@@ -1,0 +1,5 @@
+rootProject.name = 'iot-platform'
+include 'server'
+include 'common'
+include 'client'
+

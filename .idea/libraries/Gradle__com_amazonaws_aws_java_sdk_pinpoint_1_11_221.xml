@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.amazonaws:aws-java-sdk-pinpoint:1.11.221">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-pinpoint/1.11.221/68df593332514fbeacecb7b19bb4b8089cacc4f5/aws-java-sdk-pinpoint-1.11.221.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-pinpoint/1.11.221/52d274fdcba0d51b0a18038c8057aeb1d93c728a/aws-java-sdk-pinpoint-1.11.221-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

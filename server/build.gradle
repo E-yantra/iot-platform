@@ -42,7 +42,6 @@ jar {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile project(':common')
     compile group: 'org.glassfish.jersey', name: 'jersey-bom', version: '2.26' //, ext: 'pom'
     compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-grizzly2-http', version: '2.26'
     compile 'org.glassfish.jersey.inject:jersey-hk2:2.26'

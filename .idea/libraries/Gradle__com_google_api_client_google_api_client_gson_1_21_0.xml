@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.api-client:google-api-client-gson:1.21.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.google.api-client/google-api-client-gson/1.21.0/37de4d5c38d1961c49bff32873623dc1cf375dd9/google-api-client-gson-1.21.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.google.api-client/google-api-client-gson/1.21.0/3e5f630600a029dd3803348ecc0e0a59f5e64832/google-api-client-gson-1.21.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
