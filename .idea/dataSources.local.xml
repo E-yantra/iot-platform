@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal">
-    <data-source name="iot.db" uuid="4048f20d-3c4a-4b32-9e3f-c19e1c8504d3">
-      <database-info product="Apache Derby" version="10.13.1.1 - (1765088)" jdbc-version="4.2" driver-name="Apache Derby Embedded JDBC Driver" driver-version="10.13.1.1 - (1765088)">
-        <identifier-quote-string>&quot;</identifier-quote-string>
+    <data-source name="iot@localhost" uuid="b31f4841-04b8-41d0-893c-9cbc8fa77efa">
+      <database-info product="MySQL" version="5.7.20" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.44 ( Revision: b3cda4f864902ffdde495b9df93937c3e20009be )">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
       </database-info>
-      <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="upper" />
       <secret-storage>master_key</secret-storage>
       <user-name>root</user-name>
+      <introspection-schemas>*:iot</introspection-schemas>
     </data-source>
   </component>
 </project>

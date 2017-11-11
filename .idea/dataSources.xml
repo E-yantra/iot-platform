@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="iot.db" uuid="4048f20d-3c4a-4b32-9e3f-c19e1c8504d3">
-      <driver-ref>derby.embedded</driver-ref>
+    <data-source source="LOCAL" name="iot@localhost" uuid="b31f4841-04b8-41d0-893c-9cbc8fa77efa">
+      <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>org.apache.derby.jdbc.EmbeddedDriver</jdbc-driver>
-      <jdbc-url>jdbc:derby:iot.db;create=true</jdbc-url>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/iot</jdbc-url>
+      <driver-properties>
+        <property name="autoReconnect" value="true" />
+        <property name="zeroDateTimeBehavior" value="convertToNull" />
+        <property name="tinyInt1isBit" value="false" />
+        <property name="characterEncoding" value="utf8" />
+        <property name="characterSetResults" value="utf8" />
+        <property name="yearIsDateType" value="false" />
+      </driver-properties>
     </data-source>
   </component>
 </project>

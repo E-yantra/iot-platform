@@ -10,6 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+/**
+ * All users in the system are represented as this bean.
+ */
+
 @Entity
 @Table(name = "users")
 public class UserBean {
