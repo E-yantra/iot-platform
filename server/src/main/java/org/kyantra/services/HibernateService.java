@@ -11,7 +11,7 @@ public class HibernateService {
     private static SessionFactory sessionFactory ;
 
     private HibernateService() {
-        org.apache.derby.jdbc.ClientDriver driver;
+
         Configuration configuration = new Configuration().configure();
         configuration.addAnnotatedClass(UserBean.class);
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());

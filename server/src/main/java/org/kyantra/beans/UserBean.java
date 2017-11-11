@@ -29,7 +29,7 @@ public class UserBean {
     String name;
 
     @NotNull
-    @Column(name="email")
+    @Column(name="email" ,unique = true)
     @Expose
     String email;
     @NotNull

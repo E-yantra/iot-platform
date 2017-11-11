@@ -7,7 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.List;
 
 /**
  * A unit is a business unit. A unit as more units as its children or things.
@@ -24,15 +27,26 @@ public class UnitBean {
 
     @Column(name = "unit_name", unique = true)
     String unitName;
-
-    @Column(name = "parent")
-    UnitBean parent;
-
     @Column(name = "description")
     String description;
-
     @Column(name = "photo")
     String photo;
+
+    @ManyToOne
+    private UnitBean parent;
+
+    @OneToMany
+    private List<UnitBean> subunits;
+
+    
+
+    public List<UnitBean> getSubunits() {
+        return subunits;
+    }
+
+    public void setSubunits(List<UnitBean> subunits) {
+        this.subunits = subunits;
+    }
 
     public Integer getId() {
         return id;
