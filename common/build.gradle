@@ -1,0 +1,47 @@
+group 'kyantra'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'com.google.protobuf:protobuf-java:2.6.1'
+    compile 'org.freemarker:freemarker:2.3.23'
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk
+    compile group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.11.221'
+    compile 'commons-io:commons-io:2.4'
+    compile 'commons-lang:commons-lang:2.6'
+    compile 'org.apache.httpcomponents:httpclient:4.5.1'
+    compile 'org.apache.httpcomponents:httpmime:4.5.1'
+    compile 'commons-dbcp:commons-dbcp:1.4'
+    compile 'ch.qos.logback:logback-classic:1.1.2'
+    compile 'mysql:mysql-connector-java:5.1.37'
+    compile 'org.json:json:20140107'
+    compile 'org.imgscalr:imgscalr-lib:4.2'
+    compile 'org.pojava:pojava:3.0.2'
+    compile 'org.apache.tomcat.embed:tomcat-embed-logging-juli:8.0.21'
+    compile 'org.apache.tomcat.embed:tomcat-embed-logging-log4j:8.0.21'
+    compile 'org.apache.tomcat.embed:tomcat-embed-websocket:8.0.21'
+    compile 'org.apache.tomcat.embed:tomcat-embed-core:8.0.21'
+    compile group: 'com.twilio.sdk', name: 'twilio', version: '7.3.0'
+    compile 'com.google.firebase:firebase-admin:4.0.3'
+    compile group: 'org.freemarker', name: 'freemarker', version: '2.3.14'
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/fluent-hc
+    compile group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.2'
+    compile 'org.jsoup:jsoup:1.10.2'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
+    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.1'
+    // https://mvnrepository.com/artifact/joda-time/joda-time
+    compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.10.3'
+
+
+}
