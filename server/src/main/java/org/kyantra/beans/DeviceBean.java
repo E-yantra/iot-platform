@@ -27,6 +27,7 @@ public class DeviceBean {
     @Column(name="description")
     @Expose
     String description;
+
     @OneToMany
     private List<DeviceAttributeBean> deviceAttributes;
 

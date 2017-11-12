@@ -2,11 +2,10 @@ package org.kyantra.beans;
 
 import com.google.gson.annotations.Expose;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "deviceAttributes")
 public class DeviceAttributeBean {
 
     @Id

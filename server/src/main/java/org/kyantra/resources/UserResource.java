@@ -65,7 +65,4 @@ public class UserResource extends BaseResource{
         }
         return "{\"success\":false}";
     }
-
-
-
 }
