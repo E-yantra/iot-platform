@@ -59,4 +59,14 @@ public class UserDAO {
         tx.commit();
         session.close();
     }
+
+    //TODO
+    public UserBean getByEmail(String email) {
+        return null;
+    }
+
+    //TODO get from SessionBean
+    public UserBean getByToken(String token) {
+        return null;
+    }
 }

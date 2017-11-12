@@ -100,5 +100,6 @@
     <orderEntry type="library" name="Gradle: io.swagger:swagger-jaxrs:1.5.16" level="project" />
     <orderEntry type="library" name="Gradle: org.glassfish.jersey.ext:jersey-entity-filtering:2.26" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:guava-jdk5:17.0" level="project" />
   </component>
 </module>

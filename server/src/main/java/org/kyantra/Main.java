@@ -13,6 +13,7 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.mvc.freemarker.FreemarkerMvcFeature;
+import org.kyantra.filters.AuthorizationFilter;
 import org.kyantra.services.HibernateService;
 
 import java.net.URI;
@@ -35,6 +36,7 @@ public class Main {
         rc.register(io.swagger.jaxrs.listing.ApiListingResource.class);
         rc.register(io.swagger.jaxrs.listing.SwaggerSerializers.class);
         rc.register(JacksonFeature.class);
+        rc.register(AuthorizationFilter.class);
 
         ClassLoader loader = Main.class.getClassLoader();
         CLStaticHttpHandler docsHandler = new CLStaticHttpHandler(loader, "swagger-ui/");
