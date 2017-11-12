@@ -1,8 +1,10 @@
 package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
+import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.UserDAO;
+import org.kyantra.interfaces.Secure;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -20,6 +22,7 @@ public class UserResource extends BaseResource{
     @GET
     @Path("get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Secure(roles = {RoleEnum.ALL})
     public String get(@PathParam("id") Integer id){
         UserBean userBean = UserDAO.getInstance().get(id);
         return gson.toJson(userBean);
