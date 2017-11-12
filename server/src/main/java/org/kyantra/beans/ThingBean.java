@@ -1,5 +1,6 @@
 package org.kyantra.beans;
 
+
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.Column;
@@ -29,8 +30,19 @@ public class ThingBean {
     @Expose
     String description;
 
+    @Column(name = "ip")
+    String ip;
+
     @OneToMany
     private List<DeviceBean> devices;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public Integer getId() {
         return id;

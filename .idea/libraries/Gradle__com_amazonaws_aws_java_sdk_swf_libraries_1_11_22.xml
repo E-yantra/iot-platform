@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.amazonaws:aws-java-sdk-swf-libraries:1.11.22">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-swf-libraries/1.11.22/4bb64607f756c0c1f427bdb491db05b48402694/aws-java-sdk-swf-libraries-1.11.22.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-swf-libraries/1.11.22/bdc71c85859739d8a5938279322bc8317e79ed99/aws-java-sdk-swf-libraries-1.11.22-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

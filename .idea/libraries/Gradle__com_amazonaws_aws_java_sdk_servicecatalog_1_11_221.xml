@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.amazonaws:aws-java-sdk-servicecatalog:1.11.221">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-servicecatalog/1.11.221/933ed403d8ede0ae52087267a309770bf9044a36/aws-java-sdk-servicecatalog-1.11.221.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-servicecatalog/1.11.221/6352cedc90ab48c501e093194a472cded919bb80/aws-java-sdk-servicecatalog-1.11.221-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

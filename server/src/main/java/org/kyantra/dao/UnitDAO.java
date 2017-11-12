@@ -5,11 +5,16 @@ import org.kyantra.beans.UnitBean;
 
 public class UnitDAO extends BaseDAO{
 
-    public void addUnit(UnitBean bean){
+    private static UnitDAO instance = new UnitDAO();
+
+    public static UnitDAO getInstance(){
+        return instance;
+    }
+
+    public UnitBean get(Integer id){
         Session session = getService().getSessionFactory().openSession();
-        session.beginTransaction();
-        session.save(bean);
-        session.getTransaction().commit();
+        UnitBean unit = session.get(UnitBean.class,id);
         session.close();
+        return unit;
     }
 }

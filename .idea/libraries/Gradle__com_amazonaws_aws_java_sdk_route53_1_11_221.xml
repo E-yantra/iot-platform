@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.amazonaws:aws-java-sdk-route53:1.11.221">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-route53/1.11.221/f6e19a0b2bb300d24175c6963789896ee78d0e07/aws-java-sdk-route53-1.11.221.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-route53/1.11.221/ea2b093870fad248fd90b493d6da91864b188f53/aws-java-sdk-route53-1.11.221-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
