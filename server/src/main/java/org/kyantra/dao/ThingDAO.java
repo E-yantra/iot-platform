@@ -2,15 +2,19 @@ package org.kyantra.dao;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.kyantra.beans.UnitBean;
+import org.kyantra.beans.DeviceBean;
+import org.kyantra.beans.ThingBean;
 
 import java.util.List;
 
-public class UnitDAO extends BaseDAO{
-    static UnitDAO instance = new UnitDAO();
-    public static UnitDAO getInstance(){ return instance; }
+/**
+ * Created by Siddhesh Prabhugaonkar on 13-11-2017.
+ */
+public class ThingDAO extends BaseDAO{
+    static ThingDAO instance = new ThingDAO();
+    public static ThingDAO getInstance(){ return instance; }
 
-    public UnitBean add(UnitBean bean){
+    public ThingBean add(ThingBean bean){
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
         session.save(bean);
@@ -19,33 +23,31 @@ public class UnitDAO extends BaseDAO{
         return bean;
     }
 
-    public UnitBean get(Integer id) {
+    public ThingBean get(Integer id) {
         Session session = getService().getSessionFactory().openSession();
-        UnitBean unitBean = session.get(UnitBean.class,id);
+        ThingBean thingBean = session.get(ThingBean.class,id);
         session.close();
-        return unitBean;
+        return thingBean;
     }
 
     public void delete(Integer id){
         Session session = getService().getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        UnitBean unit = session.get(UnitBean.class, id);
-        session.delete(unit);
+        ThingBean thing = session.get(ThingBean.class, id);
+        session.delete(thing);
         tx.commit();
         session.close();
     }
 
-    public void update(int id, String unitName, String description, String photo, UnitBean parent, List<UnitBean> subUnits){
+    public void update(int id, String name, String description, List<DeviceBean> devices){
         if(id <=0)
             return;
         Session session = getService().getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        UnitBean unit = session.get(UnitBean.class, id);
-        unit.setUnitName(unitName);
-        unit.setDescription(description);
-        unit.setPhoto(photo);
-        unit.setParent(parent);
-        unit.setSubunits(subUnits);
+        ThingBean thing = session.get(ThingBean.class, id);
+        thing.setName(name);
+        thing.setDescription(description);
+        thing.setDevices(devices);
         tx.commit();
         session.close();
     }

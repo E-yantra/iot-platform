@@ -38,8 +38,6 @@ public class UnitBean {
     @OneToMany
     private List<UnitBean> subunits;
 
-    
-
     public List<UnitBean> getSubunits() {
         return subunits;
     }

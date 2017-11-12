@@ -3,7 +3,7 @@ package org.kyantra.services;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.kyantra.beans.UserBean;
+import org.kyantra.beans.*;
 
 public class HibernateService {
 
@@ -14,10 +14,14 @@ public class HibernateService {
 
         Configuration configuration = new Configuration().configure();
         configuration.addAnnotatedClass(UserBean.class);
+        configuration.addAnnotatedClass(UnitBean.class);
+        configuration.addAnnotatedClass(DeviceAttributeBean.class);
+        configuration.addAnnotatedClass(DeviceBean.class);
+        configuration.addAnnotatedClass(ThingBean.class);
+
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
         sessionFactory = configuration.buildSessionFactory(builder.build());
     }
-
 
     public SessionFactory getSessionFactory() {
         return sessionFactory;

@@ -2,15 +2,19 @@ package org.kyantra.dao;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.kyantra.beans.UnitBean;
+import org.kyantra.beans.DeviceAttributeBean;
+import org.kyantra.beans.DeviceBean;
 
 import java.util.List;
 
-public class UnitDAO extends BaseDAO{
-    static UnitDAO instance = new UnitDAO();
-    public static UnitDAO getInstance(){ return instance; }
+/**
+ * Created by Siddhesh Prabhugaonkar on 13-11-2017.
+ */
+public class DeviceDAO extends BaseDAO {
+    static DeviceDAO instance = new DeviceDAO();
+    public static DeviceDAO getInstance(){ return instance; }
 
-    public UnitBean add(UnitBean bean){
+    public DeviceBean add(DeviceBean bean){
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
         session.save(bean);
@@ -19,33 +23,31 @@ public class UnitDAO extends BaseDAO{
         return bean;
     }
 
-    public UnitBean get(Integer id) {
+    public DeviceBean get(Integer id) {
         Session session = getService().getSessionFactory().openSession();
-        UnitBean unitBean = session.get(UnitBean.class,id);
+        DeviceBean deviceBean = session.get(DeviceBean.class,id);
         session.close();
-        return unitBean;
+        return deviceBean;
     }
 
     public void delete(Integer id){
         Session session = getService().getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        UnitBean unit = session.get(UnitBean.class, id);
-        session.delete(unit);
+        DeviceBean device = session.get(DeviceBean.class, id);
+        session.delete(device);
         tx.commit();
         session.close();
     }
 
-    public void update(int id, String unitName, String description, String photo, UnitBean parent, List<UnitBean> subUnits){
+    public void update(int id, String name, String description, List<DeviceAttributeBean> deviceAttributes){
         if(id <=0)
             return;
         Session session = getService().getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        UnitBean unit = session.get(UnitBean.class, id);
-        unit.setUnitName(unitName);
-        unit.setDescription(description);
-        unit.setPhoto(photo);
-        unit.setParent(parent);
-        unit.setSubunits(subUnits);
+        DeviceBean device = session.get(DeviceBean.class, id);
+        device.setName(name);
+        device.setDescription(description);
+        device.setDeviceAttributes(deviceAttributes);
         tx.commit();
         session.close();
     }
