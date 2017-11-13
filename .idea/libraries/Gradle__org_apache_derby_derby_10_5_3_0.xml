@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Gradle: org.apache.derby:derby:10.5.3.0">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/server/Could not resolve org.apache.derby:derby:10.5.3.0." />
+      <root url="file://$PROJECT_DIR$/client/Could not resolve org.apache.derby:derby:10.5.3.0." />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

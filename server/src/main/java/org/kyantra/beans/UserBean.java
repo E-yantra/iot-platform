@@ -2,13 +2,18 @@ package org.kyantra.beans;
 
 import com.google.gson.annotations.Expose;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
  * All users in the system are represented as this bean.
@@ -29,13 +34,24 @@ public class UserBean {
     String name;
 
     @NotNull
-    @Column(name="email")
+    @Column(name="email" ,unique = true)
     @Expose
     String email;
     @NotNull
     @Column(name="password")
-    @Expose
     String password;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_rights", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "right_id") })
+    Set<RightsBean> rights;
+
+    public Set<RightsBean> getRights() {
+        return rights;
+    }
+
+    public void setRights(Set<RightsBean> rights) {
+        this.rights = rights;
+    }
 
     public String getPassword() {
         return password;

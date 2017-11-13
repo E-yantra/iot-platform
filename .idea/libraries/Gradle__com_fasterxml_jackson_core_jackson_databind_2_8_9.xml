@@ -1,6 +1,7 @@
 <component name="libraryTable">
-  <library name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.7.4">
+  <library name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.8.9">
     <CLASSES>
+<<<<<<< HEAD:.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_databind_2_7_4.xml
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.7.4/1e9c6f3659644aeac84872c3b62d8e363bf4c96d/jackson-databind-2.7.4.jar!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.7.4/1e9c6f3659644aeac84872c3b62d8e363bf4c96d/jackson-databind-2.7.4.jar!/" />
     </CLASSES>
@@ -8,6 +9,13 @@
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.7.4/fe8825e43af137edc12f7b54f38eb8bb5ddb3814/jackson-databind-2.7.4-sources.jar!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.7.4/fe8825e43af137edc12f7b54f38eb8bb5ddb3814/jackson-databind-2.7.4-sources.jar!/" />
+=======
+      <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.8.9/4dfca3975be3c1a98eacb829e70f02e9a71bc159/jackson-databind-2.8.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.8.9/98e1b4171628d8f230f6a60b248de84ed04fab0d/jackson-databind-2.8.9-sources.jar!/" />
+>>>>>>> dc060a617dff9e6683c1ef8730fa6a7bf5e74b90:.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_databind_2_8_9.xml
     </SOURCES>
   </library>
 </component>
