@@ -2,10 +2,12 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-cognitoidentity:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-cognitoidentity/1.11.221/66622c3f2284e113d25aecb329a4fe4297409575/aws-java-sdk-cognitoidentity-1.11.221.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-cognitoidentity/1.11.221/66622c3f2284e113d25aecb329a4fe4297409575/aws-java-sdk-cognitoidentity-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-cognitoidentity/1.11.221/6d384d1884eba149698ed19119788cb2bd51db71/aws-java-sdk-cognitoidentity-1.11.221-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-cognitoidentity/1.11.221/6d384d1884eba149698ed19119788cb2bd51db71/aws-java-sdk-cognitoidentity-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

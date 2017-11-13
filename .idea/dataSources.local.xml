@@ -9,7 +9,6 @@
       <case-sensitivity plain-identifiers="mixed" quoted-identifiers="upper" />
       <secret-storage>master_key</secret-storage>
       <user-name>root</user-name>
-      <introspection-schemas>*:iot</introspection-schemas>
     </data-source>
   </component>
 </project>

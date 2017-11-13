@@ -2,10 +2,12 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-kinesis:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-kinesis/1.11.221/77d5232e1b989332c5ed249c86afd043f9bed09/aws-java-sdk-kinesis-1.11.221.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-kinesis/1.11.221/77d5232e1b989332c5ed249c86afd043f9bed09/aws-java-sdk-kinesis-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-kinesis/1.11.221/36885c6342e3a13b8adb55eca8c56d05ebaf3317/aws-java-sdk-kinesis-1.11.221-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-kinesis/1.11.221/36885c6342e3a13b8adb55eca8c56d05ebaf3317/aws-java-sdk-kinesis-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

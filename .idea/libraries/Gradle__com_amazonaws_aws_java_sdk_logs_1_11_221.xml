@@ -2,10 +2,12 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-logs:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-logs/1.11.221/74045746d8a1ea0e78cbc387b96aee7dd510800f/aws-java-sdk-logs-1.11.221.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-logs/1.11.221/74045746d8a1ea0e78cbc387b96aee7dd510800f/aws-java-sdk-logs-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-logs/1.11.221/60d34703d49046b887b3add36c5ea58d1f0475cc/aws-java-sdk-logs-1.11.221-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-logs/1.11.221/60d34703d49046b887b3add36c5ea58d1f0475cc/aws-java-sdk-logs-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

@@ -2,6 +2,7 @@
   <library name="Gradle: org.apache.derby:derbyclient:10.14.1.0">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/org.apache.derby/derbyclient/10.14.1.0/8a10efddd1d0a9fd386053e3f939c73a42d140ad/derbyclient-10.14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.derby/derbyclient/10.14.1.0/8a10efddd1d0a9fd386053e3f939c73a42d140ad/derbyclient-10.14.1.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

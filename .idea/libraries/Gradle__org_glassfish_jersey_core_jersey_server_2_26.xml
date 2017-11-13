@@ -2,10 +2,12 @@
   <library name="Gradle: org.glassfish.jersey.core:jersey-server:2.26">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-server/2.26/aa8eff3d591641dadd7c9880bb73b59bf46d4c82/jersey-server-2.26.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-server/2.26/aa8eff3d591641dadd7c9880bb73b59bf46d4c82/jersey-server-2.26.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-server/2.26/6e535868b17f48060154bc6f68c9d033497c84ea/jersey-server-2.26-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-server/2.26/6e535868b17f48060154bc6f68c9d033497c84ea/jersey-server-2.26-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

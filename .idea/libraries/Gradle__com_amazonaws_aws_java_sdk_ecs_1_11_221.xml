@@ -2,10 +2,12 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-ecs:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-ecs/1.11.221/1949fabae74e34b4b6e3a1a3091f178ce6160526/aws-java-sdk-ecs-1.11.221.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-ecs/1.11.221/1949fabae74e34b4b6e3a1a3091f178ce6160526/aws-java-sdk-ecs-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-ecs/1.11.221/1aeb5dab446fe445822661f77f022afed066d955/aws-java-sdk-ecs-1.11.221-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-ecs/1.11.221/1aeb5dab446fe445822661f77f022afed066d955/aws-java-sdk-ecs-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
