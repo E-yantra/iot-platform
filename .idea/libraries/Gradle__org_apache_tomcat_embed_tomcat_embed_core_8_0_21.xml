@@ -2,7 +2,6 @@
   <library name="Gradle: org.apache.tomcat.embed:tomcat-embed-core:8.0.21">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-core/8.0.21/d28007b6c2d99e9c3c1473cfc0c88dfe6b13363f/tomcat-embed-core-8.0.21.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-core/8.0.21/d28007b6c2d99e9c3c1473cfc0c88dfe6b13363f/tomcat-embed-core-8.0.21.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

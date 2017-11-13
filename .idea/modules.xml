@@ -9,6 +9,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common_main.iml" filepath="$PROJECT_DIR$/.idea/modules/common_main.iml" group="common" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common_test.iml" filepath="$PROJECT_DIR$/.idea/modules/common_test.iml" group="common" />
       <module fileurl="file://$PROJECT_DIR$/.idea/iot-platform.iml" filepath="$PROJECT_DIR$/.idea/iot-platform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/iot-platform-server_main.iml" filepath="$PROJECT_DIR$/.idea/modules/iot-platform-server_main.iml" group="server" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/iot-platform-server_test.iml" filepath="$PROJECT_DIR$/.idea/modules/iot-platform-server_test.iml" group="server" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server.iml" filepath="$PROJECT_DIR$/.idea/modules/server.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server_main.iml" filepath="$PROJECT_DIR$/.idea/modules/server_main.iml" group="server" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server_test.iml" filepath="$PROJECT_DIR$/.idea/modules/server_test.iml" group="server" />

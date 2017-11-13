@@ -2,7 +2,6 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-shield:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-shield/1.11.221/d0594f91321b1260aa6585c57103cee534010a0f/aws-java-sdk-shield-1.11.221.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-shield/1.11.221/d0594f91321b1260aa6585c57103cee534010a0f/aws-java-sdk-shield-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

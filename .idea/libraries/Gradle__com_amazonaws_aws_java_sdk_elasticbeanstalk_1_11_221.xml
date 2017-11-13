@@ -2,7 +2,6 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-elasticbeanstalk:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-elasticbeanstalk/1.11.221/8b116c34e0ebf022a1bd000baf1a971ae5cb0de6/aws-java-sdk-elasticbeanstalk-1.11.221.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-elasticbeanstalk/1.11.221/8b116c34e0ebf022a1bd000baf1a971ae5cb0de6/aws-java-sdk-elasticbeanstalk-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

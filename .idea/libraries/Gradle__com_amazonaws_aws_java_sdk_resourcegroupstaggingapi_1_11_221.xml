@@ -2,7 +2,6 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-resourcegroupstaggingapi:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-resourcegroupstaggingapi/1.11.221/c5f1cf986e28f9e540f17ba1abc033f8cb6a1d61/aws-java-sdk-resourcegroupstaggingapi-1.11.221.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-resourcegroupstaggingapi/1.11.221/c5f1cf986e28f9e540f17ba1abc033f8cb6a1d61/aws-java-sdk-resourcegroupstaggingapi-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

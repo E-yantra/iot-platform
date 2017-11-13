@@ -2,7 +2,6 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-elasticloadbalancing:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-elasticloadbalancing/1.11.221/442417ba1bbcfa5243767c651ef9137791cf13f8/aws-java-sdk-elasticloadbalancing-1.11.221.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-elasticloadbalancing/1.11.221/442417ba1bbcfa5243767c651ef9137791cf13f8/aws-java-sdk-elasticloadbalancing-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

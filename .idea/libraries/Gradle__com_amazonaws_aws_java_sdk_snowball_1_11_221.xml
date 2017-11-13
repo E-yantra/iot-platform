@@ -2,7 +2,6 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-snowball:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-snowball/1.11.221/a2de3e599768e1e496c15e066dbe42cb0fdf793f/aws-java-sdk-snowball-1.11.221.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-snowball/1.11.221/a2de3e599768e1e496c15e066dbe42cb0fdf793f/aws-java-sdk-snowball-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

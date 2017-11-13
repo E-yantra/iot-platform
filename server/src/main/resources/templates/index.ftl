@@ -15,6 +15,9 @@
         <#include "common/login.ftl">
     </#if>
 
+<script type="text/x-template">
+  <#include "leftnav"
+</script>
 </div>
 </body>
 </html>

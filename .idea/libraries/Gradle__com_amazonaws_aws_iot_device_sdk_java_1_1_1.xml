@@ -2,12 +2,10 @@
   <library name="Gradle: com.amazonaws:aws-iot-device-sdk-java:1.1.1">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-iot-device-sdk-java/1.1.1/4c7fa630fdaa6f9dd6ebd5b9fbd7ecc201ca985c/aws-iot-device-sdk-java-1.1.1.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-iot-device-sdk-java/1.1.1/4c7fa630fdaa6f9dd6ebd5b9fbd7ecc201ca985c/aws-iot-device-sdk-java-1.1.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-iot-device-sdk-java/1.1.1/98ad37053dfc181f5cb72db39b5f8b691ad3936c/aws-iot-device-sdk-java-1.1.1-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-iot-device-sdk-java/1.1.1/98ad37053dfc181f5cb72db39b5f8b691ad3936c/aws-iot-device-sdk-java-1.1.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

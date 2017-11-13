@@ -2,7 +2,6 @@
   <library name="Gradle: com.amazonaws:jmespath-java:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/jmespath-java/1.11.221/273421efb649d1362a52a001250a4cf79e5b85c1/jmespath-java-1.11.221.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/jmespath-java/1.11.221/273421efb649d1362a52a001250a4cf79e5b85c1/jmespath-java-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

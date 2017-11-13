@@ -2,7 +2,6 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-athena:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-athena/1.11.221/23db05cc10408bd46f21e3d085dddf93ee5db914/aws-java-sdk-athena-1.11.221.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-athena/1.11.221/23db05cc10408bd46f21e3d085dddf93ee5db914/aws-java-sdk-athena-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

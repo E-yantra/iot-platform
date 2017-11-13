@@ -2,7 +2,6 @@
   <library name="Gradle: com.twilio.sdk:twilio:7.3.0">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.twilio.sdk/twilio/7.3.0/b412b4bdd58cc7a2a4bdbc0ef32a8343ce59355f/twilio-7.3.0.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.twilio.sdk/twilio/7.3.0/b412b4bdd58cc7a2a4bdbc0ef32a8343ce59355f/twilio-7.3.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

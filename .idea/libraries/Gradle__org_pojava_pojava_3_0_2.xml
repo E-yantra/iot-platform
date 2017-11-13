@@ -2,7 +2,6 @@
   <library name="Gradle: org.pojava:pojava:3.0.2">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/org.pojava/pojava/3.0.2/72890e743c594058e317fc9bf7280e938897b170/pojava-3.0.2.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.pojava/pojava/3.0.2/72890e743c594058e317fc9bf7280e938897b170/pojava-3.0.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

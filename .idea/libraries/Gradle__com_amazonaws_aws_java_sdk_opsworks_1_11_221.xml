@@ -2,7 +2,6 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-opsworks:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-opsworks/1.11.221/f370d8ea63ce9a89528749d28c94c70d28b506de/aws-java-sdk-opsworks-1.11.221.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-opsworks/1.11.221/f370d8ea63ce9a89528749d28c94c70d28b506de/aws-java-sdk-opsworks-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

@@ -2,7 +2,6 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-marketplacecommerceanalytics:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-marketplacecommerceanalytics/1.11.221/76a84d3309dccbb2eda3bbd956ff75731732d40f/aws-java-sdk-marketplacecommerceanalytics-1.11.221.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-marketplacecommerceanalytics/1.11.221/76a84d3309dccbb2eda3bbd956ff75731732d40f/aws-java-sdk-marketplacecommerceanalytics-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

@@ -2,12 +2,10 @@
   <library name="Gradle: com.google.http-client:google-http-client-gson:1.21.0">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client-gson/1.21.0/910306893fd7d6cc16bf4e358104f08dff63aeb8/google-http-client-gson-1.21.0.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client-gson/1.21.0/910306893fd7d6cc16bf4e358104f08dff63aeb8/google-http-client-gson-1.21.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client-gson/1.21.0/5416b077669e47a8d1fbe984bd27e7e935303f1/google-http-client-gson-1.21.0-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client-gson/1.21.0/5416b077669e47a8d1fbe984bd27e7e935303f1/google-http-client-gson-1.21.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

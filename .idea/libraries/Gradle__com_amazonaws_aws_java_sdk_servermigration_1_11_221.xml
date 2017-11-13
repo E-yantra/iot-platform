@@ -2,7 +2,6 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-servermigration:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-servermigration/1.11.221/f431a31c64b05f515a55bb6d2e5896945fa2019/aws-java-sdk-servermigration-1.11.221.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-servermigration/1.11.221/f431a31c64b05f515a55bb6d2e5896945fa2019/aws-java-sdk-servermigration-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

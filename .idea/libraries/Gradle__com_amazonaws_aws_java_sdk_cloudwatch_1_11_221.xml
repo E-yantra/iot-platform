@@ -2,7 +2,6 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-cloudwatch:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-cloudwatch/1.11.221/924939436ec2f749457f5b4248cccf1f37a43cf6/aws-java-sdk-cloudwatch-1.11.221.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-cloudwatch/1.11.221/924939436ec2f749457f5b4248cccf1f37a43cf6/aws-java-sdk-cloudwatch-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
