@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-resourcegroupstaggingapi/1.11.221/a555f61c0304738cfff6e2c9a3d69f52e8fe106f/aws-java-sdk-resourcegroupstaggingapi-1.11.221-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-resourcegroupstaggingapi/1.11.221/a555f61c0304738cfff6e2c9a3d69f52e8fe106f/aws-java-sdk-resourcegroupstaggingapi-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

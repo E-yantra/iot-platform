@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.twilio.sdk/twilio/7.3.0/623264dfd4d44f60b1cd8a1c503210124cc0a216/twilio-7.3.0-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.twilio.sdk/twilio/7.3.0/623264dfd4d44f60b1cd8a1c503210124cc0a216/twilio-7.3.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

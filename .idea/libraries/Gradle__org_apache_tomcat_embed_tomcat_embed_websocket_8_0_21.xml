@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-websocket/8.0.21/13b9807c81e3e047707955a708e5cd4424e1b2f8/tomcat-embed-websocket-8.0.21-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-websocket/8.0.21/13b9807c81e3e047707955a708e5cd4424e1b2f8/tomcat-embed-websocket-8.0.21-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

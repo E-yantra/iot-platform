@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/org.apache.httpcomponents/fluent-hc/4.5.2/f781b5655323b13c67d2ddb89b2a3b0cded7fe37/fluent-hc-4.5.2-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/fluent-hc/4.5.2/f781b5655323b13c67d2ddb89b2a3b0cded7fe37/fluent-hc-4.5.2-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

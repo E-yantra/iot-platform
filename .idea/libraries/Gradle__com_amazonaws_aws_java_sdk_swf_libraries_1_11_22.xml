@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-swf-libraries/1.11.22/bdc71c85859739d8a5938279322bc8317e79ed99/aws-java-sdk-swf-libraries-1.11.22-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-swf-libraries/1.11.22/bdc71c85859739d8a5938279322bc8317e79ed99/aws-java-sdk-swf-libraries-1.11.22-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-snowball/1.11.221/56926fb715f391bfcf1451bb311484a0f09e2731/aws-java-sdk-snowball-1.11.221-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-snowball/1.11.221/56926fb715f391bfcf1451bb311484a0f09e2731/aws-java-sdk-snowball-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

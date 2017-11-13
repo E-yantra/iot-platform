@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-cloudformation/1.11.221/21ededf98b1b34a640290476ddf1acc4d709341b/aws-java-sdk-cloudformation-1.11.221-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-cloudformation/1.11.221/21ededf98b1b34a640290476ddf1acc4d709341b/aws-java-sdk-cloudformation-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-storagegateway/1.11.221/a075c4439458065915ec364519ea9113a187674/aws-java-sdk-storagegateway-1.11.221-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-storagegateway/1.11.221/a075c4439458065915ec364519ea9113a187674/aws-java-sdk-storagegateway-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

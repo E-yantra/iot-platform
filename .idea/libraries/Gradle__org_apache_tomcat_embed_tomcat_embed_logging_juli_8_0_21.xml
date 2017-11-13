@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-logging-juli/8.0.21/eb5a6b155b4a230f1ff2a55000144215489c948e/tomcat-embed-logging-juli-8.0.21-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-logging-juli/8.0.21/eb5a6b155b4a230f1ff2a55000144215489c948e/tomcat-embed-logging-juli-8.0.21-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-greengrass/1.11.221/aaaeb65dbdfcb5c8d475f3d7ad679e7e18ac9782/aws-java-sdk-greengrass-1.11.221-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-greengrass/1.11.221/aaaeb65dbdfcb5c8d475f3d7ad679e7e18ac9782/aws-java-sdk-greengrass-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

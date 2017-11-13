@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-elasticloadbalancingv2/1.11.221/6f8d1e47d7575535ec892781df03ad7d0c266fdf/aws-java-sdk-elasticloadbalancingv2-1.11.221-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-elasticloadbalancingv2/1.11.221/6f8d1e47d7575535ec892781df03ad7d0c266fdf/aws-java-sdk-elasticloadbalancingv2-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

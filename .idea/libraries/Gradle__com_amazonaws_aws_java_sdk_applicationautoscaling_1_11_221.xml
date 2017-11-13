@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-applicationautoscaling/1.11.221/444135ea09cdca6efbbfd04f695b8af67f6e34a0/aws-java-sdk-applicationautoscaling-1.11.221-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-applicationautoscaling/1.11.221/444135ea09cdca6efbbfd04f695b8af67f6e34a0/aws-java-sdk-applicationautoscaling-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

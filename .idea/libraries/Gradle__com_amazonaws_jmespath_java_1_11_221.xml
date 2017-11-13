@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/jmespath-java/1.11.221/57b4448d58ea175ee9fd5790b8b22fe8fc7677e/jmespath-java-1.11.221-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/jmespath-java/1.11.221/57b4448d58ea175ee9fd5790b8b22fe8fc7677e/jmespath-java-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

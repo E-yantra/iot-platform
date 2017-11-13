@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-migrationhub/1.11.221/d063677b75547ef43ae46e2a14e5a5283254d0eb/aws-java-sdk-migrationhub-1.11.221-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-migrationhub/1.11.221/d063677b75547ef43ae46e2a14e5a5283254d0eb/aws-java-sdk-migrationhub-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-sns/1.11.221/dfba00d38cca41838723d5b9e32bb39e8d4d8b1f/aws-java-sdk-sns-1.11.221-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-sns/1.11.221/dfba00d38cca41838723d5b9e32bb39e8d4d8b1f/aws-java-sdk-sns-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
