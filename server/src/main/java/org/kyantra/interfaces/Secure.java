@@ -16,4 +16,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Secure {
     RoleEnum[] roles() default RoleEnum.READ;
     String subjectField() default "id";
+    String subjectType() default "unit";
 }

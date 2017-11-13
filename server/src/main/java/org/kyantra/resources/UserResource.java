@@ -22,7 +22,7 @@ public class UserResource extends BaseResource{
     @GET
     @Path("get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secure(roles = {RoleEnum.ALL})
+    @Secure(roles = {RoleEnum.READ})
     public String get(@PathParam("id") Integer id){
         UserBean userBean = UserDAO.getInstance().get(id);
         return gson.toJson(userBean);
