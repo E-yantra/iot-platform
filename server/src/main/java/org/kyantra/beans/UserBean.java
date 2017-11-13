@@ -39,7 +39,6 @@ public class UserBean {
     String email;
     @NotNull
     @Column(name="password")
-    @Expose
     String password;
 
     @OneToMany(cascade = CascadeType.ALL)

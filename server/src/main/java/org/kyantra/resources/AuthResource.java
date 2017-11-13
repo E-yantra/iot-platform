@@ -1,15 +1,22 @@
 package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
+import org.glassfish.jersey.server.mvc.Template;
 import org.kyantra.beans.CredentialBean;
 import org.kyantra.beans.SessionBean;
 import org.kyantra.dao.UserDAO;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Path("auth")
@@ -40,4 +47,6 @@ public class AuthResource extends BaseResource {
 
         return gson.toJson(new SessionBean()); //suggests failed authentication.
     }
+
+
 }
