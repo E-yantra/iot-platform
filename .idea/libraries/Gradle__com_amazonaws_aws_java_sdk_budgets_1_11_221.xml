@@ -2,10 +2,12 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-budgets:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-budgets/1.11.221/49fe9d1ce59f5446033292dc10f1a11a44e56932/aws-java-sdk-budgets-1.11.221.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-budgets/1.11.221/49fe9d1ce59f5446033292dc10f1a11a44e56932/aws-java-sdk-budgets-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-budgets/1.11.221/1e0d68a5fc0e5f9a80b77331f6556ef5768cb80c/aws-java-sdk-budgets-1.11.221-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-budgets/1.11.221/1e0d68a5fc0e5f9a80b77331f6556ef5768cb80c/aws-java-sdk-budgets-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

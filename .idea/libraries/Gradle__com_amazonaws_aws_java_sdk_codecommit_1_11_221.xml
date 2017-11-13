@@ -2,10 +2,12 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-codecommit:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-codecommit/1.11.221/eb2c6c8eb618200e5f8388c6b5b5541051805c97/aws-java-sdk-codecommit-1.11.221.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-codecommit/1.11.221/eb2c6c8eb618200e5f8388c6b5b5541051805c97/aws-java-sdk-codecommit-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-codecommit/1.11.221/401f9bcdc9fb0d3e38c4df9cb03197abaaf4d8e1/aws-java-sdk-codecommit-1.11.221-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-codecommit/1.11.221/401f9bcdc9fb0d3e38c4df9cb03197abaaf4d8e1/aws-java-sdk-codecommit-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

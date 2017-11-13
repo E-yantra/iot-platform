@@ -2,10 +2,12 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-datapipeline:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-datapipeline/1.11.221/a0b1730947ab0c68cb8610638d61ceacab2f13ea/aws-java-sdk-datapipeline-1.11.221.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-datapipeline/1.11.221/a0b1730947ab0c68cb8610638d61ceacab2f13ea/aws-java-sdk-datapipeline-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-datapipeline/1.11.221/46fd4ca4a5e0e8fcf59fa26b190e2085786b3441/aws-java-sdk-datapipeline-1.11.221-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-datapipeline/1.11.221/46fd4ca4a5e0e8fcf59fa26b190e2085786b3441/aws-java-sdk-datapipeline-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

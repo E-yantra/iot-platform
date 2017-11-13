@@ -2,10 +2,12 @@
   <library name="Gradle: org.hibernate.validator:hibernate-validator-annotation-processor:6.0.3.Final">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator-annotation-processor/6.0.3.Final/c8b439cc521fce6a79718195552a5e3a6af45c5/hibernate-validator-annotation-processor-6.0.3.Final.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator-annotation-processor/6.0.3.Final/c8b439cc521fce6a79718195552a5e3a6af45c5/hibernate-validator-annotation-processor-6.0.3.Final.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator-annotation-processor/6.0.3.Final/21cb0755115472fc1576f312c2cdac797b8ff574/hibernate-validator-annotation-processor-6.0.3.Final-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator-annotation-processor/6.0.3.Final/21cb0755115472fc1576f312c2cdac797b8ff574/hibernate-validator-annotation-processor-6.0.3.Final-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

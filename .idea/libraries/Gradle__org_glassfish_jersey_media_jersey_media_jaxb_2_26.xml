@@ -2,10 +2,12 @@
   <library name="Gradle: org.glassfish.jersey.media:jersey-media-jaxb:2.26">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/org.glassfish.jersey.media/jersey-media-jaxb/2.26/791397ceb5d1c8f389664b1de3e4208c2ac1015b/jersey-media-jaxb-2.26.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.media/jersey-media-jaxb/2.26/791397ceb5d1c8f389664b1de3e4208c2ac1015b/jersey-media-jaxb-2.26.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/org.glassfish.jersey.media/jersey-media-jaxb/2.26/97a4c4852dab3fd886e96a0aae0880a639c12ac7/jersey-media-jaxb-2.26-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.media/jersey-media-jaxb/2.26/97a4c4852dab3fd886e96a0aae0880a639c12ac7/jersey-media-jaxb-2.26-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

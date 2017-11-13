@@ -2,10 +2,12 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-cloudhsmv2:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-cloudhsmv2/1.11.221/83a9560ab5c92a5bca6a2ec2bd709c2e31f1b106/aws-java-sdk-cloudhsmv2-1.11.221.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-cloudhsmv2/1.11.221/83a9560ab5c92a5bca6a2ec2bd709c2e31f1b106/aws-java-sdk-cloudhsmv2-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-cloudhsmv2/1.11.221/89c965484b8f5d58ad186213b8e461f633037f10/aws-java-sdk-cloudhsmv2-1.11.221-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-cloudhsmv2/1.11.221/89c965484b8f5d58ad186213b8e461f633037f10/aws-java-sdk-cloudhsmv2-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
