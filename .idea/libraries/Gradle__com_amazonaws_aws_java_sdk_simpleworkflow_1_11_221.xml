@@ -2,10 +2,12 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-simpleworkflow:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-simpleworkflow/1.11.221/82fabac1c93b6f079ee1d7f3ffad29a58ecde0d1/aws-java-sdk-simpleworkflow-1.11.221.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-simpleworkflow/1.11.221/82fabac1c93b6f079ee1d7f3ffad29a58ecde0d1/aws-java-sdk-simpleworkflow-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-simpleworkflow/1.11.221/d0fb9d414f8fbd9a2fb0538d271f2d4555f187aa/aws-java-sdk-simpleworkflow-1.11.221-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-simpleworkflow/1.11.221/d0fb9d414f8fbd9a2fb0538d271f2d4555f187aa/aws-java-sdk-simpleworkflow-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

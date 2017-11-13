@@ -2,10 +2,12 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-machinelearning:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-machinelearning/1.11.221/909de3df1b2567705bf54eb07379e430facb47fa/aws-java-sdk-machinelearning-1.11.221.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-machinelearning/1.11.221/909de3df1b2567705bf54eb07379e430facb47fa/aws-java-sdk-machinelearning-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-machinelearning/1.11.221/d1d93f88e77af716a1aac1c1c90f6bdfc4338ed5/aws-java-sdk-machinelearning-1.11.221-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-machinelearning/1.11.221/d1d93f88e77af716a1aac1c1c90f6bdfc4338ed5/aws-java-sdk-machinelearning-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

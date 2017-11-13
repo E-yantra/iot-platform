@@ -2,10 +2,12 @@
   <library name="Gradle: com.amazonaws:aws-java-sdk-codestar:1.11.221">
     <CLASSES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-codestar/1.11.221/cdfd8ec43fa53e13ff440e93cba93c778df0ef9c/aws-java-sdk-codestar-1.11.221.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-codestar/1.11.221/cdfd8ec43fa53e13ff440e93cba93c778df0ef9c/aws-java-sdk-codestar-1.11.221.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/rovergradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-codestar/1.11.221/60d1d48375b9d3ff1e83e80fefe310fdd09d8b71/aws-java-sdk-codestar-1.11.221-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-codestar/1.11.221/60d1d48375b9d3ff1e83e80fefe310fdd09d8b71/aws-java-sdk-codestar-1.11.221-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
