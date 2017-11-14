@@ -21,7 +21,7 @@
     </div>
     <div class="form-group">
         <label for="inputAddress">Parent ID:</label>
-        <input type="text" class="form-control" id="parentsID" placeholder="Photo">
+        <input type="text" class="form-control" id="parentsID" placeholder="Parent ID">
     </div>
 
     <button type="submit" class="btn btn-primary">Create</button>

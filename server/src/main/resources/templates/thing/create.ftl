@@ -17,7 +17,7 @@
         </div>
         <div class="form-group">
             <label for="inputAddress">IP:</label>
-            <input type="text" class="form-control" id="photo" placeholder="Photo">
+            <input type="text" class="form-control" id="photo" placeholder="IP">
         </div>
 
         <button type="submit" class="btn btn-primary">Create</button>
