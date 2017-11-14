@@ -4,7 +4,7 @@
     <title>IoT Platform</title>
     <meta charset="utf-8">
     <script src="https://unpkg.com/vue"></script>
-    <script src="/path/to/vue-router.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.0.1/vue-router.js"></script>
     <script
             src="https://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="

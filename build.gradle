@@ -6,6 +6,7 @@ allprojects {
     apply plugin: 'application'
 
     repositories {
+        maven { url "https://maven.google.com" }
         mavenCentral()
         mavenLocal()
         maven { url "https://plugins.gradle.org/m2/" }

@@ -40,12 +40,15 @@ public class Main {
 
         ClassLoader loader = Main.class.getClassLoader();
         CLStaticHttpHandler docsHandler = new CLStaticHttpHandler(loader, "swagger-ui/");
+        CLStaticHttpHandler staticHttpHandler = new CLStaticHttpHandler(loader,"static/");
         docsHandler.setFileCacheEnabled(false);
+        staticHttpHandler.setFileCacheEnabled(true);
         HttpServer server;
 
         server = GrizzlyHttpServerFactory.createHttpServer(URI.create("http://0.0.0.0:"+port+"/"), rc);
         ServerConfiguration cfg = server.getServerConfiguration();
         cfg.addHttpHandler(docsHandler, "/docs/");
+        cfg.addHttpHandler(staticHttpHandler,"/static/");
         return server;
     }
 
@@ -56,7 +59,6 @@ public class Main {
         CommandLine cmd = parser.parse( options, args);
         int port = Integer.parseInt(cmd.getOptionValue("port","8002"));
         HibernateService hibernateService = HibernateService.getInstance(); //initialized hibernate service
-
         final HttpServer server = startServer(port);
     }
 }
