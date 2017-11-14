@@ -37,7 +37,7 @@
                 url: '/right/create',
                 data: JSON.stringify({unit_id:rightID,role:rightRoles}),
                 dataType: 'json',
-                success: function(data) { alert('data: ' + data); },
+                success: function(data) { },
             });
         })
     });
