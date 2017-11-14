@@ -4,9 +4,9 @@ version '1.0-SNAPSHOT'
 allprojects {
     apply plugin: 'java'
     apply plugin: 'application'
+    apply plugin: 'idea'
 
     repositories {
-        maven { url "https://maven.google.com" }
         mavenCentral()
         mavenLocal()
         maven { url "https://plugins.gradle.org/m2/" }
