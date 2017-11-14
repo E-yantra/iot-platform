@@ -5,10 +5,17 @@ import com.google.gson.GsonBuilder;
 import org.hibernate.Session;
 import org.kyantra.services.HibernateService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
+
 public class BaseResource {
+
 
     static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     static HibernateService service;
+
+    @Context
+    HttpServletRequest request;
 
     public BaseResource(){
         if(service==null) {
@@ -18,5 +25,13 @@ public class BaseResource {
 
     public Session getSession(){
         return service.getSessionFactory().openSession();
+    }
+
+    public HttpServletRequest getRequest() {
+        return request;
+    }
+
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
     }
 }

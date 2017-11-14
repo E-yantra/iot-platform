@@ -1,22 +1,16 @@
 package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
-import org.glassfish.jersey.server.mvc.Template;
 import org.kyantra.beans.CredentialBean;
 import org.kyantra.beans.SessionBean;
 import org.kyantra.dao.UserDAO;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Path("auth")
@@ -25,9 +19,14 @@ public class AuthResource extends BaseResource {
 
     @POST
     @Path("basic")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public String authenticate(CredentialBean credentialBean){
+    public String authenticate(@FormParam("email") String email, @FormParam("password") String password){
+
+        CredentialBean credentialBean = new CredentialBean();
+        credentialBean.setEmail(email);
+        credentialBean.setPassword(password);
+
         // Based on
         // https://stackoverflow.com/questions/26777083/best-practice-for-rest-token-based-authentication-with-jax-rs-and-jersey
         if(credentialBean.getEmail()!=null && credentialBean.getPassword()!=null){
