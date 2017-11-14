@@ -1,3 +1,9 @@
+<#include "../common/header.ftl">
+<body>
+<#include "../common/navbar.ftl"/>
+<div class="container-fluid" id="container-main">
+<#include "../common/sidenavbar.ftl"/>
+    <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
 <div class="row">
     <form class="form-signin col-md-5">
         <h2 class="form-signin-heading">Please Signup</h2><br>
@@ -12,3 +18,9 @@
         <p>Already have userid? <router-link to="login">Login</router-link></p>
     </form>
 </div>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>
