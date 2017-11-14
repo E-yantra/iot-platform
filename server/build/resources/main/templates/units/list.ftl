@@ -47,7 +47,7 @@
                 <td>@TwBootstrap</td>
                 <td>@mdo</td>
                 <td>
-                    <button type="button" class="btn btn-primary btn-sm">Edit</button>&nbsp;;
+                    <button type="button" class="btn btn-primary btn-sm">Edit</button>&nbsp;
                     <button type="button" class="btn btn-danger btn-sm">Delete</button>
                 </td>
             </tr>
