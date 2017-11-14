@@ -1,7 +1,7 @@
 
 const Login = {template: '#login-template'};
 const Signup = {template: '#signup-template'};
-const Dashboard = {template: ''};
+const Dashboard = {template: '#dashboad-template'};
 const Sidebar = {template: '#sidebar-template'};
 
 
