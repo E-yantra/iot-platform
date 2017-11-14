@@ -78,6 +78,7 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="/static/js/app.js"></script>
+
 </body>
 </html>
 
