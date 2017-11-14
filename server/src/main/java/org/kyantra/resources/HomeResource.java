@@ -44,7 +44,7 @@ public class HomeResource extends BaseResource {
     }
 
     @GET
-    @Path("/units")
+    @Path("/units/list")
     @Template(name = "/units/list.ftl")
     public Map<String, Object> listUnits() {
         final Map<String, Object> map = new HashMap<String, Object>();
@@ -61,7 +61,7 @@ public class HomeResource extends BaseResource {
 
     @GET
     @Path("/things/list")
-    @Template(name = "/things/list.ftl")
+    @Template(name = "/thing/list.ftl")
     public Map<String, Object> listThings() {
         final Map<String, Object> map = new HashMap<String, Object>();
         return map;
@@ -69,7 +69,7 @@ public class HomeResource extends BaseResource {
 
     @GET
     @Path("/things/create")
-    @Template(name = "/things/create.ftl")
+    @Template(name = "/thing/create.ftl")
     public Map<String, Object> createThing() {
         final Map<String, Object> map = new HashMap<String, Object>();
         return map;
@@ -87,6 +87,21 @@ public class HomeResource extends BaseResource {
     @Path("/rights/list")
     @Template(name = "/rights/list.ftl")
     public Map<String, Object> listRight() {
+        final Map<String, Object> map = new HashMap<String, Object>();
+        return map;
+    }
+    @GET
+    @Path("/users/create")
+    @Template(name = "/users/create.ftl")
+    public Map<String, Object> createUsers() {
+        final Map<String, Object> map = new HashMap<String, Object>();
+        return map;
+    }
+
+    @GET
+    @Path("/users/list")
+    @Template(name = "/users/list.ftl")
+    public Map<String, Object> listusers() {
         final Map<String, Object> map = new HashMap<String, Object>();
         return map;
     }
