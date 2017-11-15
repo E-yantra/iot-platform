@@ -48,7 +48,7 @@ public class DeviceResource extends BaseResource {
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String create(DeviceBean bean){
+    public String create(DeviceBean bean){ //thing_id
         try {
             String s = "Found something";
             System.out.println(gson.toJson(bean));

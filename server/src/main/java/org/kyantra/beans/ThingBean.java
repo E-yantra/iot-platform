@@ -33,6 +33,7 @@ public class ThingBean {
     @Column(name = "ip")
     String ip;
 
+
     @OneToMany
     private List<DeviceBean> devices;
 

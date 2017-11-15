@@ -2,6 +2,9 @@ package org.kyantra.dao;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.kyantra.beans.RightsBean;
+import org.kyantra.beans.RoleEnum;
+import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.services.HibernateService;
 
@@ -58,6 +61,16 @@ public class UserDAO {
         user.setPassword(password);
         tx.commit();
         session.close();
+    }
+
+    //TODO complete the method
+    public UserBean addRights(UserBean userBean, UnitBean unitBean, RoleEnum role){
+        RightsBean rightsBean = new RightsBean();
+        rightsBean.setUnit(unitBean);
+        rightsBean.setRole(role);
+        userBean.getRights().add(rightsBean);
+        //save the object
+        return null;
     }
 
     //TODO

@@ -25,6 +25,9 @@ public class DeviceAttributeBean {
     @Expose
     String def;
 
+    @OneToOne
+    UnitBean ownerUnit;
+
     public Integer getId() {
         return id;
     }

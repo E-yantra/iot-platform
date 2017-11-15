@@ -47,7 +47,7 @@ public class ThingResource extends BaseResource {
     @POST
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON) //unit_id
     public String create(ThingBean bean){
         try {
             String s = "Found something";

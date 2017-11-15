@@ -14,10 +14,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.security.Principal;
 
 @Path("/user")
 @Api(value="user")
 public class UserResource extends BaseResource{
+
 
     @GET
     @Path("get/{id}")
@@ -25,6 +27,11 @@ public class UserResource extends BaseResource{
     @Secure(roles = {RoleEnum.READ})
     public String get(@PathParam("id") Integer id){
         UserBean userBean = UserDAO.getInstance().get(id);
+
+        Principal principal = getSecurityContext().getUserPrincipal();
+        UserBean currentUser = (UserBean) principal;
+        //TODO code ot check if currentUser has permission to read this user.
+
         return gson.toJson(userBean);
     }
 
