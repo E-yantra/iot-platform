@@ -7,6 +7,7 @@ import org.kyantra.services.HibernateService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
 public class BaseResource {
 
@@ -16,6 +17,11 @@ public class BaseResource {
 
     @Context
     HttpServletRequest request;
+
+
+
+    @Context
+    SecurityContext sc;
 
     public BaseResource(){
         if(service==null) {
@@ -33,5 +39,9 @@ public class BaseResource {
 
     public void setRequest(HttpServletRequest request) {
         this.request = request;
+    }
+
+    public SecurityContext getSecurityContext() {
+        return sc;
     }
 }

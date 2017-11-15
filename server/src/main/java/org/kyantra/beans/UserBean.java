@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.security.Principal;
 import java.util.Set;
 
 /**
@@ -21,7 +22,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class UserBean {
+public class UserBean implements Principal {
 
     @Id
     @Expose

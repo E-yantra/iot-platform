@@ -54,21 +54,24 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         try {
 
             validateToken(token);
-            UserBean userBean = UserDAO.getInstance().getByToken(token);
 
-            Class<?> resourceClass = resourceInfo.getResourceClass();
+            UserBean userBean = UserDAO.getInstance().getByToken(token);
+            // /unit/create
+            Class<?> resourceClass = resourceInfo.getResourceClass(); //UnitResource.class
             List<RoleEnum> classRoles = extractRoles(resourceClass);
 
 
             Method resourceMethod = resourceInfo.getResourceMethod();
             List<RoleEnum> methodRoles = extractRoles(resourceMethod);
+
             //Which url parameter represents the Unit id. it can be id, parent_id etc.
             String subjectField  = extractSubjectField(resourceMethod);
+            String subjectType = extractSubjectType(resourceMethod);
 
             if (methodRoles.isEmpty()) {
-                checkPermissions(classRoles,null,requestContext);
+                checkPermissions(userBean,classRoles,null,requestContext);
             } else {
-                checkPermissions(methodRoles,subjectField,requestContext);
+                checkPermissions(userBean,methodRoles,subjectField,requestContext);
             }
 
             final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
@@ -77,7 +80,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
                 @Override
                 public Principal getUserPrincipal() {
 
-                    return () -> userBean.getId()+"";
+                    return userBean;
                 }
 
                 @Override
@@ -101,12 +104,29 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         }
     }
 
-    //TODO actually fetch user roles by loo
-    private void checkPermissions(List<RoleEnum> expectedRoles, String subjectField, ContainerRequestContext requestContent) throws Exception{
+    //TODO
+    private String extractSubjectType(Method resourceMethod) {
+        return null;
+    }
 
+    //TODO actually fetch user roles by loo
+    private void checkPermissions(UserBean userBean, List<RoleEnum> expectedRoles, String subjectField, ContainerRequestContext requestContent) throws Exception{
+
+        /**
+         * 1. Get the all the units for which user has permissions provided in expectedRoles
+         * 2. Get all the child units for those units.
+         * 3. subjectType = unit, extract subject_field and check if it is part of union of 1 & 2.
+         *  (OR just look at ownerunit_id )
+         * 4. subjectType = thing extract subject_field, expand union of 1 and 2 to get all their things. check if subject_id is part of it.
+         * 5. subjectType = device ....
+         * 6. subjectType = deviceAttributes
+         */
         if(expectedRoles.contains(RoleEnum.ALL)){
             throw new Exception();
         }
+
+        // User X is given some Right on Unit Y.
+        // Unit Y has children Unit Z and Unit M. X has same permissions on Z and M.
     }
 
     private boolean isTokenBasedAuthentication(String authorizationHeader) {
@@ -137,6 +157,10 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         // Throw an Exception if the token is invalid
 
         //TODO find the SessionBean with this token and find the user.
+        /**
+         * Get session bean from db for that token
+         * else throw new Exception();
+         */
     }
 
     // Extract the roles from the annotated element

@@ -1,8 +1,10 @@
 package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
+import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.dao.UnitDAO;
+import org.kyantra.interfaces.Secure;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -46,10 +48,12 @@ public class UnitResource extends BaseResource {
         return "{}";
     }
 
+
     @POST
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     public String create(UnitBean unitBean){
         try {
             String s = "Found something";
