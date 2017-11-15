@@ -4,8 +4,12 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kyantra.beans.RightsBean;
 import org.kyantra.beans.RoleEnum;
+import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.services.HibernateService;
+
+import javax.persistence.Query;
+import java.util.List;
 
 public class RightsDAO {
 
@@ -28,6 +32,19 @@ public class RightsDAO {
         tx.commit();
         session.close();
         return bean;
+    }
+
+
+
+    public List<RightsBean> list(int page, int limit){
+        Session session = mService.getSessionFactory().openSession();
+        String ql = "from RightsBean";
+        Query query = session.createQuery(ql);
+        query.setFirstResult(page*limit);
+        query.setMaxResults(limit);
+        List<RightsBean> list = query.getResultList();
+        session.close();
+        return list;
     }
 
 

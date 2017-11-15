@@ -4,7 +4,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kyantra.beans.DeviceAttributeBean;
 import org.kyantra.beans.DeviceBean;
+import org.kyantra.beans.UnitBean;
 
+import javax.persistence.Query;
 import java.util.List;
 
 /**
@@ -21,6 +23,17 @@ public class DeviceDAO extends BaseDAO {
         session.getTransaction().commit();
         session.close();
         return bean;
+    }
+
+    public List<DeviceBean> list(UnitBean unitBean,  int page, int limit){
+        Session session = mService.getSessionFactory().openSession();
+        String ql = "from DeviceBean where uni";
+        Query query = session.createQuery(ql);
+        query.setFirstResult(page*limit);
+        query.setMaxResults(limit);
+        List<DeviceBean> list = query.getResultList();
+        session.close();
+        return list;
     }
 
     public DeviceBean get(Integer id) {
