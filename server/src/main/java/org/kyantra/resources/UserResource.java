@@ -21,7 +21,6 @@ import java.util.List;
 @Api(value="user")
 public class UserResource extends BaseResource{
 
-
     int limit = 10;
 
     @GET
@@ -34,6 +33,8 @@ public class UserResource extends BaseResource{
         Principal principal = getSecurityContext().getUserPrincipal();
         UserBean currentUser = (UserBean) principal;
         //TODO code ot check if currentUser has permission to read this user.
+
+
         return gson.toJson(userBean);
     }
 

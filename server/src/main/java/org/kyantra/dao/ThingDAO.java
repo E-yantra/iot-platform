@@ -16,9 +16,10 @@ public class ThingDAO extends BaseDAO{
     static ThingDAO instance = new ThingDAO();
     public static ThingDAO getInstance(){ return instance; }
 
-    public ThingBean add(ThingBean bean){
+    public ThingBean add(ThingBean bean, UnitBean currentUnit){
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
+        bean.setOwnerUnit(currentUnit);
         session.save(bean);
         session.getTransaction().commit();
         session.close();

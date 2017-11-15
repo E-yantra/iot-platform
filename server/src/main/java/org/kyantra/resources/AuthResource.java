@@ -38,7 +38,7 @@ public class AuthResource extends BaseResource {
             //do db based auth and if it is true then Create a new SessionBean for this user.
             //Generate new String token using UUID
             SessionBean sessionBean = new SessionBean();
-            //TODO complete the getByEmail method in DAO.
+            //TODO complete the getByEmail method in DAO. -Done
             UserBean userBean = UserDAO.getInstance().getByEmail(credentialBean.getEmail());
 
             if(userBean.getPassword().equals(credentialBean.getPassword())) {

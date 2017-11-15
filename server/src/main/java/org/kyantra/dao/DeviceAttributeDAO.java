@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kyantra.beans.DeviceAttributeBean;
 import org.kyantra.beans.DeviceBean;
+import org.kyantra.beans.UnitBean;
 
 import javax.persistence.Query;
 import java.util.List;
@@ -15,9 +16,10 @@ public class DeviceAttributeDAO extends BaseDAO {
     static DeviceAttributeDAO instance = new DeviceAttributeDAO();
     public static DeviceAttributeDAO getInstance(){ return instance; }
 
-    public DeviceAttributeBean add(DeviceAttributeBean bean){
+    public DeviceAttributeBean add(DeviceAttributeBean bean, UnitBean currentUnit){
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
+        bean.setOwnerUnit(currentUnit);
         session.save(bean);
         session.getTransaction().commit();
         session.close();

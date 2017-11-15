@@ -3,19 +3,12 @@ package org.kyantra.beans;
 
 import com.google.gson.annotations.Expose;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "things")
 public class ThingBean {
-
 
     @Id
     @Expose
@@ -33,9 +26,11 @@ public class ThingBean {
     @Column(name = "ip")
     String ip;
 
-
     @OneToMany
     private List<DeviceBean> devices;
+
+    @OneToOne
+    private UnitBean ownerUnit;
 
     public String getIp() {
         return ip;
@@ -77,6 +72,11 @@ public class ThingBean {
         this.devices = devices;
     }
 
+    public UnitBean getOwnerUnit() {
+        return ownerUnit;
+    }
 
-
+    public void setOwnerUnit(UnitBean ownerUnit) {
+        this.ownerUnit = ownerUnit;
+    }
 }

@@ -2,6 +2,7 @@ package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
 import org.kyantra.beans.DeviceBean;
+import org.kyantra.beans.UnitBean;
 import org.kyantra.dao.DeviceDAO;
 
 import javax.ws.rs.*;
@@ -48,11 +49,11 @@ public class DeviceResource extends BaseResource {
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String create(DeviceBean bean){ //thing_id
+    public String create(DeviceBean bean, UnitBean currentUnit){ //thing_id
         try {
             String s = "Found something";
             System.out.println(gson.toJson(bean));
-            DeviceBean deviceBean = DeviceDAO.getInstance().add(bean);
+            DeviceBean deviceBean = DeviceDAO.getInstance().add(bean, currentUnit);
             return gson.toJson(deviceBean);
 
         }catch (Throwable t){
