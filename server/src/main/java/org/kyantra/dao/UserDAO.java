@@ -8,6 +8,9 @@ import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.services.HibernateService;
 
+import javax.persistence.Query;
+import java.util.List;
+
 public class UserDAO {
 
     static UserDAO instance = new UserDAO();
@@ -20,6 +23,23 @@ public class UserDAO {
     private UserDAO(){
 
         mService = HibernateService.getInstance();
+    }
+
+    public List<UserBean> list(int page, int limit){
+
+        try {
+            Session session = mService.getSessionFactory().openSession();
+            String ql = "from UserBean";
+            Query query = session.createQuery(ql);
+            query.setFirstResult(page * limit);
+            query.setMaxResults(limit);
+            List<UserBean> list = query.getResultList();
+            session.close();
+            return list;
+        }catch (Throwable t){
+            t.printStackTrace();
+        }
+        return null;
     }
 
     public UserBean add(UserBean bean){

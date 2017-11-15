@@ -4,12 +4,25 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kyantra.beans.UnitBean;
 
+import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UnitDAO extends BaseDAO{
     static UnitDAO instance = new UnitDAO();
     public static UnitDAO getInstance(){ return instance; }
 
+
+    public List<UnitBean> list(int page, int limit){
+        Session session = getService().getSessionFactory().openSession();
+        String ql = "from UnitBean";
+        Query query = session.createQuery(ql);
+        query.setFirstResult(page*limit);
+        query.setMaxResults(limit);
+        List<UnitBean> list = query.getResultList();
+        session.close();
+        return list;
+    }
 
     public UnitBean add(UnitBean bean){
         Session session = getService().getSessionFactory().openSession();

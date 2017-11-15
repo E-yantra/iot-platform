@@ -4,7 +4,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kyantra.beans.DeviceBean;
 import org.kyantra.beans.ThingBean;
+import org.kyantra.beans.UnitBean;
 
+import javax.persistence.Query;
 import java.util.List;
 
 /**
@@ -21,6 +23,17 @@ public class ThingDAO extends BaseDAO{
         session.getTransaction().commit();
         session.close();
         return bean;
+    }
+
+    public List<ThingBean> list(int page, int limit){
+        Session session = getService().getSessionFactory().openSession();
+        String ql = "from ThingBean";
+        Query query = session.createQuery(ql);
+        query.setFirstResult(page*limit);
+        query.setMaxResults(limit);
+        List<ThingBean> list = query.getResultList();
+        session.close();
+        return list;
     }
 
     public ThingBean get(Integer id) {

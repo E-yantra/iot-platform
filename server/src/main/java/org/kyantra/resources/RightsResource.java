@@ -59,9 +59,9 @@ public class RightsResource extends BaseResource{
         try {
             RightsBean rights = new RightsBean();
             rights.setRole(role);
-            //UnitBean unitBean = UnitDAO.getInstance().get(unitId);
             rights.setUnit(unitBean);
             RightsBean right = RightsDAO.getInstance().add(rights);
+
             return gson.toJson(right);
 
         }catch (Throwable t){
