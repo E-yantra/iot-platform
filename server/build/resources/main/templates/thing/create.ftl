@@ -38,7 +38,7 @@
                 data: JSON.stringify({name:unitName,description:description,ip:ip}),
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',
-                success: function(data) { alert('data: ' + data); },
+                success: function(data) {  },
             });
         })
     });

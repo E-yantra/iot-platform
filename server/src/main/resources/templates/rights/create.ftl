@@ -35,8 +35,8 @@
             $.ajax({
                 type: 'POST',
                 url: '/right/create',
-                data: JSON.stringify({unit_id:rightID,role:rightRoles}),
-                dataType: 'json',
+                data: {unit_id:rightID,role:rightRoles},
+                contentType:'application/x-www-form-urlencoded',
                 success: function(data) { },
             });
         })
