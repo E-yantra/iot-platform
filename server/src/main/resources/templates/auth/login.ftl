@@ -17,7 +17,7 @@
             <input type="checkbox" value="remember-me"> Remember me
         </label>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <button id="submit" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
     <p>Don't have userid ? <router-link to="signup">Signup</router-link></p>
 </form>
 </div>
@@ -25,5 +25,17 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="/static/js/app.js"></script>
+<script>
+    $("#submit").on("click",function () {
+        $.ajax({
+            type: 'POST',
+            url: "/auth/basic",
+            data: $('.form-signin').serialize(),
+            success: function(data){
+
+            }
+        });
+    });
+</script>
 </body>
 </html>
