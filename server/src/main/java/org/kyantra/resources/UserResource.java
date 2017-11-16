@@ -5,6 +5,7 @@ import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.UserDAO;
 import org.kyantra.interfaces.Secure;
+import org.kyantra.interfaces.Session;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -49,6 +50,7 @@ public class UserResource extends BaseResource{
     }
 
     @POST
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
     @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -59,6 +61,7 @@ public class UserResource extends BaseResource{
     }
 
     @DELETE
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String delete(@PathParam("id") Integer id){
@@ -72,6 +75,8 @@ public class UserResource extends BaseResource{
     }
 
     @POST
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
+    @Session
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

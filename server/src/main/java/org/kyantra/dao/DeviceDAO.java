@@ -17,10 +17,9 @@ public class DeviceDAO extends BaseDAO {
     static DeviceDAO instance = new DeviceDAO();
     public static DeviceDAO getInstance(){ return instance; }
 
-    public DeviceBean add(DeviceBean bean, UnitBean currentUnit){
+    public DeviceBean add(DeviceBean bean){
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
-        bean.setOwnerUnit(currentUnit);
         session.save(bean);
         session.getTransaction().commit();
         session.close();
@@ -74,7 +73,7 @@ public class DeviceDAO extends BaseDAO {
         session.close();
     }
 
-    public void update(int id, String name, String description, List<DeviceAttributeBean> deviceAttributes){
+    public void update(int id, String name, String description){
         if(id <=0)
             return;
         Session session = getService().getSessionFactory().openSession();
@@ -82,7 +81,6 @@ public class DeviceDAO extends BaseDAO {
         DeviceBean device = session.get(DeviceBean.class, id);
         device.setName(name);
         device.setDescription(description);
-        device.setDeviceAttributes(deviceAttributes);
         tx.commit();
         session.close();
     }

@@ -6,14 +6,9 @@ import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Secure;
+import org.kyantra.interfaces.Session;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.security.Principal;
 import java.util.List;
@@ -47,17 +42,22 @@ public class UnitResource extends BaseResource {
     }
 
     @POST
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String update(@PathParam("id") Integer id, UnitBean unitBean){
-        UnitDAO.getInstance().update(id,unitBean.getUnitName(),unitBean.getDescription(),unitBean.getPhoto(),
-                unitBean.getParent(), unitBean.getSubunits());
-        unitBean = UnitDAO.getInstance().get(unitBean.getId());
+    public String update(@PathParam("id") Integer id,
+                         @FormParam("name") String name,
+                         @FormParam("description") String description,
+                         @FormParam("photo") String photo){
+        //TODO: can parent unit be changed?
+        UnitDAO.getInstance().update(id,name,description,photo);
+        UnitBean unitBean = UnitDAO.getInstance().get(id);
         return gson.toJson(unitBean);
     }
 
     @DELETE
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String delete(@PathParam("id") Integer id){
@@ -70,17 +70,32 @@ public class UnitResource extends BaseResource {
         return "{}";
     }
 
-
     @POST
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
-    public String create(UnitBean childUnit){
+    @Session
+    public String create(@FormParam("name") String name,
+                         @FormParam("description") String description,
+                         @FormParam("photo") String photo,
+                         @DefaultValue("0") @FormParam("parentUnitId") Integer parentUnitId ){
+        //TODO: Root unit will have parent unit = NULL
+        // scenario to be handled
         try {
             String s = "Found something";
-            System.out.println(gson.toJson(childUnit));
-            UnitBean unit = UnitDAO.getInstance().add(childUnit.getParent(), childUnit);
+            //System.out.println(gson.toJson(childUnit));
+            UnitBean unit = new UnitBean();
+            unit.setUnitName(name);
+            unit.setDescription(description);
+            unit.setPhoto(photo);
+
+            //root unit will not have any parent unit
+            if (parentUnitId!=0){
+                unit.setParent(UnitDAO.getInstance().get(parentUnitId));
+            }
+
+            unit = UnitDAO.getInstance().add(unit);
             return gson.toJson(unit);
 
         }catch (Throwable t){
@@ -90,6 +105,7 @@ public class UnitResource extends BaseResource {
     }
 
     @POST
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Path("addusers/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

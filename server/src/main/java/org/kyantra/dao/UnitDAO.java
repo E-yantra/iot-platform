@@ -47,16 +47,11 @@ public class UnitDAO extends BaseDAO{
     }
 
     //returns child unit
-    public UnitBean add(UnitBean currentUnit, UnitBean childUnit){
+    public UnitBean add(UnitBean currentUnit){
         Session session = getService().getSessionFactory().openSession();
-
-        //root unit will not have any parent unit
-        if (currentUnit!=null){
-            childUnit.setParent(currentUnit);
-        }
-        session.save(childUnit);
+        session.save(currentUnit);
         session.close();
-        return childUnit;
+        return currentUnit;
     }
 
     public UnitBean get(Integer id) {
@@ -75,7 +70,7 @@ public class UnitDAO extends BaseDAO{
         session.close();
     }
 
-    public void update(int id, String unitName, String description, String photo, UnitBean parent, List<UnitBean> subUnits){
+    public void update(int id, String unitName, String description, String photo){
         if(id <=0)
             return;
         Session session = getService().getSessionFactory().openSession();
@@ -84,8 +79,6 @@ public class UnitDAO extends BaseDAO{
         unit.setUnitName(unitName);
         unit.setDescription(description);
         unit.setPhoto(photo);
-        unit.setParent(parent);
-        unit.setSubunits(subUnits);
         tx.commit();
         session.close();
     }

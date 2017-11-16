@@ -1,17 +1,16 @@
 package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
+import org.kyantra.beans.DeviceBean;
+import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.ThingDAO;
+import org.kyantra.dao.UnitDAO;
+import org.kyantra.interfaces.Secure;
+import org.kyantra.interfaces.Session;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.security.Principal;
 import java.util.List;
@@ -47,15 +46,21 @@ public class ThingResource extends BaseResource {
     @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String update(@PathParam("id") Integer id, ThingBean bean){
-        ThingDAO.getInstance().update(id, bean.getName(), bean.getDescription(), bean.getDevices());
-        bean = ThingDAO.getInstance().get(bean.getId());
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
+    public String update(@PathParam("id") Integer id,
+                         @FormParam("name") String name,
+                         @FormParam("description") String description,
+                         @FormParam("ip") String ip){
+        //TODO: create/update will only add/edit current entity values and not its parent/children attributes
+        ThingDAO.getInstance().update(id, name, description, ip);
+        ThingBean bean = ThingDAO.getInstance().get(id);
         return gson.toJson(bean);
     }
 
     @DELETE
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
     public String delete(@PathParam("id") Integer id){
         try {
             ThingDAO.getInstance().delete(id);
@@ -67,14 +72,25 @@ public class ThingResource extends BaseResource {
     }
 
     @POST
+    @Session
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON) //unit_id
-    public String create(ThingBean bean){
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
+    public String create(@FormParam("name") String name,
+                         @FormParam("description") String description,
+                         @FormParam("ip") String ip,
+                         @FormParam("parentUnitId") Integer parentUnitId){
         try {
-            String s = "Found something";
-            System.out.println(gson.toJson(bean));
-            ThingBean thingBean = ThingDAO.getInstance().add(bean, bean.getParentUnit());
+            String s = "Create thing";
+            //System.out.println(gson.toJson(bean));
+            ThingBean thing = new ThingBean();
+            thing.setName(name);
+            thing.setDescription(description);
+            thing.setIp(ip);
+            thing.setParentUnit(UnitDAO.getInstance().get(parentUnitId));
+
+            ThingBean thingBean = ThingDAO.getInstance().add(thing);
             return gson.toJson(thingBean);
 
         }catch (Throwable t){

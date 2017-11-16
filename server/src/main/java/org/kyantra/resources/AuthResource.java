@@ -68,6 +68,4 @@ public class AuthResource extends BaseResource {
         Map<String,String> map = new HashMap<>();
         return gson.toJson(map); //suggests failed authentication.
     }
-
-
 }

@@ -17,10 +17,9 @@ public class DeviceAttributeDAO extends BaseDAO {
     static DeviceAttributeDAO instance = new DeviceAttributeDAO();
     public static DeviceAttributeDAO getInstance(){ return instance; }
 
-    public DeviceAttributeBean add(DeviceAttributeBean bean, UnitBean currentUnit){
+    public DeviceAttributeBean add(DeviceAttributeBean bean){
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
-        bean.setOwnerUnit(currentUnit);
         session.save(bean);
         session.getTransaction().commit();
         session.close();

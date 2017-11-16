@@ -16,10 +16,9 @@ public class ThingDAO extends BaseDAO{
     static ThingDAO instance = new ThingDAO();
     public static ThingDAO getInstance(){ return instance; }
 
-    public ThingBean add(ThingBean bean, UnitBean currentUnit){
+    public ThingBean add(ThingBean bean){
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
-        bean.setParentUnit(currentUnit);
         session.save(bean);
         session.getTransaction().commit();
         session.close();
@@ -73,7 +72,7 @@ public class ThingDAO extends BaseDAO{
         session.close();
     }
 
-    public void update(int id, String name, String description, List<DeviceBean> devices){
+    public void update(int id, String name, String description, String ip){
         if(id <=0)
             return;
         Session session = getService().getSessionFactory().openSession();
@@ -81,7 +80,7 @@ public class ThingDAO extends BaseDAO{
         ThingBean thing = session.get(ThingBean.class, id);
         thing.setName(name);
         thing.setDescription(description);
-        thing.setDevices(devices);
+        thing.setIp(ip);
         tx.commit();
         session.close();
     }

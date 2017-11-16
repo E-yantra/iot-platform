@@ -78,7 +78,7 @@ public class RightsDAO {
         Transaction tx = session.beginTransaction();
         RightsBean bean = session.get(RightsBean.class, id);
         bean.setUnit(unit);
-        bean.setRole(RoleEnum.ALL);
+        bean.setRole(role);
         tx.commit();
         session.close();
     }

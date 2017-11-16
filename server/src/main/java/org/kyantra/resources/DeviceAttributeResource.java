@@ -2,8 +2,13 @@ package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
 import org.kyantra.beans.DeviceAttributeBean;
+import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.dao.DeviceAttributeDAO;
+import org.kyantra.dao.DeviceDAO;
+import org.kyantra.dao.UnitDAO;
+import org.kyantra.interfaces.Secure;
+import org.kyantra.interfaces.Session;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -26,15 +31,22 @@ public class DeviceAttributeResource extends BaseResource {
     @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String update(@PathParam("id") Integer id, DeviceAttributeBean bean){
-        DeviceAttributeDAO.getInstance().update(id, bean.getName(), bean.getType(), bean.getDef());
-        bean = DeviceAttributeDAO.getInstance().get(bean.getId());
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
+    @Session
+    public String update(@PathParam("id") Integer id,
+                         @FormParam("name") String name,
+                         @FormParam("type") String type,
+                         @FormParam("def") String def){
+        DeviceAttributeDAO.getInstance().update(id, name, type,def);
+        DeviceAttributeBean bean = DeviceAttributeDAO.getInstance().get(id);
         return gson.toJson(bean);
     }
 
     @DELETE
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
+    @Session
     public String delete(@PathParam("id") Integer id){
         try {
             DeviceAttributeDAO.getInstance().delete(id);
@@ -49,11 +61,25 @@ public class DeviceAttributeResource extends BaseResource {
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String create(DeviceAttributeBean bean){
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
+    @Session
+    public String create(@FormParam("name") String name,
+                         @FormParam("type") String type,
+                         @FormParam("def") String def,
+                         @FormParam("parentDeviceId") Integer parentDeviceId,
+                         @FormParam("ownerUnitId") Integer ownerUnitId){
         try {
             String s = "Found something";
-            System.out.println(gson.toJson(bean));
-            DeviceAttributeBean deviceAttributeBean = DeviceAttributeDAO.getInstance().add(bean,bean.getOwnerUnit().);
+            //System.out.println(gson.toJson(bean));
+            DeviceAttributeBean deviceAttribute = new DeviceAttributeBean();
+            deviceAttribute.setName(name);
+            deviceAttribute.setType(type);
+            deviceAttribute.setDef(def);
+            //TODO
+            //deviceAttribute.setParent(DeviceDAO.getInstance().get(parentDeviceId));
+            deviceAttribute.setOwnerUnit(UnitDAO.getInstance().get(ownerUnitId));
+
+            DeviceAttributeBean deviceAttributeBean = DeviceAttributeDAO.getInstance().add(deviceAttribute);
             return gson.toJson(deviceAttributeBean);
 
         }catch (Throwable t){
