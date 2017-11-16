@@ -49,11 +49,11 @@ public class DeviceAttributeResource extends BaseResource {
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String create(DeviceAttributeBean bean, UnitBean currentUnit){
+    public String create(DeviceAttributeBean bean){
         try {
             String s = "Found something";
             System.out.println(gson.toJson(bean));
-            DeviceAttributeBean deviceAttributeBean = DeviceAttributeDAO.getInstance().add(bean,currentUnit);
+            DeviceAttributeBean deviceAttributeBean = DeviceAttributeDAO.getInstance().add(bean,bean.getOwnerUnit().);
             return gson.toJson(deviceAttributeBean);
 
         }catch (Throwable t){
