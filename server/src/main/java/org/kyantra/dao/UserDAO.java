@@ -1,9 +1,12 @@
 package org.kyantra.dao;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.kyantra.beans.RightsBean;
 import org.kyantra.beans.RoleEnum;
+import org.kyantra.beans.SessionBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.services.HibernateService;
@@ -93,13 +96,22 @@ public class UserDAO {
         return null;
     }
 
-    //TODO
+
     public UserBean getByEmail(String email) {
-        return null;
+        Session session = mService.getSessionFactory().openSession();
+        Criteria criteria = session.createCriteria(UserBean.class);
+        UserBean userBean = (UserBean) criteria.add(Restrictions.eq("email", email)).uniqueResult();
+        session.close();
+        return userBean;
+
     }
 
-    //TODO get from SessionBean
     public UserBean getByToken(String token) {
-        return null;
+        Session session = mService.getSessionFactory().openSession();
+        Criteria criteria = session.createCriteria(SessionBean.class);
+        SessionBean sessionBean = (SessionBean) criteria.add(Restrictions.eq("token", token)).uniqueResult();
+        sessionBean.getUser();
+        session.close();
+        return sessionBean.getUser();
     }
 }

@@ -1,6 +1,7 @@
 package org.kyantra.resources;
 
 import org.glassfish.jersey.server.mvc.Template;
+import org.kyantra.interfaces.Session;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -10,11 +11,22 @@ import java.util.Map;
 @Path("/")
 public class HomeResource extends BaseResource {
 
+
+    @GET
+    @Path("/session/status")
+    @Session
+    public String setSession(){
+        return gson.toJson(getSecurityContext().getUserPrincipal());
+    }
+
+
     @GET
     @Path("/")
     @Template(name = "/index.ftl")
+    @Session
     public Map<String, Object> index() {
         final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("user",getSecurityContext().getUserPrincipal());
         return map;
     }
 

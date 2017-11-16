@@ -2,11 +2,14 @@
 <body>
 <#include "common/navbar.ftl"/>
 <div class="container-fluid" id="container-main">
-<#include "common/sidenavbar.ftl"/>
+<#if user??>
+    <#include "common/sidenavbar.ftl"/>
+</#if>
 <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
 <#if user??>
+
 <#else>
-    <#include "auth/login.ftl"/>
+
 </#if>
 </main>
 </div>
