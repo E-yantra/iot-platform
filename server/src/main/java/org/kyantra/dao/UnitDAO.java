@@ -2,17 +2,25 @@ package org.kyantra.dao;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
+import org.kyantra.beans.UserBean;
 
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class UnitDAO extends BaseDAO{
     static UnitDAO instance = new UnitDAO();
     public static UnitDAO getInstance(){ return instance; }
 
-
+    /**
+     * Returns list of all units, page by page
+     * @param page
+     * @param limit
+     * @return
+     */
     public List<UnitBean> list(int page, int limit){
         Session session = getService().getSessionFactory().openSession();
         String ql = "from UnitBean";
@@ -24,11 +32,31 @@ public class UnitDAO extends BaseDAO{
         return list;
     }
 
-    public UnitBean add(UnitBean bean){
+    /**
+     * Returns list of all units under a prent Unit
+     * @param parentUnit
+     * @param page
+     * @param limit
+     * @return
+     */
+    public List<UnitBean> list(UnitBean parentUnit, int page, int limit){
+        //TODO: verify if this is correct interpretation
+        List<UnitBean> list = parentUnit.getSubunits().subList(page*limit,limit);
+        //session.close();
+        return list;
+    }
+
+    //returns child unit
+    public UnitBean add(UnitBean currentUnit, UnitBean childUnit){
         Session session = getService().getSessionFactory().openSession();
-        session.save(bean);
+
+        //root unit will not have any parent unit
+        if (currentUnit!=null){
+            childUnit.setParent(currentUnit);
+        }
+        session.save(childUnit);
         session.close();
-        return bean;
+        return childUnit;
     }
 
     public UnitBean get(Integer id) {
@@ -58,6 +86,24 @@ public class UnitDAO extends BaseDAO{
         unit.setPhoto(photo);
         unit.setParent(parent);
         unit.setSubunits(subUnits);
+        tx.commit();
+        session.close();
+    }
+
+    public void addUsers(int id, Set<UserBean> users){
+        if(id <=0)
+            return;
+
+        Session session = getService().getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        UnitBean unit = session.get(UnitBean.class, id);
+
+        //TODO: assign default rights of all suers as ALL
+//        for (int index=0; index < users.size(); index++){
+//
+//        }
+
+        unit.setUsers(users);
         tx.commit();
         session.close();
     }

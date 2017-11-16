@@ -17,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Lenovo on 12-11-2017.
@@ -75,16 +76,26 @@ public class UnitResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
-    public String create(UnitBean unitBean){
+    public String create(UnitBean currentUnit, UnitBean childUnit){
         try {
             String s = "Found something";
-            System.out.println(gson.toJson(unitBean));
-            UnitBean unit = UnitDAO.getInstance().add(unitBean);
+            System.out.println(gson.toJson(childUnit));
+            UnitBean unit = UnitDAO.getInstance().add(currentUnit, childUnit);
             return gson.toJson(unit);
 
         }catch (Throwable t){
             t.printStackTrace();
         }
         return "{\"success\":false}";
+    }
+
+    @POST
+    @Path("addusers/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String addUsers(@PathParam("id") Integer id, Set<UserBean> users){
+        UnitDAO.getInstance().addUsers(id,users);
+        UnitBean unitBean = UnitDAO.getInstance().get(id);
+        return gson.toJson(unitBean);
     }
 }

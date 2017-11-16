@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/client/client.iml" filepath="$PROJECT_DIR$/.idea/modules/client/client.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/helper.iml" filepath="$PROJECT_DIR$/helper.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/iot-platform.iml" filepath="$PROJECT_DIR$/.idea/modules/iot-platform.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/server.iml" filepath="$PROJECT_DIR$/.idea/modules/server/server.iml" />
     </modules>

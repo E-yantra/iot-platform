@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * A unit is a business unit. A unit as more units as its children or things.
+ * A unit is a business unit. A unit has more units as its children or things.
  * For example College X is a unit which will have Farm 1 and Farm 2 as its sub units.
  */
 @Entity
@@ -46,6 +46,9 @@ public class UnitBean {
 
     @OneToMany
     private List<UnitBean> subunits;
+
+    @OneToMany
+    private List<ThingBean> things;
 
     //A unit may have many users and a user may have many units
     @ManyToMany(cascade = CascadeType.ALL)
@@ -106,6 +109,14 @@ public class UnitBean {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public List<ThingBean> getThings() {
+        return things;
+    }
+
+    public void setThings(List<ThingBean> things) {
+        this.things = things;
     }
 
     public static UnitBean valueOf(String value){

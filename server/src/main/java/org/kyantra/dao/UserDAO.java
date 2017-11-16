@@ -28,8 +28,13 @@ public class UserDAO {
         mService = HibernateService.getInstance();
     }
 
+    /**
+     * Returns list of all users, page by page
+     * @param page
+     * @param limit
+     * @return
+     */
     public List<UserBean> list(int page, int limit){
-
         try {
             Session session = mService.getSessionFactory().openSession();
             String ql = "from UserBean";
@@ -86,14 +91,22 @@ public class UserDAO {
         session.close();
     }
 
-    //TODO complete the method
+    //TODO complete the method -Done
     public UserBean addRights(UserBean userBean, UnitBean unitBean, RoleEnum role){
         RightsBean rightsBean = new RightsBean();
         rightsBean.setUnit(unitBean);
         rightsBean.setRole(role);
         userBean.getRights().add(rightsBean);
+
         //save the object
-        return null;
+        Session session = mService.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        session.save(userBean);
+        session.save(rightsBean); //TODO check if required
+
+        tx.commit();
+        session.close();
+        return userBean;
     }
 
 
@@ -113,5 +126,19 @@ public class UserDAO {
         sessionBean.getUser();
         session.close();
         return sessionBean.getUser();
+    }
+
+
+
+    public List<UnitBean> getUserUnits(UserBean user){
+        Session session = mService.getSessionFactory().openSession();
+        //TODO: check query
+        Query query = session.createQuery
+                ("Select ub.* from UnitBean as ub join UserBean as ub where user_id = :userId");
+        query.setParameter("userId",user.getId());
+        List<UnitBean> units = query.getResultList();
+        session.close();
+
+        return units;
     }
 }

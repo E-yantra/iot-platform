@@ -74,7 +74,7 @@ public class ThingResource extends BaseResource {
         try {
             String s = "Found something";
             System.out.println(gson.toJson(bean));
-            ThingBean thingBean = ThingDAO.getInstance().add(bean);
+            ThingBean thingBean = ThingDAO.getInstance().add(bean, bean.getParentUnit());
             return gson.toJson(thingBean);
 
         }catch (Throwable t){

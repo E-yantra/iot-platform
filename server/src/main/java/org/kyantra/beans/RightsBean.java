@@ -27,6 +27,8 @@ public class RightsBean {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
+    // TODO: Should this be UserBean?? Read/write/All right permissions are for the user
+    // there is already table Unit_users for association of user to units.
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "unit_id")
     @Expose
