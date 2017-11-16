@@ -22,6 +22,7 @@ public class SessionBean {
     Integer id;
 
     @Column(name = "token" ,unique = true)
+    @Expose
     String token;
 
     @OneToOne(cascade = CascadeType.ALL)

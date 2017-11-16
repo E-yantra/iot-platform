@@ -14,6 +14,9 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.mvc.freemarker.FreemarkerMvcFeature;
 import org.kyantra.filters.AuthorizationFilter;
+import org.kyantra.filters.SessionFilter;
+import org.kyantra.resources.AppExceptionMapper;
+import org.kyantra.resources.AuthResource;
 import org.kyantra.services.HibernateService;
 
 import java.net.URI;
@@ -36,7 +39,10 @@ public class Main {
         rc.register(io.swagger.jaxrs.listing.ApiListingResource.class);
         rc.register(io.swagger.jaxrs.listing.SwaggerSerializers.class);
         rc.register(JacksonFeature.class);
+        rc.register(SessionFilter.class);
         rc.register(AuthorizationFilter.class);
+        rc.register(AppExceptionMapper.class);
+        rc.register(AuthResource.class);
 
         ClassLoader loader = Main.class.getClassLoader();
         CLStaticHttpHandler docsHandler = new CLStaticHttpHandler(loader, "swagger-ui/");

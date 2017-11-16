@@ -2,7 +2,6 @@ package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
 import org.kyantra.beans.ThingBean;
-import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.ThingDAO;
 
@@ -71,11 +70,11 @@ public class ThingResource extends BaseResource {
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON) //unit_id
-    public String create(ThingBean bean, UnitBean currentUnit){
+    public String create(ThingBean bean){
         try {
             String s = "Found something";
             System.out.println(gson.toJson(bean));
-            ThingBean thingBean = ThingDAO.getInstance().add(bean, currentUnit);
+            ThingBean thingBean = ThingDAO.getInstance().add(bean, bean.getParentUnit());
             return gson.toJson(thingBean);
 
         }catch (Throwable t){

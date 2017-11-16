@@ -2,10 +2,15 @@ package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
 import org.kyantra.beans.DeviceBean;
-import org.kyantra.beans.UnitBean;
 import org.kyantra.dao.DeviceDAO;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -49,11 +54,11 @@ public class DeviceResource extends BaseResource {
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String create(DeviceBean bean, UnitBean currentUnit){ //thing_id
+    public String create(DeviceBean bean){ //thing_id
         try {
             String s = "Found something";
             System.out.println(gson.toJson(bean));
-            DeviceBean deviceBean = DeviceDAO.getInstance().add(bean, currentUnit);
+            DeviceBean deviceBean = DeviceDAO.getInstance().add(bean, bean.getOwnerUnit());
             return gson.toJson(deviceBean);
 
         }catch (Throwable t){

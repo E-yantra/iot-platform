@@ -1,9 +1,12 @@
 package org.kyantra.dao;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.kyantra.beans.RightsBean;
 import org.kyantra.beans.RoleEnum;
+import org.kyantra.beans.SessionBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.services.HibernateService;
@@ -25,6 +28,12 @@ public class UserDAO {
         mService = HibernateService.getInstance();
     }
 
+    /**
+     * Returns list of all users, page by page
+     * @param page
+     * @param limit
+     * @return
+     */
     public List<UserBean> list(int page, int limit){
         try {
             Session session = mService.getSessionFactory().openSession();
@@ -100,37 +109,26 @@ public class UserDAO {
         return userBean;
     }
 
-    //TODO -Done
+
     public UserBean getByEmail(String email) {
         Session session = mService.getSessionFactory().openSession();
-        Query query = session.createQuery("from UserBean where email = :emailId"); //TODO: use LIKE '%%'?
-        query.setParameter("emailId",email);
-        List<UserBean> users = query.getResultList();
+        Criteria criteria = session.createCriteria(UserBean.class);
+        UserBean userBean = (UserBean) criteria.add(Restrictions.eq("email", email)).uniqueResult();
         session.close();
+        return userBean;
 
-        if (users.size()>0){
-            //user found
-            return users.get(0);
-        }
-
-        return null;
     }
 
-    //TODO get from SessionBean -Done
     public UserBean getByToken(String token) {
         Session session = mService.getSessionFactory().openSession();
-        Query query = session.createQuery("Select ub.* from SessionBean as sb join UserBean as ub where sb.token = :sessionToken");
-        query.setParameter("sessionToken",token);
-        List<UserBean> users = query.getResultList();
+        Criteria criteria = session.createCriteria(SessionBean.class);
+        SessionBean sessionBean = (SessionBean) criteria.add(Restrictions.eq("token", token)).uniqueResult();
+        sessionBean.getUser();
         session.close();
-
-        if (users.size()>0){
-            //user found
-            return users.get(0);
-        }
-
-        return null;
+        return sessionBean.getUser();
     }
+
+
 
     public List<UnitBean> getUserUnits(UserBean user){
         Session session = mService.getSessionFactory().openSession();

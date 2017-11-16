@@ -19,13 +19,19 @@ public class ThingDAO extends BaseDAO{
     public ThingBean add(ThingBean bean, UnitBean currentUnit){
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
-        bean.setOwnerUnit(currentUnit);
+        bean.setParentUnit(currentUnit);
         session.save(bean);
         session.getTransaction().commit();
         session.close();
         return bean;
     }
 
+    /**
+     * Returns list of all things, page by page
+     * @param page
+     * @param limit
+     * @return
+     */
     public List<ThingBean> list(int page, int limit){
         Session session = getService().getSessionFactory().openSession();
         String ql = "from ThingBean";
@@ -34,6 +40,20 @@ public class ThingDAO extends BaseDAO{
         query.setMaxResults(limit);
         List<ThingBean> list = query.getResultList();
         session.close();
+        return list;
+    }
+
+    /**
+     * Returns list of all things under a parent Unit
+     * @param parentUnit
+     * @param page
+     * @param limit
+     * @return
+     */
+    public List<ThingBean> list(UnitBean parentUnit, int page, int limit){
+        //TODO: verify if this is correct interpretation
+        List<ThingBean> list = parentUnit.getThings().subList(page*limit,limit);
+        //session.close();
         return list;
     }
 

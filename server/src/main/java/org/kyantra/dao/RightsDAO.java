@@ -35,7 +35,12 @@ public class RightsDAO {
     }
 
 
-
+    /**
+     * Returns list of all rights, page by page
+     * @param page
+     * @param limit
+     * @return
+     */
     public List<RightsBean> list(int page, int limit){
         Session session = mService.getSessionFactory().openSession();
         String ql = "from RightsBean";

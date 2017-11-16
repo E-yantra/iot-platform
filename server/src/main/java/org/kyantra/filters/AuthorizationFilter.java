@@ -1,9 +1,8 @@
 package org.kyantra.filters;
 
+import org.kyantra.beans.RightsBean;
 import org.kyantra.beans.RoleEnum;
-import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
-import org.kyantra.dao.UnitDAO;
 import org.kyantra.dao.UserDAO;
 import org.kyantra.interfaces.Secure;
 
@@ -13,6 +12,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -24,6 +24,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Secure
 @Provider
@@ -42,38 +44,28 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         String authorizationHeader =
                 requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
+        String authorizationCookie = requestContext.getCookies().getOrDefault("authorization",new Cookie("token","")).getValue().toString();
+
         // Validate the Authorization header
-        if (!isTokenBasedAuthentication(authorizationHeader)) {
+        if (!isTokenBasedAuthentication(authorizationHeader) && !isTokenBasedAuthentication(authorizationCookie)) {
             abortWithUnauthorized(requestContext);
             return;
         }
 
-        // Extract the token from the Authorization header
-        /*
-        String token = authorizationHeader
-                .substring(AUTHENTICATION_SCHEME.length()).trim(); */
-        String token = "dummyToken";
         try {
-
+            String token = authorizationHeader==null?authorizationCookie:authorizationHeader;
             validateToken(token);
 
             UserBean userBean = UserDAO.getInstance().getByToken(token);
-            // /unit/create
             Class<?> resourceClass = resourceInfo.getResourceClass(); //UnitResource.class
             List<RoleEnum> classRoles = extractRoles(resourceClass);
-
-
             Method resourceMethod = resourceInfo.getResourceMethod();
             List<RoleEnum> methodRoles = extractRoles(resourceMethod);
 
-            //Which url parameter represents the Unit id. it can be id, parent_id etc.
-            String subjectField  = extractSubjectField(resourceMethod);
-            String subjectType = extractSubjectType(resourceMethod);
-
             if (methodRoles.isEmpty()) {
-                checkPermissions(userBean,classRoles,null,requestContext);
+                checkPermissions(userBean,classRoles,requestContext);
             } else {
-                checkPermissions(userBean,methodRoles,subjectField,requestContext);
+                checkPermissions(userBean,methodRoles,requestContext);
             }
 
             final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
@@ -81,7 +73,6 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
                 @Override
                 public Principal getUserPrincipal() {
-
                     return userBean;
                 }
 
@@ -106,50 +97,28 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         }
     }
 
-    //TODO
-    private String extractSubjectType(Method resourceMethod) {
-        if (resourceMethod == null) {
-            return null;
-        } else {
-            Secure secured = resourceMethod.getAnnotation(Secure.class);
-            return secured.subjectType();
-        }
-    }
+    private void checkPermissions(UserBean userBean, List<RoleEnum> expectedRoles, ContainerRequestContext requestContent) throws Exception{
 
-    //TODO actually fetch user roles by loo
-    private void checkPermissions(UserBean userBean, List<RoleEnum> expectedRoles, String subjectField, ContainerRequestContext requestContent) throws Exception{
-
-        /**
-         * 1. Get the all the units for which user has permissions provided in expectedRoles
-         * 2. Get all the child units for those units.
-         * 3. subjectType = unit, extract subject_field and check if it is part of union of 1 & 2.
-         *  (OR just look at ownerunit_id )
-         * 4. subjectType = thing extract subject_field, expand union of 1 and 2 to get all their things. check if subject_id is part of it.
-         * 5. subjectType = device ....
-         * 6. subjectType = deviceAttributes
-         */
-
-        //
-        List<UnitBean> userUnits = UserDAO.getInstance().getUserUnits(userBean);
-        //TODO in progress
-
-        if(expectedRoles.contains(RoleEnum.ALL)){
-            throw new Exception();
+        if(!expectedRoles.isEmpty()) {
+            Set<RoleEnum> roles = userBean.getRights().stream().map(RightsBean::getRole).collect(Collectors.toSet());
+            for(RoleEnum r:roles){
+                if(expectedRoles.contains(r)){
+                    return;
+                }
+            }
+        }else{
+            return;
         }
 
-        // User X is given some Right on Unit Y.
-        // Unit Y has children Unit Z and Unit M. X has same permissions on Z and M.
+        //TODO Remove this later
+        //throw new Exception("Not possible");
+
     }
 
     private boolean isTokenBasedAuthentication(String authorizationHeader) {
 
-        // Check if the Authorization header is valid
-        // It must not be null and must be prefixed with "Bearer" plus a whitespace
-        // The authentication scheme comparison must be case-insensitive
-        /*
-        return authorizationHeader != null && authorizationHeader.toLowerCase()
-                .startsWith(AUTHENTICATION_SCHEME.toLowerCase() + " ");*/
-        return true;
+        return authorizationHeader != null && !authorizationHeader.toLowerCase().isEmpty();
+
     }
 
     private void abortWithUnauthorized(ContainerRequestContext requestContext) {
@@ -164,19 +133,9 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     }
 
     private void validateToken(String token) throws Exception {
-        // Check if the token was issued by the server and if it's not expired
-        // Throw an Exception if the token is invalid
-
-        //TODO find the SessionBean with this token and find the user. - DONE
-        /**
-         * Get session bean from db for that token
-         * else throw new Exception();
-         */
-
-        UserBean userBean = UserDAO.getInstance().getByToken(token);
-
-        if (userBean == null){
-            throw new Exception();
+        UserBean user = UserDAO.getInstance().getByToken(token);
+        if(user==null){
+            throw new Exception("Unable to authenticate");
         }
     }
 
