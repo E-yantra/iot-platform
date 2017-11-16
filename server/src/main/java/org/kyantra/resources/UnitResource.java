@@ -76,11 +76,11 @@ public class UnitResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
-    public String create(UnitBean currentUnit, UnitBean childUnit){
+    public String create(UnitBean childUnit){
         try {
             String s = "Found something";
             System.out.println(gson.toJson(childUnit));
-            UnitBean unit = UnitDAO.getInstance().add(currentUnit, childUnit);
+            UnitBean unit = UnitDAO.getInstance().add(childUnit.getParent(), childUnit);
             return gson.toJson(unit);
 
         }catch (Throwable t){
