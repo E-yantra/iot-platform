@@ -1,7 +1,9 @@
 package org.kyantra.filters;
 
 import org.kyantra.beans.RoleEnum;
+import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
+import org.kyantra.dao.UnitDAO;
 import org.kyantra.dao.UserDAO;
 import org.kyantra.interfaces.Secure;
 
@@ -106,7 +108,12 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
     //TODO
     private String extractSubjectType(Method resourceMethod) {
-        return null;
+        if (resourceMethod == null) {
+            return null;
+        } else {
+            Secure secured = resourceMethod.getAnnotation(Secure.class);
+            return secured.subjectType();
+        }
     }
 
     //TODO actually fetch user roles by loo
@@ -121,6 +128,11 @@ public class AuthorizationFilter implements ContainerRequestFilter {
          * 5. subjectType = device ....
          * 6. subjectType = deviceAttributes
          */
+
+        //
+        List<UnitBean> userUnits = UserDAO.getInstance().getUserUnits(userBean);
+        //TODO in progress
+
         if(expectedRoles.contains(RoleEnum.ALL)){
             throw new Exception();
         }
@@ -138,7 +150,6 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         return authorizationHeader != null && authorizationHeader.toLowerCase()
                 .startsWith(AUTHENTICATION_SCHEME.toLowerCase() + " ");*/
         return true;
-
     }
 
     private void abortWithUnauthorized(ContainerRequestContext requestContext) {
@@ -156,11 +167,17 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         // Check if the token was issued by the server and if it's not expired
         // Throw an Exception if the token is invalid
 
-        //TODO find the SessionBean with this token and find the user.
+        //TODO find the SessionBean with this token and find the user. - DONE
         /**
          * Get session bean from db for that token
          * else throw new Exception();
          */
+
+        UserBean userBean = UserDAO.getInstance().getByToken(token);
+
+        if (userBean == null){
+            throw new Exception();
+        }
     }
 
     // Extract the roles from the annotated element

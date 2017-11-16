@@ -59,4 +59,12 @@ public class DeviceAttributeBean {
     public void setDef(String def) {
         this.def = def;
     }
+
+    public UnitBean getOwnerUnit() {
+        return ownerUnit;
+    }
+
+    public void setOwnerUnit(UnitBean ownerUnit) {
+        this.ownerUnit = ownerUnit;
+    }
 }

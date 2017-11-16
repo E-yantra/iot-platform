@@ -16,9 +16,10 @@ public class DeviceDAO extends BaseDAO {
     static DeviceDAO instance = new DeviceDAO();
     public static DeviceDAO getInstance(){ return instance; }
 
-    public DeviceBean add(DeviceBean bean){
+    public DeviceBean add(DeviceBean bean, UnitBean currentUnit){
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
+        bean.setOwnerUnit(currentUnit);
         session.save(bean);
         session.getTransaction().commit();
         session.close();
@@ -27,7 +28,7 @@ public class DeviceDAO extends BaseDAO {
 
     public List<DeviceBean> list(UnitBean unitBean,  int page, int limit){
         Session session = mService.getSessionFactory().openSession();
-        String ql = "from DeviceBean where uni";
+        String ql = "from DeviceBean";
         Query query = session.createQuery(ql);
         query.setFirstResult(page*limit);
         query.setMaxResults(limit);
