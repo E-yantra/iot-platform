@@ -30,7 +30,7 @@ public class ThingBean {
     private List<DeviceBean> devices;
 
     @OneToOne
-    private UnitBean ownerUnit;
+    private UnitBean parentUnit;
 
     public String getIp() {
         return ip;
@@ -72,11 +72,11 @@ public class ThingBean {
         this.devices = devices;
     }
 
-    public UnitBean getOwnerUnit() {
-        return ownerUnit;
+    public UnitBean getParentUnit() {
+        return parentUnit;
     }
 
-    public void setOwnerUnit(UnitBean ownerUnit) {
-        this.ownerUnit = ownerUnit;
+    public void setParentUnit(UnitBean parentUnit) {
+        this.parentUnit = parentUnit;
     }
 }

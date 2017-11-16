@@ -2,6 +2,7 @@ package org.kyantra.dao;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 
@@ -14,7 +15,12 @@ public class UnitDAO extends BaseDAO{
     static UnitDAO instance = new UnitDAO();
     public static UnitDAO getInstance(){ return instance; }
 
-
+    /**
+     * Returns list of all units, page by page
+     * @param page
+     * @param limit
+     * @return
+     */
     public List<UnitBean> list(int page, int limit){
         Session session = getService().getSessionFactory().openSession();
         String ql = "from UnitBean";
@@ -23,6 +29,20 @@ public class UnitDAO extends BaseDAO{
         query.setMaxResults(limit);
         List<UnitBean> list = query.getResultList();
         session.close();
+        return list;
+    }
+
+    /**
+     * Returns list of all units under a prent Unit
+     * @param parentUnit
+     * @param page
+     * @param limit
+     * @return
+     */
+    public List<UnitBean> list(UnitBean parentUnit, int page, int limit){
+        //TODO: verify if this is correct interpretation
+        List<UnitBean> list = parentUnit.getSubunits().subList(page*limit,limit);
+        //session.close();
         return list;
     }
 

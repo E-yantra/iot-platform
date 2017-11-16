@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kyantra.beans.DeviceAttributeBean;
 import org.kyantra.beans.DeviceBean;
+import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 
 import javax.persistence.Query;
@@ -26,7 +27,13 @@ public class DeviceDAO extends BaseDAO {
         return bean;
     }
 
-    public List<DeviceBean> list(UnitBean unitBean,  int page, int limit){
+    /**
+     * Returns list of all devices, page by page
+     * @param page
+     * @param limit
+     * @return
+     */
+    public List<DeviceBean> list(int page, int limit){
         Session session = mService.getSessionFactory().openSession();
         String ql = "from DeviceBean";
         Query query = session.createQuery(ql);
@@ -34,6 +41,20 @@ public class DeviceDAO extends BaseDAO {
         query.setMaxResults(limit);
         List<DeviceBean> list = query.getResultList();
         session.close();
+        return list;
+    }
+
+    /**
+     * Returns list of all devices under parent thing.
+     * @param parentThing
+     * @param page
+     * @param limit
+     * @return
+     */
+    public List<DeviceBean> list(ThingBean parentThing, int page, int limit){
+        //TODO: verify if this is correct interpretation
+        List<DeviceBean> list = parentThing.getDevices().subList(page*limit,limit);
+        //session.close();
         return list;
     }
 

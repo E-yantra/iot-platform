@@ -25,6 +25,12 @@ public class UserDAO {
         mService = HibernateService.getInstance();
     }
 
+    /**
+     * Returns list of all users, page by page
+     * @param page
+     * @param limit
+     * @return
+     */
     public List<UserBean> list(int page, int limit){
         try {
             Session session = mService.getSessionFactory().openSession();
