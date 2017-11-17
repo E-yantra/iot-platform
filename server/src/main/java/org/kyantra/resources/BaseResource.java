@@ -14,9 +14,7 @@ public class BaseResource {
 
     static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     static HibernateService service;
-
-
-
+    
 
     @Context
     SecurityContext sc;

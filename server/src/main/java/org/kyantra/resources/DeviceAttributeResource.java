@@ -74,6 +74,7 @@ public class DeviceAttributeResource extends BaseResource {
                          @FormParam("parentDeviceId") Integer parentDeviceId,
                          @FormParam("ownerUnitId") Integer ownerUnitId){
         try {
+
             String s = "Found something";
             DeviceAttributeBean deviceAttribute = new DeviceAttributeBean();
             deviceAttribute.setName(name);
