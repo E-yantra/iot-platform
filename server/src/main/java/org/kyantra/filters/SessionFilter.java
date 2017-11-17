@@ -5,6 +5,7 @@ import org.kyantra.dao.UserDAO;
 import org.kyantra.interfaces.Session;
 
 import javax.annotation.Priority;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -12,6 +13,7 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
@@ -29,6 +31,8 @@ public class SessionFilter implements ContainerRequestFilter {
 
     @Context
     ResourceInfo resourceInfo;
+    @Context
+    HttpServletRequest request;
 
     private boolean isSessionNeeded(AnnotatedElement annotatedElement) {
         if (annotatedElement == null) {
@@ -47,52 +51,60 @@ public class SessionFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) throws IOException {
 
         Method resourceMethod = resourceInfo.getResourceMethod();
+
+
         if(!isSessionNeeded(resourceMethod)){
             return;
         }
 
-        String authorizationCookie = requestContext.getCookies().getOrDefault("authorization", new Cookie("token", "")).getValue();
-        if(!authorizationCookie.isEmpty()){
-            UserBean userBean = UserDAO.getInstance().getByToken(authorizationCookie);
-            final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
-            requestContext.setSecurityContext(new SecurityContext() {
 
-                @Override
-                public Principal getUserPrincipal() {
-                    return userBean;
-                }
 
-                @Override
-                public boolean isUserInRole(String role) {
-                    return false;
-                }
+        try {
+            String authorizationCookie = requestContext.getCookies().getOrDefault("authorization", new Cookie("authorization", "")).getValue();
+            if (!authorizationCookie.isEmpty()) {
+                UserBean userBean = UserDAO.getInstance().getByToken(authorizationCookie);
+                final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
+                requestContext.setSecurityContext(new SecurityContext() {
 
-                @Override
-                public boolean isSecure() {
-                    return currentSecurityContext.isSecure();
-                }
+                    @Override
+                    public Principal getUserPrincipal() {
+                        return userBean;
+                    }
 
-                @Override
-                public String getAuthenticationScheme() {
-                    return "cookie";
+                    @Override
+                    public boolean isUserInRole(String role) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isSecure() {
+                        return currentSecurityContext.isSecure();
+                    }
+
+                    @Override
+                    public String getAuthenticationScheme() {
+                        return "cookie";
+                    }
+                });
+                if (userBean == null) {
+                    try {
+                        throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization", "")).build());
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
-            });
-            if(userBean==null){
+            } else {
+
+
                 try {
-                    throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).build());
+                    throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization", "")).build());
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
+
             }
-        }else {
-
-
-            try {
-                throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).build());
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-
+        }catch (Throwable t){
+            t.printStackTrace();
         }
     }
 }
