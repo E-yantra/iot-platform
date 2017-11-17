@@ -105,7 +105,7 @@ public class UnitResource extends BaseResource {
     }
 
     @POST
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE})
     @Path("addusers/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

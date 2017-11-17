@@ -3,14 +3,19 @@ package org.kyantra.resources;
 import io.swagger.annotations.Api;
 import org.kyantra.beans.DeviceAttributeBean;
 import org.kyantra.beans.RoleEnum;
-import org.kyantra.beans.UnitBean;
 import org.kyantra.dao.DeviceAttributeDAO;
-import org.kyantra.dao.DeviceDAO;
 import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -70,13 +75,10 @@ public class DeviceAttributeResource extends BaseResource {
                          @FormParam("ownerUnitId") Integer ownerUnitId){
         try {
             String s = "Found something";
-            //System.out.println(gson.toJson(bean));
             DeviceAttributeBean deviceAttribute = new DeviceAttributeBean();
             deviceAttribute.setName(name);
             deviceAttribute.setType(type);
             deviceAttribute.setDef(def);
-            //TODO
-            //deviceAttribute.setParent(DeviceDAO.getInstance().get(parentDeviceId));
             deviceAttribute.setOwnerUnit(UnitDAO.getInstance().get(ownerUnitId));
 
             DeviceAttributeBean deviceAttributeBean = DeviceAttributeDAO.getInstance().add(deviceAttribute);
