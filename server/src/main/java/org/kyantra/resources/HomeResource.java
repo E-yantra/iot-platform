@@ -4,11 +4,13 @@ import org.glassfish.jersey.server.mvc.Template;
 import org.kyantra.beans.RightsBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
+import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Session;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.NewCookie;
@@ -163,6 +165,20 @@ public class HomeResource extends BaseResource {
 
     private void setCommonData(Map<String, Object> map){
         map.put("user",getSecurityContext().getUserPrincipal());
+    }
+
+
+    @GET
+    @Path("/units/get/{id}")
+    @Template(name = "/units/get.ftl")
+    @Session
+    public Map<String, Object> getUnit(@PathParam("id") Integer id) {
+        final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("active","unit");
+        UnitBean unit = UnitDAO.getInstance().get(id);
+        map.put("unit",unit);
+        setCommonData(map);
+        return map;
     }
 
 }

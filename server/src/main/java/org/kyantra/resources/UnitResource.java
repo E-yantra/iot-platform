@@ -1,18 +1,30 @@
 package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
+import org.kyantra.beans.RightsBean;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.UnitDAO;
+import org.kyantra.dao.UserDAO;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by Lenovo on 12-11-2017.
@@ -113,5 +125,33 @@ public class UnitResource extends BaseResource {
         UnitDAO.getInstance().addUsers(id,users);
         UnitBean unitBean = UnitDAO.getInstance().get(id);
         return gson.toJson(unitBean);
+    }
+
+    @GET
+    @Secure(roles= {RoleEnum.READ})
+    @Path("rights/{id}/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getUserRights(@PathParam("id") Integer unitId, @PathParam("userId") Integer userId){
+        UserBean userBean = UserDAO.getInstance().get(userId);
+        Set<RightsBean> rights = userBean.getRights();
+        //TODO Siddhesh
+        /**
+         * if the unitId is a child unit of some unit where user has rights
+         * then you need to recursively get those rights
+         * else userBean.getRights would be empty.
+         */
+        return gson.toJson(rights.stream().filter(r->r.getUnit().getId()==unitId).collect(Collectors.toSet()));
+    }
+
+    @GET
+    @Secure(roles = {RoleEnum.READ})
+    @Path("users/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAuthorizedUsers(@PathParam("id") Integer unitId){
+        UserBean currentUser = (UserBean) getSecurityContext().getUserPrincipal();
+        Set<UserBean> users = new HashSet<>();
+        users.add(currentUser);
+        return gson.toJson(users);
+
     }
 }
