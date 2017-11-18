@@ -3,6 +3,7 @@ package org.kyantra.filters;
 import org.kyantra.beans.RightsBean;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.UserBean;
+import org.kyantra.dao.RightsDAO;
 import org.kyantra.dao.UserDAO;
 import org.kyantra.interfaces.Secure;
 
@@ -100,7 +101,8 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     private void checkPermissions(UserBean userBean, List<RoleEnum> expectedRoles, ContainerRequestContext requestContent) throws Exception{
 
         if(!expectedRoles.isEmpty()) {
-            Set<RoleEnum> roles = userBean.getRights().stream().map(RightsBean::getRole).collect(Collectors.toSet());
+            Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUser(userBean);
+            Set<RoleEnum> roles = rights.stream().map(RightsBean::getRole).collect(Collectors.toSet());
             for(RoleEnum r:roles){
                 if(expectedRoles.contains(r)){
                     return;

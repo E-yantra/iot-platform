@@ -1,9 +1,9 @@
 package org.kyantra.resources;
 
 import org.glassfish.jersey.server.mvc.Template;
-import org.kyantra.beans.RightsBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
+import org.kyantra.dao.RightsDAO;
 import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Session;
 
@@ -20,7 +20,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Path("/")
 public class HomeResource extends BaseResource {
@@ -42,7 +41,8 @@ public class HomeResource extends BaseResource {
         final Map<String, Object> map = new HashMap<String, Object>();
         map.put("active","home");
         UserBean userBean = (UserBean) getSecurityContext().getUserPrincipal();
-        Set<UnitBean> unitBeanList = userBean.getRights().stream().map(RightsBean::getUnit).collect(Collectors.toSet());
+
+        Set<UnitBean> unitBeanList = RightsDAO.getInstance().getUnitsByUser(userBean);
         map.put("units",unitBeanList);
         map.put("gson",gson.toJson(unitBeanList));
         setCommonData(map);

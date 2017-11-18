@@ -1,9 +1,9 @@
-<#include "../common/header.ftl">
+<#include "./common/header.ftl">
 <body>
-<#include "../common/navbar.ftl"/>
+<#include "./common/navbar.ftl"/>
 <div class="container-fluid" id="container-main">
 <#if user??>
-    <#include "../common/sidenavbar.ftl"/>
+    <#include "./common/sidenavbar.ftl"/>
 </#if>
     <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
     <#if user??>
@@ -22,7 +22,7 @@
                             <div class="clear"></div>
                         </div>
                         <div class="card-footer">
-                            <a class="btn btn-primary btn-sm" href="/units/${unit.id}">MANAGE</a>
+                            <a class="btn btn-primary btn-sm" href="/units/get/${unit.id}">MANAGE</a>
                         </div>
                     </div>
                 </div>

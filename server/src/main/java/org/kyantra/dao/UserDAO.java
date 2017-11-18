@@ -13,6 +13,7 @@ import org.kyantra.services.HibernateService;
 
 import javax.persistence.Query;
 import java.util.List;
+import java.util.Set;
 
 public class UserDAO {
 
@@ -96,7 +97,8 @@ public class UserDAO {
         RightsBean rightsBean = new RightsBean();
         rightsBean.setUnit(unitBean);
         rightsBean.setRole(role);
-        userBean.getRights().add(rightsBean);
+        Set<RightsBean> rightsBeans = RightsDAO.getInstance().getRightsByUser(userBean);
+        rightsBeans.add(rightsBean);
 
         //save the object
         Session session = mService.getSessionFactory().openSession();

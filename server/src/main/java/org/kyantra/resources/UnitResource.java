@@ -5,6 +5,7 @@ import org.kyantra.beans.RightsBean;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
+import org.kyantra.dao.RightsDAO;
 import org.kyantra.dao.UnitDAO;
 import org.kyantra.dao.UserDAO;
 import org.kyantra.interfaces.Secure;
@@ -133,7 +134,7 @@ public class UnitResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getUserRights(@PathParam("id") Integer unitId, @PathParam("userId") Integer userId){
         UserBean userBean = UserDAO.getInstance().get(userId);
-        Set<RightsBean> rights = userBean.getRights();
+        Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUser(userBean);
         //TODO Siddhesh
         /**
          * if the unitId is a child unit of some unit where user has rights

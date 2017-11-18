@@ -19,11 +19,12 @@
             <label for="inputAddress">Photo:</label>
             <input type="text" class="form-control" id="photo" placeholder="Photo">
         </div>
+        <!--
         <div class="form-group">
             <label for="inputAddress">Parent ID:</label>
             <input type="text" class="form-control" id="parentsID" placeholder="Parent ID">
         </div>
-
+        -->
         <button type="button" id="unitCreate" class="btn btn-primary">Create</button>
     </form>
 </main>

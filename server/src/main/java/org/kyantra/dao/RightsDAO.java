@@ -6,10 +6,14 @@ import org.kyantra.beans.RightsBean;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
+import org.kyantra.beans.UserBean;
 import org.kyantra.services.HibernateService;
 
 import javax.persistence.Query;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class RightsDAO {
 
@@ -81,5 +85,24 @@ public class RightsDAO {
         bean.setRole(role);
         tx.commit();
         session.close();
+    }
+
+    public Set<UnitBean> getUnitsByUser(UserBean userBean) {
+        Session session = mService.getSessionFactory().openSession();
+        String ql = "from RightsBean where user_id="+userBean.getId();
+        Query query = session.createQuery(ql);
+        List<RightsBean> list = query.getResultList();
+        Set<UnitBean> units = list.stream().map(RightsBean::getUnit).collect(Collectors.toSet());
+        session.close();
+        return units;
+    }
+
+    public Set<RightsBean> getRightsByUser(UserBean userBean) {
+        Session session = mService.getSessionFactory().openSession();
+        String ql = "from RightsBean where user_id="+userBean.getId();
+        Query query = session.createQuery(ql);
+        List<RightsBean> list = query.getResultList();
+        session.close();
+        return new HashSet<>(list);
     }
 }

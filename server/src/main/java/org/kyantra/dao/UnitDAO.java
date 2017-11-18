@@ -2,6 +2,8 @@ package org.kyantra.dao;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.kyantra.beans.RightsBean;
+import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
@@ -91,12 +93,14 @@ public class UnitDAO extends BaseDAO{
         Transaction tx = session.beginTransaction();
         UnitBean unit = session.get(UnitBean.class, id);
 
-        //TODO: assign default rights of all suers as ALL
-//        for (int index=0; index < users.size(); index++){
-//
-//        }
+        users.forEach(user->{
+            RightsBean bean = new RightsBean();
+            bean.setRole(RoleEnum.ALL);
+            bean.setUnit(unit);
+            bean.setUser(user);
+            RightsDAO.getInstance().add(bean);
+        });
 
-        unit.setUsers(users);
         tx.commit();
         session.close();
     }

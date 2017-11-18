@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * A right represents authorization of a user.
@@ -19,7 +20,7 @@ import javax.persistence.Table;
  * Roles are currently static and only read only and admin (full priviledges).
  */
 @Entity
-@Table(name = "rights")
+@Table(name = "rights", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "unit_id"})})
 public class RightsBean {
 
     @Id
@@ -27,16 +28,25 @@ public class RightsBean {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    // TODO: Should this be UserBean?? Read/write/All right permissions are for the user
-    // there is already table Unit_users for association of user to units.
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "unit_id")
     @Expose
     UnitBean unit;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    @Expose
+    UserBean user;
     @Enumerated(EnumType.STRING)
     @Expose
     RoleEnum role;
+
+    public UserBean getUser() {
+        return user;
+    }
+
+    public void setUser(UserBean user) {
+        this.user = user;
+    }
 
     public UnitBean getUnit() {
         return unit;
