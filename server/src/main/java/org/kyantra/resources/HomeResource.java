@@ -161,6 +161,15 @@ public class HomeResource extends BaseResource {
         throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization","")).build());
     }
 
+    @GET
+    @Path("/unauthorized")
+    @Template(name = "/auth/unauthorized.ftl")
+    @Session
+    public Map<String, Object> unauthorized() throws URISyntaxException{
+        final Map<String, Object> map = new HashMap<String, Object>();
+        throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization","")).build());
+    }
+
     private void setCommonData(Map<String, Object> map){
         map.put("user",getSecurityContext().getUserPrincipal());
     }

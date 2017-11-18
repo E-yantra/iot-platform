@@ -1,10 +1,10 @@
 package org.kyantra.dao;
 
-import org.kyantra.beans.DeviceAttributeBean;
-import org.kyantra.beans.DeviceBean;
-import org.kyantra.beans.ThingBean;
-import org.kyantra.beans.UnitBean;
-import org.kyantra.beans.UserBean;
+import org.hibernate.Session;
+import org.kyantra.beans.*;
+
+import javax.persistence.Query;
+import java.util.List;
 
 public class AuthorizationDAO extends BaseDAO{
 
@@ -16,20 +16,59 @@ public class AuthorizationDAO extends BaseDAO{
 
     }
 
-    public boolean ownsUnit(UserBean bean, UnitBean unitBean){
-        return true;
+    public boolean ownsUnit(UserBean user, UnitBean unit){
+        Session session = getService().getSessionFactory().openSession();
+        Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
+        query.setParameter("userId",user.getId());
+        query.setParameter("unitId",unit.getId());
+        List<RightsBean> rights = query.getResultList();
+        session.close();
+
+        if (rights.size()>0)
+            return true;
+
+        return false;
     }
 
-    public boolean ownsThing(UserBean bean, ThingBean thingBean){
-        return true;
+    public boolean ownsThing(UserBean user, ThingBean thing){
+        Session session = getService().getSessionFactory().openSession();
+        Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
+        query.setParameter("userId",user.getId());
+        query.setParameter("unitId",thing.getParentUnit().getId());
+        List<RightsBean> rights = query.getResultList();
+        session.close();
+
+        if (rights.size()>0)
+            return true;
+
+        return false;
     }
 
-    public boolean ownsDevice(UserBean bean, DeviceBean deviceBean){
-        return true;
+    public boolean ownsDevice(UserBean user, DeviceBean device){
+        Session session = getService().getSessionFactory().openSession();
+        Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
+        query.setParameter("userId",user.getId());
+        query.setParameter("unitId",device.getOwnerUnit().getId());
+        List<RightsBean> rights = query.getResultList();
+        session.close();
+
+        if (rights.size()>0)
+            return true;
+
+        return false;
     }
 
-    public boolean ownsDeviceAttributes(UserBean bean, DeviceAttributeBean deviceAttributeBean){
-        return true;
-    }
+    public boolean ownsDeviceAttributes(UserBean user, DeviceAttributeBean deviceAttribute){
+        Session session = getService().getSessionFactory().openSession();
+        Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
+        query.setParameter("userId",user.getId());
+        query.setParameter("unitId",deviceAttribute.getOwnerUnit().getId());
+        List<RightsBean> rights = query.getResultList();
+        session.close();
 
+        if (rights.size()>0)
+            return true;
+
+        return false;
+    }
 }
