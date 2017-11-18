@@ -1,5 +1,13 @@
 <header>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="/">K-Yantra IoT Platform </a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#=/">IoT Platform</a>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="ml-md-auto, mx-md-auto"></ul>
+            <span class="navbar-text text-white">
+                <#if user??>
+                    ${user.name}
+                </#if>
+            </span>
+        </div>
     </nav>
 </header>

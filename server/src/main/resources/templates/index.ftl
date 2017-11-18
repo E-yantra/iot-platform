@@ -7,7 +7,27 @@
 </#if>
 <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
 <#if user??>
-
+    <div class="row">
+        <#if !units?has_content>
+            <div class="alert alert-info">
+                You do not have any Units assigned. Please talk to your administrator.
+            </div>
+        </#if>
+        <#list units as unit>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">${unit.unitName}</div>
+                <div class="card-body">
+                    <img height=150 src="${unit.photo}" class="float-left p-1"> <p>${unit.description}</p>
+                    <div class="clear"></div>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-primary btn-sm" href="/units/${unit.id}">MANAGE</a>
+                </div>
+            </div>
+        </div>
+        </#list>
+    </div>
 <#else>
 
 </#if>

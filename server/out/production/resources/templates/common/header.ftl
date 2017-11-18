@@ -20,9 +20,7 @@
     <style>
 
         /* Move down content because we have a fixed navbar that is 3.5rem tall */
-        body {
-            padding-top: 3.5rem;
-        }
+
         h1 {
             padding-bottom: 9px;
             margin-bottom: 20px;
@@ -31,7 +29,7 @@
 
         .sidebar {
             position: fixed;
-            top: 51px;
+            top: 56px;
             bottom: 0;
             left: 0;
             z-index: 1000;

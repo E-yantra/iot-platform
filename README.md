@@ -3,3 +3,10 @@ IoT Platform is a software to manage large scale deployment of IoT devices and t
 ![architecture][logo]
 
 [logo]: http://p0.static.bookstruck.in.s3.amazonaws.com/images/60c1f12a3f754657ac33b126ef4d0bbb.png
+
+Setup
+======
+
+1. Install mysql locally and set username password to root/root 
+2. Create db named "iot"
+3. Create a user row manually in the db.  

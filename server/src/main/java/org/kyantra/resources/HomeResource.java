@@ -1,6 +1,9 @@
 package org.kyantra.resources;
 
 import org.glassfish.jersey.server.mvc.Template;
+import org.kyantra.beans.RightsBean;
+import org.kyantra.beans.UnitBean;
+import org.kyantra.beans.UserBean;
 import org.kyantra.interfaces.Session;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +17,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Path("/")
 public class HomeResource extends BaseResource {
@@ -33,10 +38,12 @@ public class HomeResource extends BaseResource {
     @Session
     public Map<String, Object> index() throws URISyntaxException {
         final Map<String, Object> map = new HashMap<String, Object>();
-        map.put("user",getSecurityContext().getUserPrincipal());
-        if(getSecurityContext().getUserPrincipal()==null){
-            throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization","")).build());
-        }
+        map.put("active","home");
+        UserBean userBean = (UserBean) getSecurityContext().getUserPrincipal();
+        Set<UnitBean> unitBeanList = userBean.getRights().stream().map(RightsBean::getUnit).collect(Collectors.toSet());
+        map.put("units",unitBeanList);
+        map.put("gson",gson.toJson(unitBeanList));
+        setCommonData(map);
         return map;
     }
 
@@ -57,14 +64,6 @@ public class HomeResource extends BaseResource {
     }
 
 
-    @GET
-    @Path("/dashboard")
-    @Template(name = "/dashboard.ftl")
-    @Session
-    public Map<String, Object> dashboard() {
-        final Map<String, Object> map = new HashMap<String, Object>();
-        return map;
-    }
 
     @GET
     @Path("/units/list")
@@ -72,6 +71,8 @@ public class HomeResource extends BaseResource {
     @Session
     public Map<String, Object> listUnits() {
         final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("active","unit");
+        setCommonData(map);
         return map;
     }
 
@@ -81,6 +82,8 @@ public class HomeResource extends BaseResource {
     @Session
     public Map<String, Object> createUnit() {
         final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("active","unit");
+        setCommonData(map);
         return map;
     }
 
@@ -90,6 +93,8 @@ public class HomeResource extends BaseResource {
     @Session
     public Map<String, Object> listThings() {
         final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("active","thing");
+        setCommonData(map);
         return map;
     }
 
@@ -99,6 +104,8 @@ public class HomeResource extends BaseResource {
     @Session
     public Map<String, Object> createThing() {
         final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("active","thing");
+        setCommonData(map);
         return map;
     }
 
@@ -108,6 +115,8 @@ public class HomeResource extends BaseResource {
     @Session
     public Map<String, Object> createRight() {
         final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("active","right");
+        setCommonData(map);
         return map;
     }
 
@@ -117,6 +126,8 @@ public class HomeResource extends BaseResource {
     @Session
     public Map<String, Object> listRight() {
         final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("active","right");
+        setCommonData(map);
         return map;
     }
     @GET
@@ -125,6 +136,8 @@ public class HomeResource extends BaseResource {
     @Session
     public Map<String, Object> createUsers() {
         final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("active","user");
+        setCommonData(map);
         return map;
     }
 
@@ -134,6 +147,8 @@ public class HomeResource extends BaseResource {
     @Session
     public Map<String, Object> listusers() {
         final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("active","user");
+        setCommonData(map);
         return map;
     }
 
@@ -144,6 +159,10 @@ public class HomeResource extends BaseResource {
     public Map<String, Object> logout(@Context HttpServletRequest request) throws URISyntaxException {
         final Map<String, Object> map = new HashMap<String, Object>();
         throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization","")).build());
+    }
+
+    private void setCommonData(Map<String, Object> map){
+        map.put("user",getSecurityContext().getUserPrincipal());
     }
 
 }
