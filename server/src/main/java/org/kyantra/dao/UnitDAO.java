@@ -33,7 +33,7 @@ public class UnitDAO extends BaseDAO{
     }
 
     /**
-     * Returns list of all units under a prent Unit
+     * Returns list of all units under a parent Unit
      * @param parentUnit
      * @param page
      * @param limit
