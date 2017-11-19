@@ -8,8 +8,7 @@
 <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
     <div class="row">
         <div class="col-md-12">
-            <div class="float-right p-1
-" v-if="role=='ALL' || roles=='WRITE'">
+            <div class="float-right p-1" v-if="role=='ALL' || role=='WRITE'">
                 <a href="" class="btn btn-outline-primary">Create Subunit</a>
                 <a href="" class="btn btn-outline-primary">Create Thing</a>
                 <a href="" class="btn btn-outline-primary">Import</a>
@@ -30,8 +29,8 @@
                     <div class="clear"></div>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-primary btn-sm float-right">EDIT</button>
-                    <button class="btn btn-danger btn-sm float-left">DELETE</button>
+                    <button v-on:click="edit" class="btn btn-primary btn-sm float-right">EDIT</button>
+                    <a class="btn btn-danger btn-sm float-left">DELETE</a>
                 </div>
             </div>
         </div>
@@ -43,16 +42,20 @@
                 <div class="card-body p-0">
                     <table class="table table-striped">
                         <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th></tr>
-                        <tr v-for="user in users"><td>{{user.id}}</td><td>
-                            {{user.name}}</td>
-                            <td>{{user.email}}</td></tr>
+                        <tr v-for="right in rights"><td>{{right.user.id}}</td><td>
+                            {{right.user.name}}</td>
+                            <td>{{right.user.email}}</td>
+                            <td>{{right.role}}</td>
+                        </tr>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 </main>
+<#include "../modals/crud_unit.ftl"/>
 </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="/static/js/app.js"></script>
 <script>
@@ -62,31 +65,68 @@
     var app = new Vue({
         el: '#container-main',
         data: {
-            unit:"",
+            unit:{},
             role:"",
-            users:[]
+            rights:[],
+            createUnit:{},
+            saveLoader:false
         },
         methods:{
             "load":function(){
 
+                var that = this;
+                $.ajax({
+                    url: "/unit/rights/"+unitId+"/"+userId,
+                    success: function (data) {
+                        that.role = data[0].role;
+                        that.unit = data[0].unit;
+                    }
+                });
+
+                $.ajax({
+                    url: "/unit/users/"+unitId,
+                    success: function (data) {
+                        that.rights = data;
+                    }
+                });
+
+            },
+            "edit":function(){
+                this.createUnit = this.unit;
+                $("#create_unit").modal('show')
+            },
+            "saveUnit":function(){
+                this.saveLoader = true;
+                var that = this;
+                if(!this.createUnit.id) {
+                    that.createUnit.parentUnitId = unitId;
+                    $.ajax({
+                        "url": "/unit/create",
+                        "method":"POST",
+                        "data": that.createUnit,
+                        "success":function (data) {
+                            that.saveLoader = false;
+                            $("#create_unit").modal('hide');
+                            that.load();
+                        }
+                    });
+                }else{
+                    $.ajax({
+                        "url": "/unit/update/"+unitId,
+                        "method":"POST",
+                        "data": that.createUnit,
+                        "success":function (data) {
+                            that.saveLoader = false;
+                            $("#create_unit").modal('hide');
+                            that.load();
+                        }
+
+                    });
+                }
             }
         },
         mounted:function(){
-            var that = this;
-            $.ajax({
-                url: "/unit/rights/"+unitId+"/"+userId,
-                success: function (data) {
-                    that.role = data[0].role;
-                    that.unit = data[0].unit;
-                }
-            });
-
-            $.ajax({
-                url: "/unit/users/"+unitId,
-                success: function (data) {
-                    that.users = data;
-                }
-            });
+            this.load()
 
         }
     })

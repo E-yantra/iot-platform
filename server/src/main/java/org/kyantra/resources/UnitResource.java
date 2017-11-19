@@ -22,7 +22,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.security.Principal;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -58,9 +57,9 @@ public class UnitResource extends BaseResource {
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String update(@PathParam("id") Integer id,
-                         @FormParam("name") String name,
+                         @FormParam("unitName") String name,
                          @FormParam("description") String description,
                          @FormParam("photo") String photo){
         //TODO: can parent unit be changed?
@@ -86,10 +85,10 @@ public class UnitResource extends BaseResource {
     @POST
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Session
-    public String create(@FormParam("name") String name,
+    public String create(@FormParam("unitName") String name,
                          @FormParam("description") String description,
                          @FormParam("photo") String photo,
                          @DefaultValue("0") @FormParam("parentUnitId") Integer parentUnitId ){
@@ -149,10 +148,9 @@ public class UnitResource extends BaseResource {
     @Path("users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAuthorizedUsers(@PathParam("id") Integer unitId){
-        UserBean currentUser = (UserBean) getSecurityContext().getUserPrincipal();
-        Set<UserBean> users = new HashSet<>();
-        users.add(currentUser);
-        return gson.toJson(users);
+
+        UnitBean unitBean = UnitDAO.getInstance().get(unitId);
+        return gson.toJson(RightsDAO.getInstance().getRightsByUnit(unitBean));
 
     }
 }

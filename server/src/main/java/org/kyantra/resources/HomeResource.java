@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.NewCookie;
@@ -82,9 +83,12 @@ public class HomeResource extends BaseResource {
     @Path("/units/create")
     @Template(name = "/units/create.ftl")
     @Session
-    public Map<String, Object> createUnit() {
+    public Map<String, Object> createUnit(@QueryParam("id") Integer id) {
         final Map<String, Object> map = new HashMap<String, Object>();
         map.put("active","unit");
+        if(id!=null){
+            map.put("unit",UnitDAO.getInstance().get(id));
+        }
         setCommonData(map);
         return map;
     }
