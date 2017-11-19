@@ -26,10 +26,12 @@ public class ThingBean {
     @Column(name = "ip")
     String ip;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
+    @Expose
     private List<DeviceBean> devices;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
+    @Expose
     private UnitBean parentUnit;
 
     public String getIp() {

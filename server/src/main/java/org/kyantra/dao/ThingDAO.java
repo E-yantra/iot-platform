@@ -7,7 +7,9 @@ import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 
 import javax.persistence.Query;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Siddhesh Prabhugaonkar on 13-11-2017.
@@ -83,5 +85,14 @@ public class ThingDAO extends BaseDAO{
         thing.setIp(ip);
         tx.commit();
         session.close();
+    }
+
+    public Set<ThingBean> getByUnitId(Integer id) {
+        Session session = getService().getSessionFactory().openSession();
+        String ql = "from ThingBean where parentUnit_id="+id;
+        Query query = session.createQuery(ql);
+        List<ThingBean> list = query.getResultList();
+        session.close();
+        return new HashSet<>(list);
     }
 }

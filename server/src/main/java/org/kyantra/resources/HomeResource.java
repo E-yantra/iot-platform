@@ -1,9 +1,11 @@
 package org.kyantra.resources;
 
 import org.glassfish.jersey.server.mvc.Template;
+import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.RightsDAO;
+import org.kyantra.dao.ThingDAO;
 import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Session;
 
@@ -39,13 +41,11 @@ public class HomeResource extends BaseResource {
     @Template(name = "/index.ftl")
     @Session
     public Map<String, Object> index() throws URISyntaxException {
-        final Map<String, Object> map = new HashMap<String, Object>();
+        final Map<String, Object> map = new HashMap<>();
         map.put("active","home");
         UserBean userBean = (UserBean) getSecurityContext().getUserPrincipal();
-
         Set<UnitBean> unitBeanList = RightsDAO.getInstance().getUnitsByUser(userBean);
         map.put("units",unitBeanList);
-        map.put("gson",gson.toJson(unitBeanList));
         setCommonData(map);
         return map;
     }
@@ -193,5 +193,20 @@ public class HomeResource extends BaseResource {
         setCommonData(map);
         return map;
     }
+
+    @GET
+    @Path("/things/get/{id}")
+    @Template(name = "/thing/get.ftl")
+    @Session
+    public Map<String, Object> getThing(@PathParam("id") Integer id) {
+        final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("active","thing");
+        ThingBean thing = ThingDAO.getInstance().get(id);
+        map.put("thing",thing);
+        setCommonData(map);
+        return map;
+    }
+
+
 
 }

@@ -1,7 +1,6 @@
 package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
-import org.kyantra.beans.DeviceBean;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UserBean;
@@ -10,10 +9,18 @@ import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Siddhesh Prabhugaonkar on 13-11-2017.
@@ -45,7 +52,7 @@ public class ThingResource extends BaseResource {
     @POST
     @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
@@ -75,7 +82,7 @@ public class ThingResource extends BaseResource {
     @Session
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON) //unit_id
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED) //unit_id
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
     public String create(@FormParam("name") String name,
                          @FormParam("description") String description,
@@ -97,5 +104,13 @@ public class ThingResource extends BaseResource {
             t.printStackTrace();
         }
         return "{\"success\":false}";
+    }
+
+    @GET
+    @Path("unit/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getByUnit(@PathParam("id") Integer id){
+        Set<ThingBean> things = ThingDAO.getInstance().getByUnitId(id);
+        return gson.toJson(things);
     }
 }

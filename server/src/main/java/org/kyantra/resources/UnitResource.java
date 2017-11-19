@@ -22,6 +22,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -134,13 +135,11 @@ public class UnitResource extends BaseResource {
     public String getUserRights(@PathParam("id") Integer unitId, @PathParam("userId") Integer userId){
         UserBean userBean = UserDAO.getInstance().get(userId);
         Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUser(userBean);
-        //TODO Siddhesh
-        /**
-         * if the unitId is a child unit of some unit where user has rights
-         * then you need to recursively get those rights
-         * else userBean.getRights would be empty.
-         */
-        return gson.toJson(rights.stream().filter(r->r.getUnit().getId()==unitId).collect(Collectors.toSet()));
+        Set<UnitBean> allBeans = new HashSet<>();
+        rights.forEach(r->{
+            allBeans.addAll(UnitDAO.getInstance().getAllparents(r.getUnit()));
+        });
+        return gson.toJson(rights.stream().filter(r->allBeans.contains(r.getUnit())).collect(Collectors.toSet()));
     }
 
     @GET
@@ -150,7 +149,22 @@ public class UnitResource extends BaseResource {
     public String getAuthorizedUsers(@PathParam("id") Integer unitId){
 
         UnitBean unitBean = UnitDAO.getInstance().get(unitId);
-        return gson.toJson(RightsDAO.getInstance().getRightsByUnit(unitBean));
+        Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUnit(unitBean);
+        while(unitBean.getParent()!=null){
+            unitBean = unitBean.getParent();
+            rights.addAll(RightsDAO.getInstance().getRightsByUnit(unitBean));
+        }
+        return gson.toJson(rights);
+
+    }
+
+    @GET
+    @Secure(roles = {RoleEnum.READ})
+    @Path("subunits/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getSubunits(@PathParam("id") Integer unitId){
+        UnitBean unitBean = UnitDAO.getInstance().get(unitId);
+        return gson.toJson(unitBean.getSubunits());
 
     }
 }

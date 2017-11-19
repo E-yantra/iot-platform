@@ -10,6 +10,7 @@ import org.kyantra.beans.UserBean;
 
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -103,5 +104,16 @@ public class UnitDAO extends BaseDAO{
 
         tx.commit();
         session.close();
+    }
+
+    public Set<UnitBean> getAllparents(UnitBean unitBean){
+        Set<UnitBean> unitBeans = new HashSet<>();
+        unitBeans.add(unitBean);
+        while(unitBean.getParent()!=null){
+            unitBean = unitBean.getParent();
+            unitBeans.add(unitBean.getParent());
+        }
+
+        return unitBeans;
     }
 }

@@ -106,7 +106,7 @@ public class RightsDAO {
         return new HashSet<>(list);
     }
 
-    public Object getRightsByUnit(UnitBean unitBean) {
+    public Set<RightsBean> getRightsByUnit(UnitBean unitBean) {
         Session session = mService.getSessionFactory().openSession();
         String ql = "from RightsBean where unit_id="+unitBean.getId();
         Query query = session.createQuery(ql);

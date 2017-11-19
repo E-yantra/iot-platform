@@ -5,6 +5,7 @@ import org.kyantra.dao.UnitDAO;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,7 +27,7 @@ public class UnitBean {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Integer id;
 
-    @Column(name = "unit_name", unique = true)
+    @Column(name = "unit_name")
     @Expose
     String unitName;
     @Column(name = "description")
@@ -39,7 +40,7 @@ public class UnitBean {
     @ManyToOne
     private UnitBean parent;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parent")
     private List<UnitBean> subunits;
 
     @OneToMany
