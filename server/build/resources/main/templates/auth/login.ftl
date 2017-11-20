@@ -48,8 +48,7 @@
                         "My-Second-Header":"second value"
                     },
                     success: function(data){
-                        console.log(data);
-                        debugger;
+
                         if(!data.token){
                             $.removeCookie('name');
                             that.error = true;

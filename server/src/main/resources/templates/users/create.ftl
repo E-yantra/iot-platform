@@ -20,7 +20,7 @@
         <input type="password" class="form-control" id="userPassword" placeholder="Password">
     </div>
 
-    <button type="button" class="btn btn-primary" id="userCreate">Create</button>
+    <button type="button" class="btn btn-primary" id="userCreate"><i class="fa fa-plus" aria-hidden="true"></i>Create</button>
 </form>
     </main>
 </div>

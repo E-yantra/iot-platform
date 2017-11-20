@@ -20,7 +20,7 @@
             <input type="text" class="form-control" id="ip" placeholder="IP">
         </div>
 
-        <button type="button" id="thingCreate" class="btn btn-primary">Create</button>
+        <button type="button" id="thingCreate" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>Create</button>
     </form>
 </main>
 </div>

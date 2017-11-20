@@ -23,8 +23,8 @@
                         <td>Otto</td>
                         <td>@mdo</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm">Edit</button>&nbsp;
-                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></i>Edit</button>&nbsp;
+                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i>Delete</button>
                         </td>
                     </tr>
                     <tr>
@@ -33,8 +33,8 @@
                         <td>@TwBootstrap</td>
                         <td>@mdo</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm">Edit</button>&nbsp;
-                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></i>Edit</button>&nbsp;
+                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i>Delete</button>
                         </td>
                     </tr>
                     <tr>
@@ -43,8 +43,8 @@
                         <td>@TwBootstrap</td>
                         <td>@mdo</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm">Edit</button>&nbsp;
-                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></i>Edit</button>&nbsp;
+                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i>Delete</button>
                         </td>
                     </tr>
                     <tr>
@@ -53,8 +53,8 @@
                         <td>@TwBootstrap</td>
                         <td>@mdo</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm">Edit</button>&nbsp;
-                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></i>Edit</button>&nbsp;
+                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></i>Delete</button>
                         </td>
                     </tr>
                     <tr>
@@ -63,8 +63,8 @@
                         <td>@TwBootstrap</td>
                         <td>@mdo</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm">Edit</button>&nbsp;
-                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></i>Edit</button>&nbsp;
+                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i>Delete</button>
                         </td>
                     </tr>
 

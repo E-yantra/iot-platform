@@ -20,7 +20,7 @@
             </select>
         </div>
 
-        <button type="button" id="rightCreate" class="btn btn-primary">Create</button>
+        <button type="button" id="rightCreate" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>Create</button>
     </form>
 </main>
 </div>

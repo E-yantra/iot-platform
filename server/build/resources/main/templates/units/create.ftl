@@ -4,27 +4,40 @@
 <div class="container-fluid" id="container-main">
 <#include "../common/sidenavbar.ftl"/>
 <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+    <#if unit??>
+    <#else>
+    <#assign unit={}>
+    </#if>
     <form>
         <div class="form-group">
-            <label for="inputEmail4">Unit Name:</label>
-            <input type="text" class="form-control" id="inputUnitname" placeholder="Unit Name">
+            <label for="inputUnitname">Unit Name:</label>
+            <input type="text" class="form-control" value='${unit.unitName!""}' form-control" id="inputUnitname" placeholder="Unit Name">
         </div>
 
 
         <div class="form-group">
-            <label for="comment">Description:</label>
-            <textarea class="form-control" rows="5" id="description"></textarea>
+            <label for="description">Description:</label>
+            <textarea class="form-control" rows="5" id="description">${unit.description!""}</textarea>
         </div>
         <div class="form-group">
             <label for="inputAddress">Photo:</label>
-            <input type="text" class="form-control" id="photo" placeholder="Photo">
-        </div>
-        <div class="form-group">
-            <label for="inputAddress">Parent ID:</label>
-            <input type="text" class="form-control" id="parentsID" placeholder="Parent ID">
+            <input type="text" class="form-control" id="photo" value="${unit.photo!''}" placeholder="Photo">
         </div>
 
-        <button type="button" id="unitCreate" class="btn btn-primary">Create</button>
+        <#if unit.parent??>
+
+                <input type="hidden" value="${unit.parent.id!""}" class="form-control" id="parentsID" placeholder="Parent ID">
+
+        </#if>
+
+        <#if unit.id??>
+            <div class="form-group">
+                <input type="hidden" value="${unit.parent.id!""}" class="form-control" id="parentsID" placeholder="Parent ID">
+            </div>
+        </#if>
+
+
+        <button type="button" id="unitCreate" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>Create</button>
     </form>
 </main>
 </div>
@@ -43,7 +56,12 @@
                 data: JSON.stringify({unitName:unitName,description:description,photo:photo,parent:parentsID}),
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',
-                success: function(data) { },
+                success: function(data) {
+
+                },
+                failure: function(){
+                    alert("Failed to create unit");
+                }
             });
         })
     });

@@ -21,7 +21,7 @@
                         <td>Otto</td>
                         <td>READ</td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i>Delete</button>
                         </td>
                     </tr>
                     <tr>
@@ -29,7 +29,7 @@
                         <td>@TwBootstrap</td>
                         <td>WRITE</td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i>Delete</button>
                         </td>
                     </tr>
                     <tr>
@@ -37,7 +37,7 @@
                         <td>@TwBootstrap</td>
                         <td>ALL</td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i>Delete</button>
                         </td>
                     </tr>
                     <tr>
@@ -45,7 +45,7 @@
                         <td>@TwBootstrap</td>
                         <td>READ</td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i>Delete</button>
                         </td>
                     </tr>
                     <tr>
@@ -53,7 +53,7 @@
                         <td>@TwBootstrap</td>
                         <td>READ</td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i>Delete</button>
                         </td>
                     </tr>
 

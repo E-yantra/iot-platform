@@ -22,7 +22,7 @@
                             <div class="clear"></div>
                         </div>
                         <div class="card-footer">
-                            <a class="btn btn-primary btn-sm" href="/units/get/${unit.id}">MANAGE</a>
+                            <a class="btn btn-primary btn-sm" href="/units/get/${unit.id}"><i class="fa fa-cog"></i>MANAGE</a>
                         </div>
                     </div>
                 </div>
@@ -33,6 +33,7 @@
     </#if>
     </main>
 </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="/static/js/app.js">`</script>
 </body>
