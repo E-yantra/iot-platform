@@ -25,9 +25,10 @@
 
                     </div>
                     <div class="card-footer">
-                        <button v-on:click="edit" class="btn btn-primary btn-sm float-right">EDIT</button> &nbsp;
-                        <button v-on:click="generate" class="btn btn-primary btn-sm float-right">GENERATE CLIENT
-                        </button>
+                        <div class="float-right">
+                            <button v-on:click="edit" class="btn btn-primary btn-sm">EDIT</button>
+                            <button v-on:click="generate" class="btn btn-primary btn-sm">GENERATE CLIENT</button>
+                        </div>
                         <button class="btn btn-danger btn-sm float-left text-white">DELETE THING</button>
                     </div>
                 </div>
