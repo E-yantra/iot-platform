@@ -108,7 +108,13 @@
                 that.createDevice.ownerUnitId = that.thing.parentUnit.id;
                 that.createDevice.parentThingId = that.thingId;
                 if(this.createDevice.id){
-
+                    $.ajax({
+                        url: "/device/update/"+that.createDevice.id,
+                        data:that.createDevice,
+                        success: function (data) {
+                            that.load();
+                        }
+                    });
                 }else{
                     $.ajax({
                         url: "/device/create",
