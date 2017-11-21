@@ -86,7 +86,7 @@
             },
             "addAttr": function () {
                 debugger;
-                if(this.cttr.name){
+                if(this.cttr.name && this.cttr.type){
                     this.createDevice.deviceAttributes.push(Object.assign({}, this.cttr));
                 }
 
@@ -101,6 +101,24 @@
 
             },
             "generate": function () {
+
+            },
+            "saveDevice":function () {
+                var that = this;
+                that.createDevice.ownerUnitId = that.thing.parentUnit.id;
+                that.createDevice.parentThingId = that.thingId;
+                if(this.createDevice.id){
+
+                }else{
+                    $.ajax({
+                        url: "/device/create",
+                        data:that.createDevice,
+                        success: function (data) {
+                            that.load();
+
+                        }
+                    });
+                }
 
             },
             "saveUnit": function () {
