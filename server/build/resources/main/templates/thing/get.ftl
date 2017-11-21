@@ -52,7 +52,13 @@
             role:"",
             unit: {},
             thing: {},
-            devices: []
+            devices: [],
+            createDevice:{
+                "deviceAttributes":[]
+            },
+            cttr:{
+
+            }
         },
         methods: {
             "load": function () {
@@ -73,8 +79,23 @@
                 });
 
             },
-            "newDevice": function () {
+            "removeAttr":function (key) {
+                if (key !== -1) {
+                    array.splice(key, 1);
+                }
+            },
+            "addAttr": function () {
+                debugger;
+                if(this.cttr.name){
+                    this.createDevice.deviceAttributes.push(Object.assign({}, this.cttr));
+                }
 
+            },
+            "newDevice": function () {
+                this.createDevice = {
+                    deviceAttributes:[]
+                };
+                $("#create_device").modal('show');
             },
             "edit": function () {
 

@@ -20,12 +20,9 @@ public class UserDAO {
     static UserDAO instance = new UserDAO();
     public static UserDAO getInstance(){ return instance; }
 
-
     HibernateService mService;
 
-
     private UserDAO(){
-
         mService = HibernateService.getInstance();
     }
 
@@ -69,14 +66,12 @@ public class UserDAO {
     }
 
     public void delete(Integer id){
-
         Session session = mService.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         UserBean user = session.get(UserBean.class, id);
         session.delete(user);
         tx.commit();
         session.close();
-
     }
 
     public void update(int id, String name, String email, String password){
@@ -111,7 +106,6 @@ public class UserDAO {
         return userBean;
     }
 
-
     public UserBean getByEmail(String email) {
         Session session = mService.getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(UserBean.class);
@@ -129,8 +123,6 @@ public class UserDAO {
         session.close();
         return sessionBean.getUser();
     }
-
-
 
     public List<UnitBean> getUserUnits(UserBean user){
         Session session = mService.getSessionFactory().openSession();

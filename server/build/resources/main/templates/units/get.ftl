@@ -48,7 +48,7 @@
                             <span v-if="things.length==0">
                                 No Things for this Unit.
                             </span>
-                            <table class="table table-striped">
+                            <table v-if="things.length>0" class="table table-striped">
                                 <tr><th>Name</th><th>Actions</th></tr>
                                 <tr v-for="u in things"><td><a v-bind:href="'/things/get/'+u.id">{{u.name}}</a></td><td><button v-on:click="editThing(u)" class="btn btn-default btn-sm">EDIT</button> </td></tr>
                             </table>
@@ -67,7 +67,7 @@
                             <span v-if="subunits.length==0">
                                 No Subunits for this Unit.
                             </span>
-                            <ul>
+                            <ul v-if="subunits.length>0">
                                 <li v-for="u in subunits">
                                     <a v-bind:href="'/units/get/'+u.id">{{u.unitName}}</a>
                                 </li>
