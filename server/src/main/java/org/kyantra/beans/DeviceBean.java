@@ -22,7 +22,8 @@ public class DeviceBean {
     @Expose
     String description;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
+    @Expose
     private List<DeviceAttributeBean> deviceAttributes;
 
     @OneToOne

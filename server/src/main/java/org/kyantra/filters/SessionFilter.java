@@ -59,7 +59,7 @@ public class SessionFilter implements ContainerRequestFilter {
 
 
 
-        try {
+
             String authorizationCookie = requestContext.getCookies().getOrDefault("authorization", new Cookie("authorization", "")).getValue();
             if (!authorizationCookie.isEmpty()) {
                 UserBean userBean = UserDAO.getInstance().getByToken(authorizationCookie);
@@ -103,8 +103,6 @@ public class SessionFilter implements ContainerRequestFilter {
                 }
 
             }
-        }catch (Throwable t){
-            t.printStackTrace();
-        }
+
     }
 }
