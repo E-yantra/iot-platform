@@ -2,7 +2,14 @@ package org.kyantra.beans;
 
 import com.google.gson.annotations.Expose;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "deviceAttributes")
@@ -27,6 +34,17 @@ public class DeviceAttributeBean {
 
     @OneToOne
     UnitBean ownerUnit;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    DeviceBean parentDevice;
+
+    public DeviceBean getParentDevice() {
+        return parentDevice;
+    }
+
+    public void setParentDevice(DeviceBean parentDevice) {
+        this.parentDevice = parentDevice;
+    }
 
     public Integer getId() {
         return id;

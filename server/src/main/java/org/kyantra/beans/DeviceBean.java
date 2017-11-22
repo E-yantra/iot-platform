@@ -22,12 +22,23 @@ public class DeviceBean {
     @Expose
     String description;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentDevice")
     @Expose
     private List<DeviceAttributeBean> deviceAttributes;
 
     @OneToOne
     private UnitBean ownerUnit;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    private ThingBean parentThing;
+
+    public ThingBean getParentThing() {
+        return parentThing;
+    }
+
+    public void setParentThing(ThingBean parentThing) {
+        this.parentThing = parentThing;
+    }
 
     public Integer getId() {
         return id;

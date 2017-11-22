@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import org.kyantra.beans.DeviceAttributeBean;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.dao.DeviceAttributeDAO;
+import org.kyantra.dao.DeviceDAO;
 import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
@@ -17,6 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * Created by Siddhesh Prabhugaonkar on 13-11-2017.
@@ -65,7 +67,7 @@ public class DeviceAttributeResource extends BaseResource {
     @POST
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
     @Session
     public String create(@FormParam("name") String name,
@@ -89,5 +91,21 @@ public class DeviceAttributeResource extends BaseResource {
             t.printStackTrace();
         }
         return "{\"success\":false}";
+    }
+
+    @POST
+    @Path("add/{deviceId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE})
+    @Session
+    public String add(@PathParam("deviceId") Integer deviceId,
+                         List<DeviceAttributeBean> attributes){
+        for(DeviceAttributeBean att:attributes){
+            att.setParentDevice(DeviceDAO.getInstance().get(deviceId));
+            DeviceAttributeDAO.getInstance().add(att);
+        }
+
+        return "";
     }
 }

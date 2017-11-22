@@ -26,7 +26,7 @@ public class ThingBean {
     @Column(name = "ip")
     String ip;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "parentThing")
     @Expose
     private List<DeviceBean> devices;
 

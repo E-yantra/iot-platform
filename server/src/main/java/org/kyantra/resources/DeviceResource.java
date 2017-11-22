@@ -1,17 +1,24 @@
 package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
-import org.kyantra.beans.DeviceAttributeBean;
 import org.kyantra.beans.DeviceBean;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.dao.DeviceDAO;
+import org.kyantra.dao.ThingDAO;
 import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Siddhesh Prabhugaonkar on 13-11-2017.
@@ -27,10 +34,19 @@ public class DeviceResource extends BaseResource {
         return gson.toJson(bean);
     }
 
+
+    @GET
+    @Path("thing/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getByThing(@PathParam("id") Integer id){
+        Set<DeviceBean> beans = DeviceDAO.getInstance().getByThing(id);
+        return gson.toJson(beans);
+    }
+
     @POST
     @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "device", subjectField = "parentId")
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
@@ -57,7 +73,7 @@ public class DeviceResource extends BaseResource {
     @POST
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "device", subjectField = "parentId")
     @Session
     public String create(@FormParam("name") String name,
@@ -65,14 +81,12 @@ public class DeviceResource extends BaseResource {
                          @FormParam("parentThingId") Integer parentThingId,
                          @FormParam("ownerUnitId") Integer ownerUnitId){
         try {
-            String s = "Found something";
-            //System.out.println(gson.toJson(bean));
+
             DeviceBean device = new DeviceBean();
             device.setName(name);
             device.setDescription(description);
-            //TODO
-            //device.setParent(ThingDAO.getInstance().get(parentThingId));
             device.setOwnerUnit(UnitDAO.getInstance().get(ownerUnitId));
+            device.setParentThing(ThingDAO.getInstance().get(parentThingId));
 
             DeviceBean deviceBean = DeviceDAO.getInstance().add(device);
             return gson.toJson(deviceBean);

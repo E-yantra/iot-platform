@@ -21,8 +21,17 @@
                     <div class="card-header">
                         {{ thing.name }}
                     </div>
-                    <div class="card-body">
-
+                    <div class="card-body p-0">
+                        <table class="table table-striped">
+                            <tr><th>Device Name</th><th>Actions</th></tr>
+                            <tr v-for="d in devices">
+                                <td>{{d.name}}</td>
+                                <td>
+                                    <Button v-on:click="deleteDevice(d)" class="btn btn-sm btn-danger text-white">DELETE</Button>
+                                    <Button v-on:click="editDevice(d)" class="btn btn-sm btn-default text-white">EDIT</Button>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                     <div class="card-footer">
                         <div class="float-right">
@@ -77,6 +86,12 @@
                         });
                     }
                 });
+                $.ajax({
+                    url: "/device/thing/" + thingId,
+                    success: function (data) {
+                        that.devices = data;
+                    }
+                });
 
             },
             "removeAttr":function (key) {
@@ -85,10 +100,12 @@
                 }
             },
             "addAttr": function () {
-                debugger;
                 if(this.cttr.name && this.cttr.type){
                     this.createDevice.deviceAttributes.push(Object.assign({}, this.cttr));
                 }
+
+            },
+            "deleteDevice":function () {
 
             },
             "newDevice": function () {
@@ -105,13 +122,17 @@
             },
             "saveDevice":function () {
                 var that = this;
+                this.saveLoader = true;
                 that.createDevice.ownerUnitId = that.thing.parentUnit.id;
-                that.createDevice.parentThingId = that.thingId;
+                that.createDevice.parentThingId = that.thing.id;
                 if(this.createDevice.id){
                     $.ajax({
                         url: "/device/update/"+that.createDevice.id,
+                        "method": "POST",
                         data:that.createDevice,
                         success: function (data) {
+                            that.saveLoader = false;
+                            that.saveAttributes(data.id,that.createDevice.deviceAttributes);
                             that.load();
                         }
                     });
@@ -119,13 +140,34 @@
                     $.ajax({
                         url: "/device/create",
                         data:that.createDevice,
+                        "method": "POST",
                         success: function (data) {
+
+                            that.saveLoader = false;
+                            that.saveAttributes(data.id,that.createDevice.deviceAttributes);
                             that.load();
 
                         }
                     });
                 }
 
+            },
+            "editDevice":function (device) {
+                this.createDevice = device;
+                debugger;
+                $("#create_device").modal('show');
+            },
+            "saveAttributes":function (deviceId,attributes) {
+                $.ajax({
+                    "url": "/attribute/add/"+deviceId,
+                    "method": "POST",
+                    "data": JSON.stringify(attributes),
+                    contentType: "application/json; charset=utf-8",
+                    "success": function (data) {
+                        that.saveLoader = false;
+                        that.load();
+                    }
+                });
             },
             "saveUnit": function () {
                 this.saveLoader = true;
@@ -139,6 +181,7 @@
                         "success": function (data) {
                             that.saveLoader = false;
                             $("#create_unit").modal('hide');
+
                             that.load();
                         }
                     });

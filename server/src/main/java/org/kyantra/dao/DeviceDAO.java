@@ -2,13 +2,13 @@ package org.kyantra.dao;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.kyantra.beans.DeviceAttributeBean;
 import org.kyantra.beans.DeviceBean;
 import org.kyantra.beans.ThingBean;
-import org.kyantra.beans.UnitBean;
 
 import javax.persistence.Query;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Siddhesh Prabhugaonkar on 13-11-2017.
@@ -83,5 +83,14 @@ public class DeviceDAO extends BaseDAO {
         device.setDescription(description);
         tx.commit();
         session.close();
+    }
+
+    public Set<DeviceBean> getByThing(Integer thingId) {
+        Session session = getService().getSessionFactory().openSession();
+        String ql = "from DeviceBean where parentThing_Id="+thingId;
+        Query query = session.createQuery(ql);
+        List<DeviceBean> list = query.getResultList();
+        session.close();
+        return new HashSet<>(list);
     }
 }
