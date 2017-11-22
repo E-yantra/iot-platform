@@ -28,7 +28,7 @@
                                 <td>{{d.name}}</td>
                                 <td>
                                     <Button v-on:click="deleteDevice(d)" class="btn btn-sm btn-danger text-white">DELETE</Button>
-                                    <Button v-on:click="editDevice(d)" class="btn btn-sm btn-default text-white">EDIT</Button>
+                                    <Button v-on:click="editDevice(d)" class="btn btn-sm btn-default">EDIT</Button>
                                 </td>
                             </tr>
                         </table>

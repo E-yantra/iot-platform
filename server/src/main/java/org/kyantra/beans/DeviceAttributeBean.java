@@ -32,6 +32,10 @@ public class DeviceAttributeBean {
     @Expose
     String def;
 
+    @Column(name="actuator")
+    @Expose
+    Boolean actuator;
+
     @OneToOne
     UnitBean ownerUnit;
 
