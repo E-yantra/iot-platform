@@ -46,6 +46,7 @@
 <script>
     $(document).ready(function(){
         $("#unitCreate").on("click",function(){
+            alert('ijsf');
             var unitName = $("#inputUnitname").val();
             var description = $("#description").val();
             var photo = $("#photo").val();
@@ -57,7 +58,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',
                 success: function(data) {
-
+                    alert("Unit created successfully");
                 },
                 failure: function(){
                     alert("Failed to create unit");

@@ -31,7 +31,7 @@
                     <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" v-model="createDevice.deviceAttributes[key].def" placeholder="Default">
                     <button type="button" class="btn btn-danger" v-on:click="removeAttr(key)">x</button>
                 </form>
-                <form class="form-inline">
+                <form class="form-inline p-1">
                     <label class="sr-only" for="inlineFormInputName2" >Name</label>
                     <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0"  v-model="cttr.name" placeholder="Name">
 
@@ -50,9 +50,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary save"><i class="fa fa-floppy-o" aria-hidden="true"></i>Save</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i>Close</i>
-                    Close</button>
+                <button type="button" class="btn btn-primary save" v-on:click="saveDevice"><i class="fa fa-floppy-o" aria-hidden="true"></i>Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i>Close</button>
             </div>
         </div>
     </div>

@@ -37,7 +37,9 @@
                 url: '/right/create',
                 data: {unit_id:rightID,role:rightRoles},
                 contentType:'application/x-www-form-urlencoded',
-                success: function(data) { },
+                success: function(data) {
+                    alert('success')
+                },
             });
         })
     });

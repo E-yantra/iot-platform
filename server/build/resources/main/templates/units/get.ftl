@@ -13,7 +13,7 @@
                 <button v-on:click="newThing" class="btn btn-outline-primary">Create Thing</button>
                 <a href="" class="btn btn-outline-primary">Import</a>
                 <a href="" class="btn btn-outline-primary">Export</a>
-                <a href="" class="btn btn-outline-primary">Add User</a>
+                <button v-on:click="newUser" class="btn btn-outline-primary">Add User</button>
             </div>
         </div>
         <div class="clearfix"></div>
@@ -50,7 +50,10 @@
                             </span>
                             <table v-if="things.length>0" class="table table-striped">
                                 <tr><th>Name</th><th>Actions</th></tr>
-                                <tr v-for="u in things"><td><a v-bind:href="'/things/get/'+u.id">{{u.name}}</a></td><td><button v-on:click="editThing(u)" class="btn btn-default btn-sm">EDIT</button> </td></tr>
+                                <tr v-for="u in things">
+                                    <td><a v-bind:href="'/things/get/'+u.id">{{u.name}}</a></td>
+                                    <td><button v-on:click="editThing(u)" class="btn btn-default btn-sm">EDIT</button> </td>
+                                </tr>
                             </table>
                         </div>
                     </div>
@@ -85,11 +88,12 @@
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-striped">
-                        <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th></tr>
+                        <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Actions</th></tr>
                         <tr v-for="right in rights"><td>{{right.user.id}}</td><td>
                             {{right.user.name}}</td>
                             <td>{{right.user.email}}</td>
                             <td>{{right.role}}</td>
+                            <td><button v-on:click="editUser(right)" class="btn btn-default btn-sm">EDIT</button> </td>
                         </tr>
                     </table>
                 </div>
@@ -99,6 +103,7 @@
 </main>
 <#include "../modals/crud_unit.ftl"/>
 <#include "../modals/crud_thing.ftl"/>
+<#include "../modals/crud_user.ftl"/>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
@@ -115,6 +120,9 @@
             rights:[],
             createUnit:{},
             createThing:{},
+            createUser:{
+                "rights":[]
+            },
             saveLoader:false,
             subunits:[],
             things:[]
@@ -175,6 +183,17 @@
                 this.createThing = thing;
                 $("#create_thing").modal('show')
             },
+            "newUser":function(){
+                this.createUser = {
+                    "unitId":unitId,
+                    "userId":0
+                };
+                $("#create_user").modal('show')
+            },
+            "editUser":function(user){
+                this.createUser = user;
+                $("#create_user").modal('show')
+            },
             "edit":function(){
                 this.createUnit = this.unit;
                 $("#create_unit").modal('show')
@@ -233,14 +252,54 @@
                             $("#create_unit").modal('hide');
                             that.load();
                         }
-
+                    });
+                }
+            },
+            "saveUser":function () {
+                this.saveLoader = true;
+                var that = this;
+                if(!this.createUser.id) {
+                    //
+                    $.ajax({
+                        "url": "/user/create",
+                        "method":"POST",
+                        "data": that.createUser,
+                        "success":function (data) {
+                            that.saveLoader = false;
+                            $("#create_unit").modal('hide');
+                            that.createUser.userId  = data.id;
+                            that.saveRights(that.createUser);
+                            that.load();
+                        }
+                    });
+                }else{
+                    $.ajax({
+                        "url": "/user/update/"+userId,
+                        "method":"POST",
+                        "data": that.createUser,
+                        "success":function (data) {
+                            that.saveLoader = false;
+                            $("#create_unit").modal('hide');
+                            that.load();
+                        }
                     });
                 }
             }
         },
+        "saveRights":function (attributes) {
+            $.ajax({
+                "url": "/right/create",
+                "method": "POST",
+                "data": JSON.stringify(attributes),
+                contentType: "application/json; charset=utf-8",
+                "success": function (data) {
+                    that.saveLoader = false;
+                    that.load();
+                }
+            });
+        },
         mounted:function(){
             this.load()
-
         }
     })
 </script>
