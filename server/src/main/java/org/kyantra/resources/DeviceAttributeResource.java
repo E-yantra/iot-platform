@@ -103,7 +103,9 @@ public class DeviceAttributeResource extends BaseResource {
                          List<DeviceAttributeBean> attributes){
         for(DeviceAttributeBean att:attributes){
             att.setParentDevice(DeviceDAO.getInstance().get(deviceId));
-            DeviceAttributeDAO.getInstance().add(att);
+            try {
+                DeviceAttributeDAO.getInstance().add(att);
+            }catch (Throwable t) {t.printStackTrace();} //later chnge to something
         }
 
         return "";

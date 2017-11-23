@@ -10,9 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "deviceAttributes")
+@Table(name = "deviceAttributes" ,uniqueConstraints = @UniqueConstraint(columnNames={"name", "parentDevice_id"}))
 public class DeviceAttributeBean {
 
     @Id
@@ -31,16 +32,23 @@ public class DeviceAttributeBean {
     @Column(name="def")
     @Expose
     String def;
-
     @Column(name="actuator")
     @Expose
-    Boolean actuator;
-
+    Boolean actuator = Boolean.FALSE;
     @OneToOne
     UnitBean ownerUnit;
-
     @OneToOne(fetch = FetchType.EAGER)
     DeviceBean parentDevice;
+
+    public Boolean getActuator() {
+        if(actuator==null)
+            return Boolean.FALSE;
+        return actuator;
+    }
+
+    public void setActuator(Boolean actuator) {
+        this.actuator = actuator;
+    }
 
     public DeviceBean getParentDevice() {
         return parentDevice;

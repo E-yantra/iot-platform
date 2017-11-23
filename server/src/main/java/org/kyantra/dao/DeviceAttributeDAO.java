@@ -1,5 +1,6 @@
 package org.kyantra.dao;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kyantra.beans.DeviceAttributeBean;
@@ -8,6 +9,8 @@ import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 
 import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -84,5 +87,24 @@ public class DeviceAttributeDAO extends BaseDAO {
         deviceAttribute.setDef(def);
         tx.commit();
         session.close();
+    }
+
+    public String getTopic(DeviceAttributeBean att) {
+        List<String> list = new ArrayList<>();
+        list.add(sanitize(att.getName())+":"+att.getId());
+        list.add(sanitize(att.getParentDevice().getName())+":"+(att.getParentDevice().getId()));
+        list.add(sanitize(att.getParentDevice().getParentThing().getName())+":"+att.getParentDevice().getParentThing().getId());
+        UnitBean unitBean = att.getParentDevice().getParentThing().getParentUnit();
+        while (unitBean!=null){
+            list.add(sanitize(unitBean.getUnitName())+":"+unitBean.getId());
+            unitBean = unitBean.getParent();
+        }
+        Collections.reverse(list);
+        String topic = StringUtils.join(list,"/");
+        return topic;
+    }
+
+    private String sanitize(String string){
+        return string.replaceAll("[^a-zA-Z0-9]", "");
     }
 }

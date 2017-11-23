@@ -1,8 +1,13 @@
 package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
+import org.kyantra.beans.ConfigBean;
+import org.kyantra.beans.DeviceAttributeBean;
 import org.kyantra.beans.DeviceBean;
 import org.kyantra.beans.RoleEnum;
+import org.kyantra.beans.ThingBean;
+import org.kyantra.dao.ConfigDAO;
+import org.kyantra.dao.DeviceAttributeDAO;
 import org.kyantra.dao.DeviceDAO;
 import org.kyantra.dao.ThingDAO;
 import org.kyantra.dao.UnitDAO;
@@ -18,6 +23,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -95,5 +103,33 @@ public class DeviceResource extends BaseResource {
             t.printStackTrace();
         }
         return "{\"success\":false}";
+    }
+
+    @GET
+    @Path("generate/{id}")
+    @Session
+    @Produces(MediaType.APPLICATION_JSON)
+    public String generate(@PathParam("id")Integer thingId){
+        ThingBean thing = ThingDAO.getInstance().get(thingId);
+        List<DeviceBean> devices = thing.getDevices();
+        Map<String,String> publishTo = new HashMap<>();
+        Map<String,String> subscribeFrom = new HashMap<>();
+
+        devices.forEach(d->{
+            List<DeviceAttributeBean> attributes = d.getDeviceAttributes();
+            for (DeviceAttributeBean att:attributes){
+                if(att.getActuator()){
+                    subscribeFrom.put(d.getName()+"-"+att.getName(), DeviceAttributeDAO.getInstance().getTopic(att)+"/set");
+                }
+                publishTo.put(d.getName()+"-"+att.getName(), DeviceAttributeDAO.getInstance().getTopic(att)+"/get");
+            }
+        });
+        Map<String,Object> ret = new HashMap<>();
+        ret.put("publishTo",publishTo);
+        ret.put("subscribeTo",subscribeFrom);
+        ret.put("clientId","thing_"+thingId);
+        ConfigBean configBean = ConfigDAO.getInstance().get("endPoint");
+        ret.put("endPoint",configBean.getValue());
+        return gson.toJson(ret);
     }
 }
