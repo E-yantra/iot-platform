@@ -6,6 +6,7 @@ import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.dao.RightsDAO;
 import org.kyantra.dao.UnitDAO;
+import org.kyantra.dao.UserDAO;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
@@ -66,10 +67,12 @@ public class RightsResource extends BaseResource{
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "right", subjectField = "parentId")
     @Session
     public String create(@FormParam("unitId") Integer unitId,
+                         @FormParam("userId") Integer userId,
                          @FormParam("role") RoleEnum role){
         try {
             RightsBean rights = new RightsBean();
             rights.setRole(role);
+            rights.setUser(UserDAO.getInstance().get(userId));
             rights.setUnit(UnitDAO.getInstance().get(unitId));
             RightsBean right = RightsDAO.getInstance().add(rights);
 

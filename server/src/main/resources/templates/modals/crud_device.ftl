@@ -46,7 +46,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary save" v-on:click="saveDevice()"><i class="fa fa-floppy-o" aria-hidden="true"></i>Save</button>
+                <button type="button" class="btn btn-primary save" v-on:click="saveDevice"><i class="fa fa-floppy-o" aria-hidden="true"></i>Save</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i>Close</button>
             </div>
         </div>
