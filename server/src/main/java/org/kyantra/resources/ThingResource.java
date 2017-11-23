@@ -113,4 +113,5 @@ public class ThingResource extends BaseResource {
         Set<ThingBean> things = ThingDAO.getInstance().getByUnitId(id);
         return gson.toJson(things);
     }
+
 }

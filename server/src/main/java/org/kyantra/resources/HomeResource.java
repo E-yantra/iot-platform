@@ -207,6 +207,19 @@ public class HomeResource extends BaseResource {
         return map;
     }
 
+    @GET
+    @Path("/things/dashboard/{id}")
+    @Template(name = "/thing/dashboard.ftl")
+    @Session
+    public Map<String, Object> getDashboard(@PathParam("id") Integer id){
+        final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("active","thing");
+        ThingBean thing = ThingDAO.getInstance().get(id);
+        map.put("thing",thing);
+        setCommonData(map);
+        return map;
+    }
+
 
 
 }
