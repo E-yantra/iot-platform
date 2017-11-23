@@ -32,7 +32,7 @@
                         </div>
                         <div class="card-footer">
                             <button v-on:click="edit" class="btn btn-primary btn-sm float-right">EDIT</button>
-                            <button class="btn btn-danger btn-sm float-left text-white">DELETE</button>
+                            <button v-on:click="deleteUnit" class="btn btn-danger btn-sm float-left text-white">DELETE</button>
                         </div>
                     </div>
                 </div>
@@ -93,7 +93,8 @@
                             {{right.user.name}}</td>
                             <td>{{right.user.email}}</td>
                             <td>{{right.role}}</td>
-                            <td><button v-on:click="editUser(right)" class="btn btn-default btn-sm">EDIT</button> </td>
+                            <td><button v-on:click="editUser(right)" class="btn btn-default btn-sm">EDIT</button>
+                            <button v-on:click="deleteUser(right)" class="btn btn-default btn-sm">DELETE</button> </td>
                         </tr>
                     </table>
                 </div>
@@ -125,7 +126,8 @@
             },
             saveLoader:false,
             subunits:[],
-            things:[]
+            things:[],
+            deleteUnit:{}
         },
         methods:{
             "load":function(){
@@ -193,6 +195,33 @@
             "editUser":function(user){
                 this.createUser = user;
                 $("#create_user").modal('show')
+            },
+            "deleteUser": function (right) {
+                alert(JSON.stringify(right));
+
+                if (confirm("Are you sure you want to delete device?") && confirm("Are you really sure?")) {
+                    $.ajax({
+                        url: "/user/delete/" + right.userId,
+                        "method": "DELETE",
+                        success: function (data) {
+                            alert('User deleted');
+                            this.deleteRight(right.id);
+                            this.load();
+                        }
+                    });
+                }
+            },
+            "deleteRight": function (rightId) {
+                if (confirm("Are you sure you want to delete device?") && confirm("Are you really sure?")){
+                    $.ajax({
+                        url: "/right/delete/" + rightId,
+                        "method": "DELETE",
+                        success: function (data) {
+                            alert('rights deleted');
+                            this.load();
+                        }
+                    });
+                }
             },
             "edit":function(){
                 this.createUnit = this.unit;
@@ -266,7 +295,7 @@
                         "data": that.createUser,
                         "success":function (data) {
                             that.saveLoader = false;
-                            $("#create_unit").modal('hide');
+                            $("#create_user").modal('hide');
                             that.createUser.userId  = data.id;
                             that.saveRights(that.createUser);
                             that.load();
@@ -279,7 +308,9 @@
                         "data": that.createUser,
                         "success":function (data) {
                             that.saveLoader = false;
-                            $("#create_unit").modal('hide');
+                            $("#create_user").modal('hide');
+                            that.createUser.userId  = data.id;
+                            that.saveRights(that.createUser);
                             that.load();
                         }
                     });
@@ -297,6 +328,18 @@
                     that.load();
                 }
             });
+        },
+        "deleteUnit": function () {
+            if (confirm("Are you sure you want to delete unit?") && confirm("Are you really sure?")){
+                $.ajax({
+                    url: "/unit/delete/" + unitId,
+                    "method": "DELETE",
+                    success: function (data) {
+                        alert('Device deleted');
+                        this.load();
+                    }
+                });
+            }
         },
         mounted:function(){
             this.load()

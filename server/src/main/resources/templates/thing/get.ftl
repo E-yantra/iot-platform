@@ -43,7 +43,7 @@
                             <button v-on:click="edit" class="btn btn-primary btn-sm">EDIT</button>
                             <button v-on:click="generate" class="btn btn-primary btn-sm">GENERATE CLIENT</button>
                         </div>
-                        <button class="btn btn-danger btn-sm float-left text-white"><i class="fa fa-trash-o fa-lg"></i>DELETE
+                        <button v-on:click="deleteThing" class="btn btn-danger btn-sm float-left text-white"><i class="fa fa-trash-o fa-lg"></i>DELETE
                             THING
                         </button>
                     </div>
@@ -195,10 +195,44 @@
                 if (this.cttr.name && this.cttr.type) {
                     this.createDevice.deviceAttributes.push(Object.assign({}, this.cttr));
                 }
-
             },
-            "deleteDevice": function () {
-
+            "deleteDevice": function (device) {
+                if (confirm("Are you sure you want to delete device?") && confirm("Are you really sure?")){
+                    $.ajax({
+                        url: "/device/delete/" + device.id,
+                        "method": "DELETE",
+                        success: function (data) {
+                            alert('Device deleted');
+                            this.deleteDeviceAttributes(device.id);
+                            this.load();
+                        }
+                    });
+                }
+            },
+            "deleteDeviceAttributes": function (deviceId) {
+                if (confirm("Are you sure you want to delete device?") && confirm("Are you really sure?")){
+                    $.ajax({
+                        url: "/attribute/delete/" + deviceId,
+                        "method": "DELETE",
+                        success: function (data) {
+                            alert('Device attributes deleted');
+                            this.load();
+                        }
+                    });
+                }
+            },
+            "deleteThing": function () {
+                alert(thingId);
+                if (confirm("Are you sure you want to delete thing?") && confirm("Are you really sure?")){
+                    $.ajax({
+                        url: "/thing/delete/" + thingId,
+                        "method": "DELETE",
+                        success: function (data) {
+                            alert('Thing deleted');
+                            this.load();
+                        }
+                    });
+                }
             },
             "newDevice": function () {
                 this.createDevice = {
@@ -210,7 +244,6 @@
 
             },
             "generate": function () {
-
                 $("#generate_code").modal('show');
                 saveLoader = true;
                 var that = this;
@@ -297,14 +330,12 @@
                             $("#create_unit").modal('hide');
                             that.load();
                         }
-
                     });
                 }
             }
         },
         mounted: function () {
             this.load()
-
         }
     })
 </script>
