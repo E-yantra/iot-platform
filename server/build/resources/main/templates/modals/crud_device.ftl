@@ -26,26 +26,22 @@
                         <option value="Integer">Integer</option>
                     </select>
 
-
                     <label class="sr-only" for="inlineFormInputName2">Default</label>
                     <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" v-model="createDevice.deviceAttributes[key].def" placeholder="Default">
+                    <input type="checkbox" class="form-control mb-2 mr-sm-2 mb-sm-0" v-model="createDevice.deviceAttributes[key].actuator"/> Actuator &nbsp;
                     <button type="button" class="btn btn-danger" v-on:click="removeAttr(key)">x</button>
                 </form>
                 <form class="form-inline p-1">
-                    <label class="sr-only" for="inlineFormInputName2" >Name</label>
                     <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0"  v-model="cttr.name" placeholder="Name">
-
                     <label class="sr-only" for="inlineFormInputName2">Type</label>
                     <select class="custom-select mb-2 mr-sm-2 mb-sm-0" v-model="cttr.type">
-                        <option value="Boolean">Boolean</option>
+                        <option value="Boolean" selected>Boolean</option>
                         <option value="Double">Double</option>
                         <option value="String">String</option>
                         <option value="Integer">Integer</option>
                     </select>
-
-
-                    <label class="sr-only" for="inlineFormInputName2">Default</label>
-                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="Default" v-model="cttr.def">
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="Default Value" v-model="cttr.def">
+                    <input type="checkbox" class="form-control mb-2 mr-sm-2 mb-sm-0" v-model="cttr.actuator"/> Actuator &nbsp;
                     <button type="button" class="btn btn-primary" v-on:click="addAttr">Add</button>
                 </form>
             </div>
