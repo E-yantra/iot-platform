@@ -5,7 +5,7 @@
 <#include "../common/sidenavbar.ftl"/>
     <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
         <div class="row">
-            <div v-for="d in devices" class="card col-md4 p-0">
+            <div v-for="d in devices" class="card col-md-6 p-0">
                 <div class="card-header p-d0">{{d.name}}</div>
                 <div class="card-body p-1">
                     <div class="m-1" v-for="att in d.deviceAttributes">
@@ -16,6 +16,7 @@
                         </div>
                         <div v-if="att.actuator">
                             <div v-if="att.type=='Boolean'" v-bind:id="'att_'+att.id">
+                                {{att.value}}
                                 <button v-if="att.value" class="btn btn-success" v-on:click="toggle(att)">{{att.name}} ON</button>
                                 <button v-if="!att.value" class="btn btn-danger"  v-on:click="toggle(att)">{{att.name}} OFF</button>
                             </div>
@@ -54,8 +55,19 @@
             devices: []
         },
         methods: {
-            "toggle":function () {
+            "toggle":function (att) {
+                var that = this;
+                var data = {
+                    "value": att.value?0:1
+                };
+                $.ajax({
+                    url: "/pubsub/value/"+att.id,
+                    "method": "POST",
+                    "data":JSON.stringify(data),
+                    success: function (data) {
 
+                    }
+                });
             },
             "updateGauge":function (att) {
 
@@ -80,13 +92,15 @@
                 });
             },
             "updateButton":function (att) {
+                var that = this;
                 $.ajax({
                     url: "/pubsub/value/"+att.id,
                     "method": "GET",
                     success: function (data) {
+                        Vue.set(att, 'value', false);
                         att.value = false;
-                        if(data.value>0 || data.value=="true"){
-                            att.value = true;
+                        if(data.value>0){
+                            Vue.set(att, 'value', true);
                         }
                     }
                 });
@@ -97,10 +111,10 @@
                     var d = that.devices[i];
                     for(var j in d.deviceAttributes){
                         var att =  d.deviceAttributes[j];
-                        if(att.type=='Double'){
+                        if(att.type==='Double'){
                             that.updateGauge(att);
                         }
-                        if(att.type=='Boolean'){
+                        if(att.type==='Boolean'){
                             that.updateButton(att);
                         }
                     }

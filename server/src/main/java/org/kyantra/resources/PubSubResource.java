@@ -119,6 +119,18 @@ public class PubSubResource extends BaseResource {
     }
 
     @POST
+    @Path("value/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public String setValue(@FormParam("value") String value, @PathParam("id") Integer id) throws AWSIotException {
+        DeviceAttributeBean att = DeviceAttributeDAO.getInstance().get(id);
+        String topic = DeviceAttributeDAO.getInstance().getTopic(att)+"/set";
+        client.publish(topic,value);
+        return  "";
+
+    }
+
+    @POST
     @Path("messages")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
