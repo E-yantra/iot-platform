@@ -11,12 +11,11 @@
                     <div class="m-1" v-for="att in d.deviceAttributes">
                         <div v-if="!att.actuator">
                             <div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">
-                                Loading...
+                                <img src="/static/img/ajax-loader.gif"/>
                             </div>
                         </div>
                         <div v-if="att.actuator">
                             <div v-if="att.type=='Boolean'" v-bind:id="'att_'+att.id">
-                                {{att.value}}
                                 <button v-if="att.value" class="btn btn-success" v-on:click="toggle(att)">{{att.name}} ON</button>
                                 <button v-if="!att.value" class="btn btn-danger"  v-on:click="toggle(att)">{{att.name}} OFF</button>
                             </div>
@@ -57,68 +56,60 @@
         methods: {
             "toggle":function (att) {
                 var that = this;
-                var data = {
-                    "value": att.value?0:1
-                };
                 $.ajax({
                     url: "/pubsub/value/"+att.id,
                     "method": "POST",
-                    "data":JSON.stringify(data),
+                    "data":{ "value": att.value?0:1} ,
                     success: function (data) {
-
+                        that.refresh();
                     }
                 });
             },
             "updateGauge":function (att) {
 
-                $.ajax({
-                    url: "/pubsub/value/"+att.id,
-                    "method": "GET",
-                    success: function (data) {
+                var data = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    [att.name,att.value]
+                ]);
+                var options = {
+                    width: 400, height: 120
+                };
+                var chart = new google.visualization.Gauge(document.getElementById('att_'+att.id));
+                chart.draw(data, options);
 
-                        var data = google.visualization.arrayToDataTable([
-                            ['Label', 'Value'],
-                            [att.name,data.value]
-                        ]);
-
-                        var options = {
-                            width: 400, height: 120
-                        };
-
-                        var chart = new google.visualization.Gauge(document.getElementById('att_'+att.id));
-
-                        chart.draw(data, options);
-                    }
-                });
-            },
-            "updateButton":function (att) {
-                var that = this;
-                $.ajax({
-                    url: "/pubsub/value/"+att.id,
-                    "method": "GET",
-                    success: function (data) {
-                        Vue.set(att, 'value', false);
-                        att.value = false;
-                        if(data.value>0){
-                            Vue.set(att, 'value', true);
-                        }
-                    }
-                });
             },
             "refresh": function () {
                 var that = this;
-                for(var i in that.devices){
-                    var d = that.devices[i];
-                    for(var j in d.deviceAttributes){
-                        var att =  d.deviceAttributes[j];
-                        if(att.type==='Double'){
-                            that.updateGauge(att);
+
+                $.ajax({
+                        url: "/pubsub/shadow/"+thingId,
+                        "method": "GET",
+                        success: function (data) {
+                            data = data["state"];
+                            for(var key in data["reported"]){
+                                var val = data["reported"][key];
+                                for(var d in that.devices){
+                                    var device = that.devices[d];
+                                    for(var ak in device.deviceAttributes){
+                                        var att = device.deviceAttributes[ak];
+                                        var dName = "device"+device.id+"."+att.id;
+                                        if(dName===key){console.log(att);
+                                            if(att.type!=="Boolean"){
+                                                Vue.set(att, 'value', val);
+                                                that.updateGauge(att);
+                                            }else{
+                                                Vue.set(att, 'value', val !== 0);
+
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+
                         }
-                        if(att.type==='Boolean'){
-                            that.updateButton(att);
-                        }
-                    }
-                }
+                    });
+
             },
             "publish": function () {
                 var that = this;
@@ -134,42 +125,6 @@
                     }
                 });
             },
-            "subscribe": function () {
-                try {
-                    clearInterval(this.subscribeHandle);
-                } catch (ex) {
-                }
-                var that = this;
-
-                $.ajax({
-                    url: "/pubsub/subscribe",
-                    "method": "POST",
-                    "data": {
-                        "topic": that.testTopic
-                    },
-                    success: function (data) {
-
-                    }
-                });
-
-                this.subscribeHandle = setInterval(function () {
-                    $.ajax({
-                        url: "/pubsub/messages",
-                        "method": "POST",
-                        "data": {
-                            "topic": that.testTopic
-                        },
-                        success: function (data) {
-                            if (data.length > 0) {
-                                for (var i in data) {
-                                    that.subscribed.push(JSON.stringify(data[i], null, 4));
-                                }
-
-                            }
-                        }
-                    });
-                }, 8000);
-            },
             "load": function () {
 
                 var that = this;
@@ -178,32 +133,14 @@
                     success: function (data) {
                         that.thing = data;
                         that.unit = that.thing.parentUnit;
+                        that.devices = data.devices;
+                        that.refresh();
                         $.ajax({
                             url: "/unit/rights/" + that.unit.id + "/" + userId,
                             success: function (data) {
                                 that.role = data[0].role;
                             }
                         });
-                    }
-                });
-                $.ajax({
-                    url: "/device/thing/" + thingId,
-                    success: function (data) {
-                        that.devices = data;
-                        for(var i in that.devices){
-                            var d = that.devices[i];
-                            for(var j in d.deviceAttributes){
-                                var att = d.deviceAttributes[j];
-                                $.ajax({
-                                    url: "/pubsub/subscribe/"+att.id,
-                                    "method": "GET",
-                                    success: function (data) {
-
-                                    }
-                                });
-                            }
-                        }
-
                     }
                 });
 
@@ -215,7 +152,7 @@
 
             setInterval(function () {
                 that.refresh();
-            },5000);
+            },30000);
         }
     })
 </script>

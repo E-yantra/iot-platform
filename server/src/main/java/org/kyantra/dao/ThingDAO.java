@@ -1,5 +1,6 @@
 package org.kyantra.dao;
 
+import com.amazonaws.services.iot.AWSIotClient;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kyantra.beans.DeviceBean;

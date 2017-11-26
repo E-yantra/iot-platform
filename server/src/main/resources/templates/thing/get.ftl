@@ -256,7 +256,7 @@
                     "method": "GET",
                     success: function (data) {
                         that.saveLoader = false;
-                        that.generateCode = JSON.stringify(data, null, 4);
+                        that.generateCode = (data);
                     }
                 });
             },

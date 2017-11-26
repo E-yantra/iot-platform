@@ -3,8 +3,16 @@ package org.kyantra.beans;
 
 import com.google.gson.annotations.Expose;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import java.util.Set;
 
 @Entity
 @Table(name = "things")
@@ -28,7 +36,7 @@ public class ThingBean {
 
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "parentThing")
     @Expose
-    private List<DeviceBean> devices;
+    private Set<DeviceBean> devices;
 
     @OneToOne(fetch = FetchType.EAGER)
     @Expose
@@ -66,11 +74,11 @@ public class ThingBean {
         this.description = description;
     }
 
-    public List<DeviceBean> getDevices() {
+    public Set<DeviceBean> getDevices() {
         return devices;
     }
 
-    public void setDevices(List<DeviceBean> devices) {
+    public void setDevices(Set<DeviceBean> devices) {
         this.devices = devices;
     }
 

@@ -43,19 +43,7 @@ public class DeviceDAO extends BaseDAO {
         return list;
     }
 
-    /**
-     * Returns list of all devices under parent thing.
-     * @param parentThing
-     * @param page
-     * @param limit
-     * @return
-     */
-    public List<DeviceBean> list(ThingBean parentThing, int page, int limit){
-        //TODO: verify if this is correct interpretation
-        List<DeviceBean> list = parentThing.getDevices().subList(page*limit,limit);
-        //session.close();
-        return list;
-    }
+
 
     public DeviceBean get(Integer id) {
         Session session = getService().getSessionFactory().openSession();

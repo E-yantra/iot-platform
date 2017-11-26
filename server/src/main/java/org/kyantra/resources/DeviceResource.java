@@ -1,18 +1,20 @@
 package org.kyantra.resources;
 
+import com.amazonaws.services.iot.AWSIot;
+import com.amazonaws.services.iot.model.CreateThingRequest;
+import com.amazonaws.services.iot.model.CreateThingResult;
 import io.swagger.annotations.Api;
-import org.kyantra.beans.ConfigBean;
 import org.kyantra.beans.DeviceAttributeBean;
 import org.kyantra.beans.DeviceBean;
 import org.kyantra.beans.RoleEnum;
+import org.kyantra.beans.ShadowBean;
 import org.kyantra.beans.ThingBean;
-import org.kyantra.dao.ConfigDAO;
-import org.kyantra.dao.DeviceAttributeDAO;
 import org.kyantra.dao.DeviceDAO;
 import org.kyantra.dao.ThingDAO;
 import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
+import org.kyantra.utils.AwsIotHelper;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -23,9 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -108,28 +108,41 @@ public class DeviceResource extends BaseResource {
     @GET
     @Path("generate/{id}")
     @Session
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public String generate(@PathParam("id")Integer thingId){
         ThingBean thing = ThingDAO.getInstance().get(thingId);
-        List<DeviceBean> devices = thing.getDevices();
-        Map<String,String> publishTo = new HashMap<>();
-        Map<String,String> subscribeFrom = new HashMap<>();
+        Set<DeviceBean> devices = thing.getDevices();
 
-        devices.forEach(d->{
-            List<DeviceAttributeBean> attributes = d.getDeviceAttributes();
-            for (DeviceAttributeBean att:attributes){
-                if(att.getActuator()){
-                    subscribeFrom.put(d.getName()+"-"+att.getName(), DeviceAttributeDAO.getInstance().getTopic(att)+"/set");
-                }
-                publishTo.put(d.getName()+"-"+att.getName(), DeviceAttributeDAO.getInstance().getTopic(att)+"/get");
+        AWSIot client = AwsIotHelper.getIotClient();
+        CreateThingResult response = client.createThing(new CreateThingRequest()
+                .withThingName("thing" + thing.getId()));
+       
+
+        ShadowBean shadowBean = new ShadowBean();
+        shadowBean.setThingBean(thing);
+        StringBuilder sb = new StringBuilder();
+        sb.append("clientId:");
+        sb.append("thing"+ thing.getId());
+        sb.append("\n");
+        sb.append("Subscribe to Delta Topic : "+shadowBean.getDeltaTopic());
+        sb.append("\n");
+        sb.append("Publish to reporting Topic : "+shadowBean.getUpdateTopic());
+        sb.append("\n");
+
+        for(DeviceBean deviceBean:devices){
+            List<DeviceAttributeBean> atts = deviceBean.getDeviceAttributes();
+            sb.append("For Device "+deviceBean.getName());
+            sb.append("\n");
+            sb.append("Use the following property names");
+            sb.append("\n\n");
+
+            for(DeviceAttributeBean att:atts){
+                sb.append("device"+deviceBean.getId()+"."+att.getId()+"\t"+att.getType()+" //"+deviceBean.getName()+" "+att.getName());
+                sb.append("\n");
             }
-        });
-        Map<String,Object> ret = new HashMap<>();
-        ret.put("publishTo",publishTo);
-        ret.put("subscribeTo",subscribeFrom);
-        ret.put("clientId","thing_"+thingId);
-        ConfigBean configBean = ConfigDAO.getInstance().get("endPoint");
-        ret.put("endPoint",configBean.getValue());
-        return gson.toJson(ret);
+
+        }
+
+        return sb.toString();
     }
 }

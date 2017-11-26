@@ -1,13 +1,16 @@
 package org.kyantra.resources;
 
+import com.amazonaws.services.iot.client.AWSIotDevice;
 import com.amazonaws.services.iot.client.AWSIotException;
-import com.amazonaws.services.iot.client.AWSIotMessage;
 import com.amazonaws.services.iot.client.AWSIotMqttClient;
-import com.amazonaws.services.iot.client.AWSIotTopic;
 import org.kyantra.beans.DeviceAttributeBean;
+import org.kyantra.beans.ShadowBean;
+import org.kyantra.beans.ThingBean;
 import org.kyantra.dao.ConfigDAO;
 import org.kyantra.dao.DeviceAttributeDAO;
+import org.kyantra.dao.ThingDAO;
 import org.kyantra.interfaces.Session;
+import org.kyantra.utils.AwsIotHelper;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -20,7 +23,6 @@ import javax.ws.rs.core.MediaType;
 import java.util.Deque;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
 
 @Path("/pubsub")
 public class PubSubResource extends BaseResource {
@@ -52,71 +54,22 @@ public class PubSubResource extends BaseResource {
         return gson.toJson("{}");
     }
 
-    @POST
-    @Path("subscribe")
-    @Session
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String subscribe(@FormParam("topic") String topic) throws AWSIotException {
-        AWSIotTopic topicObj = new AWSIotTopic(topic){
-
-            @Override
-            public void onMessage(AWSIotMessage message) {
-                super.onMessage(message);
-                messages.putIfAbsent(topic, new ConcurrentLinkedDeque<>());
-                messages.get(topic).add(message.getStringPayload());
-                if(messages.get(topic).size()>100){
-                    messages.get(topic).clear();
-                }
-            }
-        };
-        client.unsubscribe(topic);
-        client.subscribe(topicObj,3000);
-        return gson.toJson("{}");
-    }
-
     @GET
-    @Path("subscribe/{id}")
-    @Session
+    @Path("shadow/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String subscribe(@PathParam("id") Integer id) throws AWSIotException {
-        DeviceAttributeBean att = DeviceAttributeDAO.getInstance().get(id);
-        String topic = DeviceAttributeDAO.getInstance().getTopic(att)+"/get";
-        AWSIotTopic topicObj = new AWSIotTopic(topic){
-
-            @Override
-            public void onMessage(AWSIotMessage message) {
-                super.onMessage(message);
-                messages.putIfAbsent(topic, new ConcurrentLinkedDeque<>());
-                messages.get(topic).add(message.getStringPayload());
-                if(messages.get(topic).size()>100){
-                    messages.get(topic).clear();
-                }
-            }
-        };
-        client.unsubscribe(topic);
-        client.subscribe(topicObj,3000);
-        System.out.println("Subscribed to "+topic);
-        return gson.toJson("{}");
+    public String getThingShadow(@PathParam("id") Integer thingId) throws AWSIotException {
+        ThingBean thingBean = ThingDAO.getInstance().get(thingId);
+        String shadowName = "thing"+thingBean.getId();
+        AWSIotMqttClient client = AwsIotHelper.getMQTT();
+        AWSIotDevice device = new AWSIotDevice(shadowName);
+        client.attach(device);
+        client.connect();
+        String state = device.get();
+        client.disconnect();
+        return state;
     }
 
-    @GET
-    @Path("value/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String getValue(@PathParam("id") Integer id){
-        DeviceAttributeBean att = DeviceAttributeDAO.getInstance().get(id);
-        String topic = DeviceAttributeDAO.getInstance().getTopic(att)+"/get";
-        messages.putIfAbsent(topic,new ConcurrentLinkedDeque<>());
-        if(messages.isEmpty()){
-            return "";
-        }else{
-            return messages.get(topic).removeLast();
-        }
-
-
-    }
 
     @POST
     @Path("value/{id}")
@@ -124,9 +77,19 @@ public class PubSubResource extends BaseResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String setValue(@FormParam("value") String value, @PathParam("id") Integer id) throws AWSIotException {
         DeviceAttributeBean att = DeviceAttributeDAO.getInstance().get(id);
-        String topic = DeviceAttributeDAO.getInstance().getTopic(att)+"/set";
-        client.publish(topic,value);
-        return  "";
+        ShadowBean bean = new ShadowBean();
+        bean.setThingBean(att.getParentDevice().getParentThing());
+        if(att.getType().equals("Boolean")) {
+            bean.setDesired(att, att.getId() + "", value.equals("1")?1:0);
+        }
+        else if(att.getType().equals("Double")) {
+            bean.setDesired(att, att.getId() + "", Double.parseDouble(value));
+        }else{
+            bean.setDesired(att, att.getId() + "", value);
+        }
+
+        client.publish(bean.getUpdateTopic(),gson.toJson(bean.getMap()));
+        return  gson.toJson(bean.getMap());
 
     }
 
