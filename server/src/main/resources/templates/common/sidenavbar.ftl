@@ -5,19 +5,10 @@
                 <a class="nav-link <#if active?? && active=="home">active</#if>" href="/">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <#if active?? && active=="right">active</#if>" href="/rights/list">Right</a>
+                <a class="nav-link <#if active?? && active=="profile">active</#if>" href="/profile">My Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <#if active?? && active=="thing">active</#if>" href="/things/list">Thing</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <#if active?? && active=="unit">active</#if>" href="/units/list">Unit</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <#if active?? && active=="user">active</#if>" href="/users/list">User</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
+                <a class="nav-link text-red" href="/logout">Logout</a>
             </li>
         </ul>
     </#if>
