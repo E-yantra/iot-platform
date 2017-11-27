@@ -52,6 +52,18 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        Automation Rules
+                    </div>
+                    <div class="card-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-6">
                 <p>&nbsp;</p>
                 <div class="card">

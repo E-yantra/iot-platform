@@ -9,4 +9,9 @@ Setup
 
 1. Install mysql locally and set username password to root/root 
 2. Create db named "iot"
-3. Create a user row manually in the db.  
+3. In the table configset add three keys and their respective values
+    - awsKey
+    - awsSecret 
+    - endpoint (iot endpoint unique to your AWS account)
+    
+ 
