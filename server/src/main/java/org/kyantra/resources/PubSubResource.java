@@ -1,8 +1,10 @@
 package org.kyantra.resources;
 
-import com.amazonaws.services.iot.client.AWSIotDevice;
 import com.amazonaws.services.iot.client.AWSIotException;
 import com.amazonaws.services.iot.client.AWSIotMqttClient;
+import com.amazonaws.services.iotdata.AWSIotData;
+import com.amazonaws.services.iotdata.model.GetThingShadowRequest;
+import com.amazonaws.services.iotdata.model.GetThingShadowResult;
 import org.kyantra.beans.DeviceAttributeBean;
 import org.kyantra.beans.ShadowBean;
 import org.kyantra.beans.ThingBean;
@@ -61,13 +63,17 @@ public class PubSubResource extends BaseResource {
     public String getThingShadow(@PathParam("id") Integer thingId) throws AWSIotException {
         ThingBean thingBean = ThingDAO.getInstance().get(thingId);
         String shadowName = "thing"+thingBean.getId();
-        AWSIotMqttClient client = AwsIotHelper.getMQTT();
-        AWSIotDevice device = new AWSIotDevice(shadowName);
-        client.attach(device);
-        client.connect();
-        String state = device.get();
-        client.disconnect();
-        return state;
+
+        AWSIotData client1 = AwsIotHelper.getIotDataClient();
+        GetThingShadowResult result = client1.getThingShadow(new GetThingShadowRequest()
+                    .withThingName(shadowName));
+        byte[] bytes = new byte[result.getPayload().remaining()];
+        result.getPayload().get(bytes);
+        String resultString = new String(bytes);
+        client1.shutdown();
+
+        return resultString;
+
     }
 
 

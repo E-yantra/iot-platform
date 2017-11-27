@@ -5,6 +5,8 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.iot.AWSIot;
 import com.amazonaws.services.iot.AWSIotClientBuilder;
 import com.amazonaws.services.iot.client.AWSIotMqttClient;
+import com.amazonaws.services.iotdata.AWSIotData;
+import com.amazonaws.services.iotdata.AWSIotDataClientBuilder;
 import org.kyantra.config.AWSCredsProvider;
 import org.kyantra.dao.ConfigDAO;
 
@@ -19,6 +21,18 @@ public class AwsIotHelper {
         clientBuilder.setCredentials(new AWSCredsProvider( new BasicAWSCredentials(awsKey,awsSecret)));
         clientBuilder.setRegion(Regions.AP_SOUTHEAST_1.getName());
         AWSIot client = clientBuilder.build();
+        return client;
+    }
+
+    public static AWSIotData getIotDataClient(){
+
+        String awsKey = ConfigDAO.getInstance().get("awsKey").getValue();
+        String awsSecret = ConfigDAO.getInstance().get("awsSecret").getValue();
+
+        AWSIotDataClientBuilder clientBuilder = AWSIotDataClientBuilder.standard();
+        clientBuilder.setCredentials(new AWSCredsProvider( new BasicAWSCredentials(awsKey,awsSecret)));
+        clientBuilder.setRegion(Regions.AP_SOUTHEAST_1.getName());
+        AWSIotData client = clientBuilder.build();
         return client;
     }
 
