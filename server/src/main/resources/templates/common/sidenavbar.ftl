@@ -8,6 +8,9 @@
                 <a class="nav-link <#if active?? && active=="profile">active</#if>" href="/profile">My Profile</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link <#if active?? && active=="rules">active</#if>" href="/rules">Rules</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link text-red" href="/logout">Logout</a>
             </li>
         </ul>

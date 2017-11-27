@@ -42,6 +42,10 @@
             border-right: 1px solid #eee;
         }
 
+        button{
+            cursor: pointer;
+        }
+
         .sidebar .nav {
             margin-bottom: 20px;
         }

@@ -1,5 +1,9 @@
 package org.kyantra.resources;
 
+import com.amazonaws.services.iot.client.AWSIotException;
+import com.amazonaws.services.iotdata.AWSIotData;
+import com.amazonaws.services.iotdata.model.GetThingShadowRequest;
+import com.amazonaws.services.iotdata.model.GetThingShadowResult;
 import io.swagger.annotations.Api;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.ThingBean;
@@ -8,6 +12,7 @@ import org.kyantra.dao.ThingDAO;
 import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
+import org.kyantra.utils.AwsIotHelper;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -114,4 +119,23 @@ public class ThingResource extends BaseResource {
         return gson.toJson(things);
     }
 
+    @GET
+    @Path("shadow/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public String getThingShadow(@PathParam("id") Integer thingId) throws AWSIotException {
+        ThingBean thingBean = ThingDAO.getInstance().get(thingId);
+        String shadowName = "thing"+thingBean.getId();
+
+        AWSIotData client1 = AwsIotHelper.getIotDataClient();
+        GetThingShadowResult result = client1.getThingShadow(new GetThingShadowRequest()
+                .withThingName(shadowName));
+        byte[] bytes = new byte[result.getPayload().remaining()];
+        result.getPayload().get(bytes);
+        String resultString = new String(bytes);
+        client1.shutdown();
+
+        return resultString;
+
+    }
 }
