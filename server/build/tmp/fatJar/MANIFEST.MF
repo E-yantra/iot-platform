@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Implementation-Title: Api Server
 Implementation-Version: 1.0-server
-Main-Class: in.bookstruck.api.Main
+Main-Class: org.kyantra.Main
 

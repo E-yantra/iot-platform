@@ -21,7 +21,7 @@ task fatJar(type: Jar) {
         //noinspection GroovyAssignabilityCheck
         attributes 'Implementation-Title': 'Api Server',
                 'Implementation-Version': version,
-                'Main-Class': 'in.bookstruck.api.Main'
+                'Main-Class': 'org.kyantra.Main'
     }
     baseName = project.name + '-all'
     from {
