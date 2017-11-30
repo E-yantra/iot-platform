@@ -42,10 +42,23 @@
                         <div class="float-right">
                             <button v-on:click="edit" class="btn btn-primary btn-sm">EDIT</button>
                             <button v-on:click="generate" class="btn btn-primary btn-sm">GENERATE CLIENT</button>
+                            <button v-on:click="dashboard" class="btn btn-primary btn-sm">DASHBOARD</button>
                         </div>
                         <button v-on:click="deleteThing" class="btn btn-danger btn-sm float-left text-white"><i class="fa fa-trash-o fa-lg"></i>DELETE
                             THING
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        Automation Rules
+                    </div>
+                    <div class="card-body">
+
                     </div>
                 </div>
             </div>
@@ -112,6 +125,9 @@
             generateCode: ""
         },
         methods: {
+            "dashboard":function () {
+              window.location = "/things/dashboard/"+thingId;
+            },
             "publish": function () {
                 var that = this;
                 $.ajax({
@@ -252,7 +268,7 @@
                     "method": "GET",
                     success: function (data) {
                         that.saveLoader = false;
-                        that.generateCode = JSON.stringify(data, null, 4);
+                        that.generateCode = (data);
                     }
                 });
             },

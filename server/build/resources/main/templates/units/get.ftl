@@ -93,8 +93,8 @@
                             {{right.user.name}}</td>
                             <td>{{right.user.email}}</td>
                             <td>{{right.role}}</td>
-                            <td><button v-on:click="editUser(right)" class="btn btn-default btn-sm">EDIT</button> </td>
-                            <td><button v-on:click="deleteUser(right)" class="btn btn-default btn-sm">DELETE</button> </td>
+                            <td><button v-on:click="editUser(right)" class="btn btn-default btn-sm">EDIT</button>
+                            <button v-on:click="deleteUser(right)" class="btn btn-default btn-sm">DELETE</button> </td>
                         </tr>
                     </table>
                 </div>

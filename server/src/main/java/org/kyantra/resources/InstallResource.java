@@ -1,12 +1,17 @@
 package org.kyantra.resources;
 
 import org.glassfish.jersey.server.mvc.Template;
-import org.kyantra.beans.*;
+import org.hibernate.Session;
+import org.kyantra.beans.RightsBean;
+import org.kyantra.beans.RoleEnum;
+import org.kyantra.beans.SessionBean;
+import org.kyantra.beans.ThingBean;
+import org.kyantra.beans.UnitBean;
+import org.kyantra.beans.UserBean;
 import org.kyantra.dao.RightsDAO;
 import org.kyantra.dao.ThingDAO;
 import org.kyantra.dao.UnitDAO;
 import org.kyantra.dao.UserDAO;
-import org.hibernate.Session;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -14,11 +19,11 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Siddhesh Prabhugaonkar on 21-11-2017.
  */
+@Path("install")
 public class InstallResource extends BaseResource {
 
     @GET
@@ -34,7 +39,7 @@ public class InstallResource extends BaseResource {
             UserBean user1 = new UserBean();
             user1.setName("Super Admin");
             user1.setEmail("admin@e-yantra.org");
-            user1.setPassword("123456");
+            user1.setPassword("1234567");
             UserDAO.getInstance().add(user1);
 
             UserBean user2 = new UserBean();
@@ -44,9 +49,9 @@ public class InstallResource extends BaseResource {
             UserDAO.getInstance().add(user2);
 
             UnitBean unit1 = new UnitBean();
-            unit1.setUnitName("Unit_Name");
+            unit1.setUnitName("My Main Unit");
             unit1.setDescription("sample description");
-            unit1.setPhoto("http://p0.static.bookstruck.in.s3.amazonaws.com/images/6d638803187b4d2988598252d2ad3c7c.jpg");
+            unit1.setPhoto("hhttp://p0.static.bookstruck.in.s3.amazonaws.com/images/b5b8f6d9aa9049df91f9b5d45418b073.png\n");
             UnitDAO.getInstance().add(unit1);
 
             UnitBean unit2 = new UnitBean();
