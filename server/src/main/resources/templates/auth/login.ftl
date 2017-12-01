@@ -9,7 +9,7 @@
                     <div id="app" v-if="error" class="alert alert-danger">
                         {{ message }}
                     </div>
-                    <div style="text-align: center;font-size: 30px;text-decoration: none;"><a href="#=/">IoT Platform</a></div>
+                    <div style="text-align: center;font-size: 30px;"><a style="text-decoration: none;" href="#">IoT Platform</a></div>
                     <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" autocomplete="off" />
                     <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="" autocomplete="off" />
                     <div style="text-align: left" class="checkbox">
