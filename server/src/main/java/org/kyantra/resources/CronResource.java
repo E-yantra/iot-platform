@@ -23,8 +23,6 @@ public class CronResource extends BaseResource {
 
 
 
-
-
     @POST
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)

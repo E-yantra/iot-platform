@@ -4,9 +4,11 @@ import com.google.gson.annotations.Expose;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -29,6 +31,22 @@ public class CronBean {
     @Column(name = "cloudwatch_resource")
     @Expose
     String cloudwatchResource;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @Expose
+    ThingBean parentThing;
+
+
+
+    public ThingBean getParentThing() {
+        return parentThing;
+    }
+
+    public void setParentThing(ThingBean parentThing) {
+        this.parentThing = parentThing;
+    }
+
+
 
 
 

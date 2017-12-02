@@ -37,10 +37,21 @@ public class ThingBean {
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "parentThing")
     @Expose
     private Set<DeviceBean> devices;
-
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "parentThing")
+    private Set<CronBean> crons;
     @OneToOne(fetch = FetchType.EAGER)
     @Expose
     private UnitBean parentUnit;
+
+
+
+    public Set<CronBean> getCrons() {
+        return crons;
+    }
+
+    public void setCrons(Set<CronBean> crons) {
+        this.crons = crons;
+    }
 
     public String getIp() {
         return ip;
