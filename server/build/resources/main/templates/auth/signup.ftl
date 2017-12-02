@@ -77,7 +77,9 @@
     .form-links a {
         color: #fff;
     }
-
+    a {
+        color: #20a8d8 !important;
+    }
 </style>
 </body>
 </html>
