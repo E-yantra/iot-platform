@@ -26,6 +26,20 @@ public class CronBean {
     @Expose
     String desiredState;
 
+    @Column(name = "cloudwatch_resource")
+    @Expose
+    String cloudwatchResource;
+
+
+
+    public String getCloudwatchResource() {
+        return cloudwatchResource;
+    }
+
+    public void setCloudwatchResource(String cloudwatchResource) {
+        this.cloudwatchResource = cloudwatchResource;
+    }
+
     public Integer getId() {
         return id;
     }

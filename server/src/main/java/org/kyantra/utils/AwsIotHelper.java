@@ -2,6 +2,8 @@ package org.kyantra.utils;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.cloudwatchevents.AmazonCloudWatchEvents;
+import com.amazonaws.services.cloudwatchevents.AmazonCloudWatchEventsClientBuilder;
 import com.amazonaws.services.iot.AWSIot;
 import com.amazonaws.services.iot.AWSIotClientBuilder;
 import com.amazonaws.services.iot.client.AWSIotMqttClient;
@@ -22,6 +24,15 @@ public class AwsIotHelper {
         clientBuilder.setRegion(Regions.AP_SOUTHEAST_1.getName());
         AWSIot client = clientBuilder.build();
         return client;
+    }
+
+    public static AmazonCloudWatchEvents getAmazonCloudWatchEvents(){
+        String awsKey = ConfigDAO.getInstance().get("awsKey").getValue();
+        String awsSecret = ConfigDAO.getInstance().get("awsSecret").getValue();
+        AmazonCloudWatchEventsClientBuilder clientBuilder = AmazonCloudWatchEventsClientBuilder.standard();
+        clientBuilder.setCredentials(new AWSCredsProvider( new BasicAWSCredentials(awsKey,awsSecret)));
+        clientBuilder.setRegion(Regions.AP_SOUTHEAST_1.getName());
+        return clientBuilder.build();
     }
 
     public static AWSIotData getIotDataClient(){

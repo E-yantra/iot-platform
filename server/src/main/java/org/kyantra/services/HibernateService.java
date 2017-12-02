@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.kyantra.beans.ConfigBean;
+import org.kyantra.beans.CronBean;
 import org.kyantra.beans.DeviceAttributeBean;
 import org.kyantra.beans.DeviceBean;
 import org.kyantra.beans.RightsBean;
@@ -28,6 +29,7 @@ public class HibernateService {
         configuration.addAnnotatedClass(ThingBean.class);
         configuration.addAnnotatedClass(SessionBean.class);
         configuration.addAnnotatedClass(ConfigBean.class);
+        configuration.addAnnotatedClass(CronBean.class);
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
         sessionFactory = configuration.buildSessionFactory(builder.build());
     }

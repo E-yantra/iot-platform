@@ -61,7 +61,10 @@
                     "method": "POST",
                     "data":{ "value": att.value?0:1} ,
                     success: function (data) {
-                        that.refresh();
+                        setTimeout(function () {
+                            that.refresh();
+                        },3000);
+
                     }
                 });
             },
@@ -152,7 +155,7 @@
 
             setInterval(function () {
                 that.refresh();
-            },30000);
+            },10000);
         }
     })
 </script>
