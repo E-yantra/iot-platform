@@ -5,7 +5,7 @@
 <#include "../common/sidenavbar.ftl"/>
 <main role="main" class="main">
     <form>
-        <div style="float: right;margin-bottom: 10px;"><a href="/units/create" role="button"class="btn btn-primary">Add New</a></div>
+        <div style="float: right;margin-bottom: 10px;" v-if="role=='ALL' || role=='WRITE'"><a href="/units/create" role="button"class="btn btn-primary">Add New</a></div>
         <table class="table table-bordered">
             <thead>
             <tr>
