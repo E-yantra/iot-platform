@@ -5,7 +5,7 @@
 <#if user??>
     <#include "./common/sidenavbar.ftl"/>
 </#if>
-    <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+    <main role="main" class="main">
     <#if user??>
         <div class="row">
             <#if !units?has_content>

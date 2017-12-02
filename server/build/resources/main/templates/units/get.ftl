@@ -5,6 +5,7 @@
 <#if user??>
     <#include "../common/sidenavbar.ftl"/>
 </#if>
+
 <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
     <div class="row">
         <div class="col-md-12">
@@ -102,11 +103,12 @@
         </div>
     </div>
 </main>
+
+
 <#include "../modals/crud_unit.ftl"/>
 <#include "../modals/crud_thing.ftl"/>
 <#include "../modals/crud_user.ftl"/>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="/static/js/app.js"></script>
 <script>
