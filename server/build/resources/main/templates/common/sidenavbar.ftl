@@ -2,16 +2,16 @@
     <#if user??>
         <ul class="nav nav-pills flex-column">
             <li class="nav-item">
-                <a class="nav-link <#if active?? && active=="home">active</#if>" href="/">Home</a>
+               <a class="nav-link <#if active?? && active=="home">active</#if>" href="/">Home  <i style="float: right;" class="fa fa-home fa-lg" aria-hidden="true"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <#if active?? && active=="profile">active</#if>" href="/profile">My Profile</a>
+                <a class="nav-link <#if active?? && active=="profile">active</#if>" href="/profile">My Profile<i style="float: right;"  class="fa fa-user fa-lg" aria-hidden="true"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <#if active?? && active=="rules">active</#if>" href="/rules">Rules</a>
+                <a class="nav-link <#if active?? && active=="rules">active</#if>" href="/rules">Rules<i style="float: right;"  class="fa fa-book fa-lg" aria-hidden="true"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-red" href="/logout">Logout</a>
+                <a class="nav-link text-red" href="/logout">Logout <i style="float: right;" class="fa fa-sign-out fa-lg" aria-hidden="true"></i></a>
             </li>
         </ul>
     </#if>

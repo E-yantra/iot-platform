@@ -3,7 +3,7 @@
 <#include "../common/navbar.ftl"/>
 <div class="container-fluid" id="container-main">
 <#include "../common/sidenavbar.ftl"/>
-    <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+    <main role="main" class="main">
             <form>
                 <div style="float: right;margin-bottom: 10px;"><a href="/rights/create" role="button"class="btn btn-primary">Add New</a></div>
                 <table class="table table-bordered">
