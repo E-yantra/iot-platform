@@ -69,7 +69,7 @@ public class CronResource extends BaseResource {
     public String create(
             @FormParam("thingId") Integer thingId,
             @FormParam("cronExpression") String cronExpression,
-                         @FormParam("desiredState") String desiredState){
+            @FormParam("desiredState") String desiredState){
 
         try {
             CronBean bean = new CronBean();

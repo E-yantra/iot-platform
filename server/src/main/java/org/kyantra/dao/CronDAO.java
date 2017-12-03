@@ -1,9 +1,11 @@
 package org.kyantra.dao;
 
 import com.amazonaws.services.cloudwatchevents.AmazonCloudWatchEvents;
+import com.amazonaws.services.cloudwatchevents.model.DeleteRuleRequest;
 import com.amazonaws.services.cloudwatchevents.model.PutRuleRequest;
 import com.amazonaws.services.cloudwatchevents.model.PutRuleResult;
 import com.amazonaws.services.cloudwatchevents.model.PutTargetsRequest;
+import com.amazonaws.services.cloudwatchevents.model.RemoveTargetsRequest;
 import com.amazonaws.services.cloudwatchevents.model.RuleState;
 import com.amazonaws.services.cloudwatchevents.model.Target;
 import com.amazonaws.services.lambda.AWSLambda;
@@ -51,7 +53,7 @@ public class CronDAO extends BaseDAO {
             PutRuleRequest request = new PutRuleRequest()
                     .withName("cronRule"+bean.getId())
                     .withDescription("Iot Generated Rule")
-                    .withScheduleExpression("cron(" + bean.getCronExpression() + ")")
+                    .withScheduleExpression("cron(" + bean.getCronExpression().trim() + ")")
                     .withState(RuleState.ENABLED);
 
             PutRuleResult response = cwe.putRule(request);
@@ -97,7 +99,7 @@ public class CronDAO extends BaseDAO {
         Session session = getService().getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         CronBean cronBean = session.get(CronBean.class, id);
-        cronBean.setCronExpression(ruleArn);
+        cronBean.setCloudwatchResource(ruleArn);
         tx.commit();
         session.close();
     }
@@ -110,6 +112,20 @@ public class CronDAO extends BaseDAO {
     }
 
     public void delete(Integer id){
+
+        try {
+
+            RemoveTargetsRequest targetsRequest = new RemoveTargetsRequest();
+            targetsRequest.withIds("target_"+id);
+            targetsRequest.setRule("cronRule" + id);
+            cwe.removeTargets(targetsRequest);
+            DeleteRuleRequest ruleRequest = new DeleteRuleRequest();
+            ruleRequest.withName("cronRule" + id);
+            cwe.deleteRule(ruleRequest);
+        }catch (Throwable t){
+            t.printStackTrace();
+        }
+
         Session session = getService().getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         CronBean bean = session.get(CronBean.class, id);

@@ -53,17 +53,31 @@
         </div>
         <div class="row">
             <div class="col-md-12">
+                <p>&nbsp;</p>
                 <div class="card">
                     <div class="card-header">
-                        Automation Rules
+                        Crons
                     </div>
                     <div class="card-body">
-
+                        <table class="table">
+                            <tr v-for="cron in crons">
+                                <td>
+                                    {{cron.cronExpression}}
+                                </td>
+                                <td>
+                                    {{cron.desiredState}}
+                                </td>
+                                <td><button class="btn btn-danger" v-on:click="deleteCron(cron)" >Delete</button> </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <button v-on:click="addCron" class="btn btn-outline-primary">Add Cron</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row hidden hide" style="display: none;">
             <div class="col-md-6">
                 <p>&nbsp;</p>
                 <div class="card">
@@ -96,6 +110,7 @@
         </div>
     </main>
 <#include "../modals/crud_device.ftl"/>
+<#include "../modals/crud_cron.ftl"/>
 <#include "../modals/generate.ftl"/>
 </div>
 
@@ -122,7 +137,13 @@
                 "deviceAttributes": []
             },
             cttr: {},
-            generateCode: ""
+            generateCode: "",
+            cron:{},
+            cronDevice:{},
+            cronAttribute:{},
+            cronExpression:"",
+            cronAttributeValue:"",
+            crons:[]
         },
         methods: {
             "dashboard":function () {
@@ -201,6 +222,8 @@
                     }
                 });
 
+                that.getCrons();
+
             },
             "removeAttr": function (key) {
                 if (key !== -1) {
@@ -256,7 +279,61 @@
                 };
                 $("#create_device").modal('show');
             },
+            "addCron": function(){
+
+                $("#create_cron").modal('show');
+            },
             "edit": function () {
+
+            },
+            "deleteCron":function (cron) {
+                var that = this;
+                if(confirm("Are you sure you want to delete this cron?")){
+                    $.ajax({
+                        url: "/cron/delete/"+cron.id,
+                        "method": "DELETE",
+                        success: function (data) {
+                            that.getCrons();
+                        }
+                    });
+
+                }
+            },
+            "getCrons":function(){
+                var that = this;
+                $.ajax({
+                    url: "/cron/thing/"+thingId,
+                    "method": "GET",
+                    success: function (data) {
+                       that.crons = data;
+                    }
+                });
+            },
+            "saveCron": function(){
+
+                var that = this;
+                that.saveLoader = true;
+                var desired = {};
+
+                desired["device"+that.cronDevice.id+"."+that.cronAttribute.id] = (that.cronAttribute.type==='Integer' ||  that.cronAttribute.type==='Boolean') ? parseInt(that.cronAttributeValue,10):that.cronAttributeValue;
+                if(that.cronAttribute.type==='Double'){
+                    desired["device"+that.cronDevice.id+"."+that.cronAttribute.id] = parseFloat(that.cronAttributeValue);
+                }
+                $.ajax({
+                    url: "/cron/create",
+                    "method": "POST",
+                    "data":{
+                        "thingId":thingId,
+                        "cronExpression":that.cronExpression,
+                        "desiredState":JSON.stringify(desired)
+                    },
+                    success: function (data) {
+                        that.saveLoader = false;
+                        $("#create_cron").modal('hide');
+                        that.getCrons();
+                    }
+                });
+
 
             },
             "generate": function () {
