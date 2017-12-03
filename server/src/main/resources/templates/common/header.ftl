@@ -58,6 +58,10 @@
             border-radius:0px;
         }
 
+        .main{
+            padding-top:50px;
+        }
+
         /*login form css */
         @CHARSET "UTF-8";
 
