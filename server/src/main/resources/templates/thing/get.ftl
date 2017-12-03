@@ -5,7 +5,7 @@
 <#if user??>
     <#include "../common/sidenavbar.ftl"/>
 </#if>
-    <main role="main" class="main">
+    <main role="main" class="main col-sm-9 ml-sm-auto col-md-10 pt-3">
         <div class="row">
             <div class="col-md-12">
                 <div class="float-right p-1" v-if="role=='ALL' || role=='WRITE'">
