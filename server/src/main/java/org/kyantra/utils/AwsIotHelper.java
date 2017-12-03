@@ -9,6 +9,8 @@ import com.amazonaws.services.iot.AWSIotClientBuilder;
 import com.amazonaws.services.iot.client.AWSIotMqttClient;
 import com.amazonaws.services.iotdata.AWSIotData;
 import com.amazonaws.services.iotdata.AWSIotDataClientBuilder;
+import com.amazonaws.services.lambda.AWSLambda;
+import com.amazonaws.services.lambda.AWSLambdaClientBuilder;
 import org.kyantra.config.AWSCredsProvider;
 import org.kyantra.dao.ConfigDAO;
 
@@ -30,6 +32,15 @@ public class AwsIotHelper {
         String awsKey = ConfigDAO.getInstance().get("awsKey").getValue();
         String awsSecret = ConfigDAO.getInstance().get("awsSecret").getValue();
         AmazonCloudWatchEventsClientBuilder clientBuilder = AmazonCloudWatchEventsClientBuilder.standard();
+        clientBuilder.setCredentials(new AWSCredsProvider( new BasicAWSCredentials(awsKey,awsSecret)));
+        clientBuilder.setRegion(Regions.AP_SOUTHEAST_1.getName());
+        return clientBuilder.build();
+    }
+
+    public static AWSLambda getAWSLambdaClient(){
+        String awsKey = ConfigDAO.getInstance().get("awsKey").getValue();
+        String awsSecret = ConfigDAO.getInstance().get("awsSecret").getValue();
+        AWSLambdaClientBuilder clientBuilder = AWSLambdaClientBuilder.standard().standard();
         clientBuilder.setCredentials(new AWSCredsProvider( new BasicAWSCredentials(awsKey,awsSecret)));
         clientBuilder.setRegion(Regions.AP_SOUTHEAST_1.getName());
         return clientBuilder.build();

@@ -64,6 +64,9 @@ dependencies {
     compile 'com.amazonaws:aws-java-sdk-iot:1.11.221'
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-events
     compile group: 'com.amazonaws', name: 'aws-java-sdk-events', version: '1.11.238'
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-lambda
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-lambda', version: '1.11.240'
+
 
 
 

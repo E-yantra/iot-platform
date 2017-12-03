@@ -6,6 +6,8 @@ import com.amazonaws.services.cloudwatchevents.model.PutRuleResult;
 import com.amazonaws.services.cloudwatchevents.model.PutTargetsRequest;
 import com.amazonaws.services.cloudwatchevents.model.RuleState;
 import com.amazonaws.services.cloudwatchevents.model.Target;
+import com.amazonaws.services.lambda.AWSLambda;
+import com.amazonaws.services.lambda.model.AddPermissionRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.hibernate.Session;
@@ -14,8 +16,13 @@ import org.kyantra.beans.ConfigBean;
 import org.kyantra.beans.CronBean;
 import org.kyantra.utils.AwsIotHelper;
 
+import javax.persistence.Query;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class CronDAO extends BaseDAO {
 
@@ -43,6 +50,7 @@ public class CronDAO extends BaseDAO {
         try {
             PutRuleRequest request = new PutRuleRequest()
                     .withName("cronRule"+bean.getId())
+                    .withDescription("Iot Generated Rule")
                     .withScheduleExpression("cron(" + bean.getCronExpression() + ")")
                     .withState(RuleState.ENABLED);
 
@@ -50,7 +58,7 @@ public class CronDAO extends BaseDAO {
             ConfigBean configBean = ConfigDAO.getInstance().get("lambdaFunctionArn");
             String targetData = "{}";
             Map<String,Object> map = new HashMap<>();
-            map.put("thingName","thing"+bean.getId());
+            map.put("thingName","thing"+bean.getParentThing().getId());
             map.put("desired",bean.getDesiredState());
             targetData = gson.toJson(map);
 
@@ -63,6 +71,15 @@ public class CronDAO extends BaseDAO {
                     .withTargets(target)
                     .withRule("cronRule"+bean.getId());
             cwe.putTargets(request2);
+
+            AWSLambda lambda = AwsIotHelper.getAWSLambdaClient();
+            String[] functionArn = configBean.getValue().split(":");
+            lambda.addPermission(new AddPermissionRequest()
+                    .withFunctionName(functionArn[functionArn.length-1])
+                    .withStatementId(UUID.randomUUID().toString())
+                    .withPrincipal("events.amazonaws.com")
+                    .withSourceArn(response.getRuleArn())
+            .withAction("lambda:InvokeFunction"));
 
             updateLambdaArn(bean.getId(),response.getRuleArn());
         }catch (Throwable t){
@@ -111,5 +128,14 @@ public class CronDAO extends BaseDAO {
         cronBean.setDesiredState(desiredState);
         tx.commit();
         session.close();
+    }
+
+    public Set<CronBean> getByThingId(Integer id) {
+        Session session = getService().getSessionFactory().openSession();
+        String ql = "from CronBean where parentThing_Id="+id;
+        Query query = session.createQuery(ql);
+        List<CronBean> list = query.getResultList();
+        session.close();
+        return new HashSet<>(list);
     }
 }
