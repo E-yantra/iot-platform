@@ -54,6 +54,10 @@
             padding-bottom: 1.5rem;
         }
 
+        .nav-pills .nav-link{
+            border-radius:0px;
+        }
+
         /*login form css */
         @CHARSET "UTF-8";
 
