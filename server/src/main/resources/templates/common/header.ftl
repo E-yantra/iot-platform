@@ -59,7 +59,7 @@
         }
 
         .main{
-            padding-top:50px;
+            padding-top:60px !important;
         }
 
         /*login form css */
