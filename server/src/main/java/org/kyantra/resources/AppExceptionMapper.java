@@ -12,6 +12,13 @@ public class AppExceptionMapper implements ExceptionMapper<Throwable> {
     @Override
     public Response toResponse(Throwable ex) {
 
+        if(ex instanceof AccessDeniedException){
+            return Response.status(403)
+                    .entity("Access Denied")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+
         if(ex instanceof WebApplicationException){
             WebApplicationException exception = (WebApplicationException) ex;
             return exception.getResponse();
