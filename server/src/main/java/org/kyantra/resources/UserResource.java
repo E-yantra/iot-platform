@@ -49,9 +49,12 @@ public class UserResource extends BaseResource{
     @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String update(@PathParam("id") Integer id, UserBean userBean){
-        UserDAO.getInstance().update(id,userBean.getName(),userBean.getEmail(),userBean.getPassword());
-        userBean = UserDAO.getInstance().get(userBean.getId());
+    public String update(@PathParam("id") Integer id,
+                         @FormParam("name") String name,
+                         @FormParam("email") String email,
+                         @FormParam("password") String password){
+        UserDAO.getInstance().update(id,name,email,password);
+        UserBean userBean = UserDAO.getInstance().get(id);
         return gson.toJson(userBean);
     }
 
@@ -80,7 +83,6 @@ public class UserResource extends BaseResource{
                          @FormParam("email") String email,
                          @FormParam("password") String password){
         try {
-
             String s = "Found something";
             UserBean user = new UserBean();
             user.setName(name);
@@ -89,7 +91,6 @@ public class UserResource extends BaseResource{
             UserBean userBean = UserDAO.getInstance().add(user);
 
             return gson.toJson(userBean);
-
         }catch (Throwable t){
             t.printStackTrace();
         }

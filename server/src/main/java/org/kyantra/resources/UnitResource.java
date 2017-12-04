@@ -62,25 +62,34 @@ public class UnitResource extends BaseResource {
     public String update(@PathParam("id") Integer id,
                          @FormParam("unitName") String name,
                          @FormParam("description") String description,
-                         @FormParam("photo") String photo){
+                         @FormParam("photo") String photo) throws NotAuthorizedException {
         //TODO: can parent unit be changed?
-        UnitDAO.getInstance().update(id,name,description,photo);
-        UnitBean unitBean = UnitDAO.getInstance().get(id);
-        return gson.toJson(unitBean);
+        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
+            UnitDAO.getInstance().update(id, name, description, photo);
+            UnitBean unitBean = UnitDAO.getInstance().get(id);
+            return gson.toJson(unitBean);
+        }
+        else{
+            throw new NotAuthorizedException("Not authorized.");
+        }
     }
 
     @DELETE
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String delete(@PathParam("id") Integer id){
-        try {
-            UnitDAO.getInstance().delete(id);
+    public String delete(@PathParam("id") Integer id) throws NotAuthorizedException{
+        if (AuthorizationDAO.getInstance().ownsUnit((UserBean) getSecurityContext().getUserPrincipal(), UnitDAO.getInstance().get(id))) {
+            try {
+                UnitDAO.getInstance().delete(id);
+                return "{}";
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
             return "{}";
-        }catch (Throwable t) {
-            t.printStackTrace();
+        } else {
+            throw new NotAuthorizedException("Not authorized.");
         }
-        return "{}";
     }
 
     @POST
@@ -92,29 +101,31 @@ public class UnitResource extends BaseResource {
     public String create(@FormParam("unitName") String name,
                          @FormParam("description") String description,
                          @FormParam("photo") String photo,
-                         @DefaultValue("0") @FormParam("parentUnitId") Integer parentUnitId ){
-        //TODO: Root unit will have parent unit = NULL
-        // scenario to be handled
-        try {
-            String s = "Found something";
-            //System.out.println(gson.toJson(childUnit));
-            UnitBean unit = new UnitBean();
-            unit.setUnitName(name);
-            unit.setDescription(description);
-            unit.setPhoto(photo);
+                         @DefaultValue("0") @FormParam("parentUnitId") Integer parentUnitId) throws NotAuthorizedException{
+        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(parentUnitId))) {
+            try {
+                String s = "Found something";
+                //System.out.println(gson.toJson(childUnit));
+                UnitBean unit = new UnitBean();
+                unit.setUnitName(name);
+                unit.setDescription(description);
+                unit.setPhoto(photo);
 
-            //root unit will not have any parent unit
-            if (parentUnitId!=0){
-                unit.setParent(UnitDAO.getInstance().get(parentUnitId));
+                //root unit will not have any parent unit
+                if (parentUnitId != 0) {
+                    unit.setParent(UnitDAO.getInstance().get(parentUnitId));
+                }
+
+                unit = UnitDAO.getInstance().add(unit);
+                return gson.toJson(unit);
+
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
-
-            unit = UnitDAO.getInstance().add(unit);
-            return gson.toJson(unit);
-
-        }catch (Throwable t){
-            t.printStackTrace();
+            return "{\"success\":false}";
+        }else{
+            throw new NotAuthorizedException("Not authorized.");
         }
-        return "{\"success\":false}";
     }
 
     @POST
@@ -122,10 +133,14 @@ public class UnitResource extends BaseResource {
     @Path("addusers/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String addUsers(@PathParam("id") Integer id, Set<UserBean> users){
-        UnitDAO.getInstance().addUsers(id,users);
-        UnitBean unitBean = UnitDAO.getInstance().get(id);
-        return gson.toJson(unitBean);
+    public String addUsers(@PathParam("id") Integer id, Set<UserBean> users) throws NotAuthorizedException{
+        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
+            UnitDAO.getInstance().addUsers(id, users);
+            UnitBean unitBean = UnitDAO.getInstance().get(id);
+            return gson.toJson(unitBean);
+        }else{
+            throw new NotAuthorizedException("Not authorized.");
+        }
     }
 
     @GET

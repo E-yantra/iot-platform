@@ -4,17 +4,14 @@ import org.glassfish.jersey.server.mvc.Template;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
+import org.kyantra.dao.AuthorizationDAO;
 import org.kyantra.dao.RightsDAO;
 import org.kyantra.dao.ThingDAO;
 import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Session;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
@@ -66,8 +63,6 @@ public class HomeResource extends BaseResource {
         return map;
     }
 
-
-
     @GET
     @Path("/units/list")
     @Template(name = "/units/list.ftl")
@@ -83,14 +78,20 @@ public class HomeResource extends BaseResource {
     @Path("/units/create")
     @Template(name = "/units/create.ftl")
     @Session
-    public Map<String, Object> createUnit(@QueryParam("id") Integer id) {
-        final Map<String, Object> map = new HashMap<String, Object>();
-        map.put("active","unit");
-        if(id!=null){
-            map.put("unit",UnitDAO.getInstance().get(id));
+    public Map<String, Object> createUnit(@QueryParam("id") Integer id) throws NotAuthorizedException{
+        //TODO: required?
+        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
+            final Map<String, Object> map = new HashMap<String, Object>();
+            map.put("active", "unit");
+            if (id != null) {
+                map.put("unit", UnitDAO.getInstance().get(id));
+            }
+            setCommonData(map);
+            return map;
         }
-        setCommonData(map);
-        return map;
+        else{
+            throw new NotAuthorizedException("Not authorized.");
+        }
     }
 
     @GET
@@ -219,7 +220,4 @@ public class HomeResource extends BaseResource {
         setCommonData(map);
         return map;
     }
-
-
-
 }

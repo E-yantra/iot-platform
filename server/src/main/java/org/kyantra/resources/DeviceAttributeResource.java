@@ -3,20 +3,15 @@ package org.kyantra.resources;
 import io.swagger.annotations.Api;
 import org.kyantra.beans.DeviceAttributeBean;
 import org.kyantra.beans.RoleEnum;
+import org.kyantra.beans.UserBean;
+import org.kyantra.dao.AuthorizationDAO;
 import org.kyantra.dao.DeviceAttributeDAO;
 import org.kyantra.dao.DeviceDAO;
 import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -43,10 +38,14 @@ public class DeviceAttributeResource extends BaseResource {
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
                          @FormParam("type") String type,
-                         @FormParam("def") String def){
-        DeviceAttributeDAO.getInstance().update(id, name, type,def);
-        DeviceAttributeBean bean = DeviceAttributeDAO.getInstance().get(id);
-        return gson.toJson(bean);
+                         @FormParam("def") String def) throws NotAuthorizedException{
+        if (AuthorizationDAO.getInstance().ownsDeviceAttributes((UserBean)getSecurityContext().getUserPrincipal(),DeviceAttributeDAO.getInstance().get(id))) {
+            DeviceAttributeDAO.getInstance().update(id, name, type, def);
+            DeviceAttributeBean bean = DeviceAttributeDAO.getInstance().get(id);
+            return gson.toJson(bean);
+        }else {
+            throw new NotAuthorizedException("Not authorized.");
+        }
     }
 
     @DELETE
@@ -54,14 +53,18 @@ public class DeviceAttributeResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
     @Session
-    public String delete(@PathParam("id") Integer id){
-        try {
-            DeviceAttributeDAO.getInstance().delete(id);
+    public String delete(@PathParam("id") Integer id) throws  NotAuthorizedException{
+        if (AuthorizationDAO.getInstance().ownsDeviceAttributes((UserBean)getSecurityContext().getUserPrincipal(),DeviceAttributeDAO.getInstance().get(id))) {
+            try {
+                DeviceAttributeDAO.getInstance().delete(id);
+                return "{}";
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
             return "{}";
-        }catch (Throwable t) {
-            t.printStackTrace();
+        }else{
+            throw new NotAuthorizedException("Not authorized.");
         }
-        return "{}";
     }
 
     @POST
@@ -74,23 +77,25 @@ public class DeviceAttributeResource extends BaseResource {
                          @FormParam("type") String type,
                          @FormParam("def") String def,
                          @FormParam("parentDeviceId") Integer parentDeviceId,
-                         @FormParam("ownerUnitId") Integer ownerUnitId){
-        try {
+                         @FormParam("ownerUnitId") Integer ownerUnitId) throws NotAuthorizedException {
+        if (AuthorizationDAO.getInstance().ownsDevice((UserBean)getSecurityContext().getUserPrincipal(),DeviceDAO.getInstance().get(parentDeviceId))) {
+            try {
+                String s = "Found something";
+                DeviceAttributeBean deviceAttribute = new DeviceAttributeBean();
+                deviceAttribute.setName(name);
+                deviceAttribute.setType(type);
+                deviceAttribute.setDef(def);
+                deviceAttribute.setOwnerUnit(UnitDAO.getInstance().get(ownerUnitId));
 
-            String s = "Found something";
-            DeviceAttributeBean deviceAttribute = new DeviceAttributeBean();
-            deviceAttribute.setName(name);
-            deviceAttribute.setType(type);
-            deviceAttribute.setDef(def);
-            deviceAttribute.setOwnerUnit(UnitDAO.getInstance().get(ownerUnitId));
-
-            DeviceAttributeBean deviceAttributeBean = DeviceAttributeDAO.getInstance().add(deviceAttribute);
-            return gson.toJson(deviceAttributeBean);
-
-        }catch (Throwable t){
-            t.printStackTrace();
+                DeviceAttributeBean deviceAttributeBean = DeviceAttributeDAO.getInstance().add(deviceAttribute);
+                return gson.toJson(deviceAttributeBean);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+            return "{\"success\":false}";
+        }else{
+            throw new NotAuthorizedException("Not authorized.");
         }
-        return "{\"success\":false}";
     }
 
     @POST
@@ -105,7 +110,7 @@ public class DeviceAttributeResource extends BaseResource {
             att.setParentDevice(DeviceDAO.getInstance().get(deviceId));
             try {
                 DeviceAttributeDAO.getInstance().add(att);
-            }catch (Throwable t) {t.printStackTrace();} //later chnge to something
+            }catch (Throwable t) {t.printStackTrace();} //later change to something
         }
 
         return "";
