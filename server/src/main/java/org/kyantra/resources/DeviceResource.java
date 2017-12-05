@@ -48,14 +48,14 @@ public class DeviceResource extends BaseResource {
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "device", subjectField = "parentId")
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
-                         @FormParam("description") String description) throws NotAuthorizedException{
+                         @FormParam("description") String description) throws AccessDeniedException{
         //TODO: required?
         if (AuthorizationDAO.getInstance().ownsDevice((UserBean)getSecurityContext().getUserPrincipal(),DeviceDAO.getInstance().get(id))) {
             DeviceDAO.getInstance().update(id, name, description);
             DeviceBean bean = DeviceDAO.getInstance().get(id);
             return gson.toJson(bean);
         }        else {
-            throw new NotAuthorizedException("Not authorized.");
+            throw new AccessDeniedException();
         }
     }
 
@@ -63,7 +63,7 @@ public class DeviceResource extends BaseResource {
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "device", subjectField = "parentId")
-    public String delete(@PathParam("id") Integer id) throws NotAuthorizedException{
+    public String delete(@PathParam("id") Integer id) throws AccessDeniedException{
         if (AuthorizationDAO.getInstance().ownsDevice((UserBean)getSecurityContext().getUserPrincipal(),DeviceDAO.getInstance().get(id))) {
             try {
                 DeviceDAO.getInstance().delete(id);
@@ -73,7 +73,7 @@ public class DeviceResource extends BaseResource {
             }
             return "{}";
         }else {
-            throw new NotAuthorizedException("Not authorized.");
+            throw new AccessDeniedException();
         }
     }
 
@@ -86,7 +86,7 @@ public class DeviceResource extends BaseResource {
     public String create(@FormParam("name") String name,
                          @FormParam("description") String description,
                          @FormParam("parentThingId") Integer parentThingId,
-                         @FormParam("ownerUnitId") Integer ownerUnitId) throws NotAuthorizedException{
+                         @FormParam("ownerUnitId") Integer ownerUnitId) throws AccessDeniedException{
         if (AuthorizationDAO.getInstance().ownsThing((UserBean)getSecurityContext().getUserPrincipal(),ThingDAO.getInstance().get(parentThingId))) {
             try {
                 DeviceBean device = new DeviceBean();
@@ -103,7 +103,7 @@ public class DeviceResource extends BaseResource {
             }
             return "{\"success\":false}";
         }else {
-            throw new NotAuthorizedException("Not authorized.");
+            throw new AccessDeniedException();
         }
     }
 

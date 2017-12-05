@@ -78,7 +78,7 @@ public class HomeResource extends BaseResource {
     @Path("/units/create")
     @Template(name = "/units/create.ftl")
     @Session
-    public Map<String, Object> createUnit(@QueryParam("id") Integer id) throws NotAuthorizedException{
+    public Map<String, Object> createUnit(@QueryParam("id") Integer id) throws AccessDeniedException{
         //TODO: required?
         if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
             final Map<String, Object> map = new HashMap<String, Object>();
@@ -90,7 +90,7 @@ public class HomeResource extends BaseResource {
             return map;
         }
         else{
-            throw new NotAuthorizedException("Not authorized.");
+            throw new AccessDeniedException();
         }
     }
 

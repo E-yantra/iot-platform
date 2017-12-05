@@ -56,7 +56,7 @@ public class ThingResource extends BaseResource {
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
                          @FormParam("description") String description,
-                         @FormParam("ip") String ip) throws NotAuthorizedException{
+                         @FormParam("ip") String ip) throws AccessDeniedException{
         //TODO: create/update will only add/edit current entity values and not its parent/children attributes
         if (AuthorizationDAO.getInstance().ownsThing((UserBean)getSecurityContext().getUserPrincipal(),ThingDAO.getInstance().get(id))) {
             ThingDAO.getInstance().update(id, name, description, ip);
@@ -64,7 +64,7 @@ public class ThingResource extends BaseResource {
             return gson.toJson(bean);
         }
         else {
-            throw new NotAuthorizedException("Not authorized.");
+            throw new AccessDeniedException();
         }
     }
 
@@ -72,7 +72,7 @@ public class ThingResource extends BaseResource {
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
-    public String delete(@PathParam("id") Integer id) throws NotAuthorizedException{
+    public String delete(@PathParam("id") Integer id) throws AccessDeniedException{
         if (AuthorizationDAO.getInstance().ownsThing((UserBean)getSecurityContext().getUserPrincipal(),ThingDAO.getInstance().get(id))) {
             try {
                 ThingDAO.getInstance().delete(id);
@@ -83,7 +83,7 @@ public class ThingResource extends BaseResource {
             return "{}";
         }
         else{
-            throw new NotAuthorizedException("Not authorized.");
+            throw new AccessDeniedException();
         }
     }
 
@@ -96,7 +96,7 @@ public class ThingResource extends BaseResource {
     public String create(@FormParam("name") String name,
                          @FormParam("description") String description,
                          @FormParam("ip") String ip,
-                         @FormParam("parentUnitId") Integer parentUnitId) throws NotAuthorizedException{
+                         @FormParam("parentUnitId") Integer parentUnitId) throws AccessDeniedException{
         if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(parentUnitId))) {
             try {
                 String s = "Create thing";
@@ -115,7 +115,7 @@ public class ThingResource extends BaseResource {
             }
             return "{\"success\":false}";
         }else{
-            throw new NotAuthorizedException("Not authorized.");
+            throw new AccessDeniedException();
         }
     }
 
