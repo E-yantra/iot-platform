@@ -65,14 +65,12 @@ public class RightsDAO {
     }
 
     public void delete(Integer id){
-
         Session session = mService.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         RightsBean user = session.get(RightsBean.class, id);
         session.delete(user);
         tx.commit();
         session.close();
-
     }
 
     public void update(int id, UnitBean unit, RoleEnum role){

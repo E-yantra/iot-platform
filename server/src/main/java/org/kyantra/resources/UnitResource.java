@@ -163,7 +163,6 @@ public class UnitResource extends BaseResource {
             rights.addAll(RightsDAO.getInstance().getRightsByUnit(unitBean));
         }
         return gson.toJson(rights);
-
     }
 
     @GET
@@ -173,6 +172,5 @@ public class UnitResource extends BaseResource {
     public String getSubunits(@PathParam("id") Integer unitId){
         UnitBean unitBean = UnitDAO.getInstance().get(unitId);
         return gson.toJson(unitBean.getSubunits());
-
     }
 }
