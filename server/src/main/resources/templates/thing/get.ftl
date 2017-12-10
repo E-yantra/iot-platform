@@ -246,7 +246,7 @@
                         "method": "DELETE",
                         success: function (data) {
                             that.saveLoader = false;
-                            alert('Device deleted');
+                            alert(data);
                             //that.deleteDeviceAttributes(device.id);
                             that.load();
                         }
