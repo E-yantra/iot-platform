@@ -26,7 +26,7 @@ public class ShadowBean {
     }
 
     public String getDeltaTopic() {
-        return String.format("$aws/things/thing%s/shadow/delta",thingBean.getId()+"");
+        return String.format("$aws/things/thing%s/shadow/update/delta",thingBean.getId()+"");
     }
 
     public String getUpdateRejectedTopic() {
