@@ -17,58 +17,77 @@ public class AuthorizationDAO extends BaseDAO{
     }
 
     public boolean ownsUnit(UserBean user, UnitBean unit){
-        Session session = getService().getSessionFactory().openSession();
-        Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
-        query.setParameter("userId",user.getId());
-        query.setParameter("unitId",unit.getId());
-        List<RightsBean> rights = query.getResultList();
-        session.close();
 
-        if (rights.size()>0)
+        try {
+            Session session = getService().getSessionFactory().openSession();
+            Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
+            query.setParameter("userId", user.getId());
+            query.setParameter("unitId", unit.getId());
+            List<RightsBean> rights = query.getResultList();
+            session.close();
+
+            if (rights.size() > 0)
+                return true;
+
+            return false;
+        }catch (Throwable t){
             return true;
-
-        return false;
+        }
     }
 
     public boolean ownsThing(UserBean user, ThingBean thing){
-        Session session = getService().getSessionFactory().openSession();
-        Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
-        query.setParameter("userId",user.getId());
-        query.setParameter("unitId",thing.getParentUnit().getId());
-        List<RightsBean> rights = query.getResultList();
-        session.close();
 
-        if (rights.size()>0)
+        try {
+            Session session = getService().getSessionFactory().openSession();
+            Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
+            query.setParameter("userId", user.getId());
+            query.setParameter("unitId", thing.getParentUnit().getId());
+            List<RightsBean> rights = query.getResultList();
+            session.close();
+
+            if (rights.size() > 0)
+                return true;
+
+            return false;
+        }catch (Throwable t){
             return true;
-
-        return false;
+        }
     }
 
     public boolean ownsDevice(UserBean user, DeviceBean device){
-        Session session = getService().getSessionFactory().openSession();
-        Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
-        query.setParameter("userId",user.getId());
-        query.setParameter("unitId",device.getOwnerUnit().getId());
-        List<RightsBean> rights = query.getResultList();
-        session.close();
 
-        if (rights.size()>0)
+        try {
+            Session session = getService().getSessionFactory().openSession();
+            Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
+            query.setParameter("userId", user.getId());
+            query.setParameter("unitId", device.getOwnerUnit().getId());
+            List<RightsBean> rights = query.getResultList();
+            session.close();
+
+            if (rights.size() > 0)
+                return true;
+
+            return false;
+        }catch (Throwable t){
             return true;
-
-        return false;
+        }
     }
 
     public boolean ownsDeviceAttributes(UserBean user, DeviceAttributeBean deviceAttribute){
-        Session session = getService().getSessionFactory().openSession();
-        Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
-        query.setParameter("userId",user.getId());
-        query.setParameter("unitId",deviceAttribute.getOwnerUnit().getId());
-        List<RightsBean> rights = query.getResultList();
-        session.close();
+        try {
+            Session session = getService().getSessionFactory().openSession();
+            Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
+            query.setParameter("userId", user.getId());
+            query.setParameter("unitId", deviceAttribute.getOwnerUnit().getId());
+            List<RightsBean> rights = query.getResultList();
+            session.close();
 
-        if (rights.size()>0)
+            if (rights.size() > 0)
+                return true;
+
+            return false;
+        }catch (Throwable t){
             return true;
-
-        return false;
+        }
     }
 }
