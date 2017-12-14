@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="float-right p-1" v-if="role=='ALL' || role=='WRITE'">
                     <button v-on:click="newDevice" class="btn btn-outline-primary">Add Device</button>
-                    <button class="btn btn-outline-primary">Import Device</button>
+                    <button v-on:click="import" class="btn btn-outline-primary">Import Device</button>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -236,14 +236,19 @@
                 }
             },
             "deleteDevice": function (device) {
+                alert(device.id);
+                this.saveLoader = true;
+                var that = this;
+
                 if (confirm("Are you sure you want to delete device?") && confirm("Are you really sure?")){
                     $.ajax({
                         url: "/device/delete/" + device.id,
                         "method": "DELETE",
                         success: function (data) {
-                            alert('Device deleted');
-                            this.deleteDeviceAttributes(device.id);
-                            this.load();
+                            that.saveLoader = false;
+                            alert(data);
+                            //that.deleteDeviceAttributes(device.id);
+                            that.load();
                         }
                     });
                 }
@@ -371,15 +376,12 @@
                         data: that.createDevice,
                         "method": "POST",
                         success: function (data) {
-
                             that.saveLoader = false;
                             that.saveAttributes(data.id, that.createDevice.deviceAttributes);
                             that.load();
-
                         }
                     });
                 }
-
             },
             "editDevice": function (device) {
                 this.createDevice = device;
@@ -426,6 +428,9 @@
                     });
                 }
             }
+        },
+        "import": function () {
+            //TODO
         },
         mounted: function () {
             this.load()

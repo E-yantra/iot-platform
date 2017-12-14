@@ -12,8 +12,8 @@
             <div class="float-right p-1" v-if="role=='ALL' || role=='WRITE'">
                 <button v-on:click="newUnit" class="btn btn-outline-primary">Create Subunit</button>
                 <button v-on:click="newThing" class="btn btn-outline-primary">Create Thing</button>
-                <a href="" class="btn btn-outline-primary">Import</a>
-                <a href="" class="btn btn-outline-primary">Export</a>
+                <button v-on:click="importUnit" class="btn btn-outline-primary">Import</button>
+                <button v-on:click="exportUnit" class="btn btn-outline-primary">Export</button>
                 <button v-on:click="newUser" class="btn btn-outline-primary">Add User</button>
             </div>
         </div>
@@ -194,27 +194,42 @@
                 };
                 $("#create_user").modal('show')
             },
+            "exportUnit":function(){
+                alert(JSON.stringify(this.unit));
+            },
+            "importUnit":function(){
+                //TODO
+            },
             "editUser":function(user){
                 this.createUser = user;
                 $("#create_user").modal('show')
             },
-            "deleteUser": function (right) {
-                alert(JSON.stringify(right));
+            "deleteUser":function(right) {
+                var that = this;
 
-                if (confirm("Are you sure you want to delete device?") && confirm("Are you really sure?")) {
-                    $.ajax({
-                        url: "/user/delete/" + right.userId,
+                if (confirm("Are you sure you want to delete rights of the user for this unit?") && confirm("Are you really sure?")) {
+                    /*$.ajax({
+                        url: "/user/delete/" + right.user.id,
                         "method": "DELETE",
                         success: function (data) {
                             alert('User deleted');
-                            this.deleteRight(right.id);
-                            this.load();
+                            that.deleteRight(right.id);
+                            that.load();
+                        }
+                    });*/
+
+                    $.ajax({
+                        url: "/right/delete/" + right.id,
+                        "method": "DELETE",
+                        success: function (data) {
+                            alert('rights deleted');
+                            that.load();
                         }
                     });
                 }
             },
-            "deleteRight": function (rightId) {
-                if (confirm("Are you sure you want to delete device?") && confirm("Are you really sure?")){
+            "deleteRight":function(rightId) {
+                alert(rightId);
                     $.ajax({
                         url: "/right/delete/" + rightId,
                         "method": "DELETE",
@@ -223,7 +238,6 @@
                             this.load();
                         }
                     });
-                }
             },
             "edit":function(){
                 this.createUnit = this.unit;
@@ -331,13 +345,13 @@
                 }
             });
         },
-        "deleteUnit": function () {
+        "deleteUnit":function() {
             if (confirm("Are you sure you want to delete unit?") && confirm("Are you really sure?")){
                 $.ajax({
                     url: "/unit/delete/" + unitId,
                     "method": "DELETE",
                     success: function (data) {
-                        alert('Device deleted');
+                        alert('Unit deleted');
                         this.load();
                     }
                 });

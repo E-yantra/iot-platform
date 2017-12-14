@@ -17,7 +17,6 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -64,7 +63,7 @@ public class UnitResource extends BaseResource {
     public String update(@PathParam("id") Integer id,
                          @FormParam("unitName") String name,
                          @FormParam("description") String description,
-                         @FormParam("photo") String photo) throws NotAuthorizedException {
+                         @FormParam("photo") String photo) throws AccessDeniedException {
         //TODO: can parent unit be changed?
         if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
             UnitDAO.getInstance().update(id, name, description, photo);
@@ -72,7 +71,7 @@ public class UnitResource extends BaseResource {
             return gson.toJson(unitBean);
         }
         else{
-            throw new NotAuthorizedException("Not authorized.");
+            throw new AccessDeniedException();
         }
     }
 
@@ -80,7 +79,7 @@ public class UnitResource extends BaseResource {
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String delete(@PathParam("id") Integer id) throws NotAuthorizedException{
+    public String delete(@PathParam("id") Integer id) throws AccessDeniedException{
         if (AuthorizationDAO.getInstance().ownsUnit((UserBean) getSecurityContext().getUserPrincipal(), UnitDAO.getInstance().get(id))) {
             try {
                 UnitDAO.getInstance().delete(id);
@@ -90,7 +89,7 @@ public class UnitResource extends BaseResource {
             }
             return "{}";
         } else {
-            throw new NotAuthorizedException("Not authorized.");
+            throw new AccessDeniedException();
         }
     }
 
@@ -103,7 +102,7 @@ public class UnitResource extends BaseResource {
     public String create(@FormParam("unitName") String name,
                          @FormParam("description") String description,
                          @FormParam("photo") String photo,
-                         @DefaultValue("0") @FormParam("parentUnitId") Integer parentUnitId) throws NotAuthorizedException{
+                         @DefaultValue("0") @FormParam("parentUnitId") Integer parentUnitId) throws AccessDeniedException{
         if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(parentUnitId))) {
             try {
                 String s = "Found something";
@@ -126,7 +125,7 @@ public class UnitResource extends BaseResource {
             }
             return "{\"success\":false}";
         }else{
-            throw new NotAuthorizedException("Not authorized.");
+            throw new AccessDeniedException();
         }
     }
 
@@ -135,13 +134,13 @@ public class UnitResource extends BaseResource {
     @Path("addusers/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String addUsers(@PathParam("id") Integer id, Set<UserBean> users) throws NotAuthorizedException{
+    public String addUsers(@PathParam("id") Integer id, Set<UserBean> users) throws AccessDeniedException{
         if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
             UnitDAO.getInstance().addUsers(id, users);
             UnitBean unitBean = UnitDAO.getInstance().get(id);
             return gson.toJson(unitBean);
         }else{
-            throw new NotAuthorizedException("Not authorized.");
+            throw new AccessDeniedException();
         }
     }
 
@@ -172,7 +171,6 @@ public class UnitResource extends BaseResource {
             rights.addAll(RightsDAO.getInstance().getRightsByUnit(unitBean));
         }
         return gson.toJson(rights);
-
     }
 
     @GET
@@ -182,6 +180,5 @@ public class UnitResource extends BaseResource {
     public String getSubunits(@PathParam("id") Integer unitId){
         UnitBean unitBean = UnitDAO.getInstance().get(unitId);
         return gson.toJson(unitBean.getSubunits());
-
     }
 }
