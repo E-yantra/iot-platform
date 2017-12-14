@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="float-right p-1" v-if="role=='ALL' || role=='WRITE'">
                     <button v-on:click="newDevice" class="btn btn-outline-primary">Add Device</button>
-                    <button v-on:click="import" class="btn btn-outline-primary">Import Device</button>
+                    <button v-on:click="importThing" class="btn btn-outline-primary">Import Device</button>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -354,6 +354,9 @@
                     }
                 });
             },
+            "importThing": function () {
+                //TODO
+            },
             "saveDevice": function () {
                 var that = this;
                 this.saveLoader = true;
@@ -428,9 +431,6 @@
                     });
                 }
             }
-        },
-        "import": function () {
-            //TODO
         },
         mounted: function () {
             this.load()
