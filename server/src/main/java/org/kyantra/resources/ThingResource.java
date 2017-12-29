@@ -1,6 +1,8 @@
 package org.kyantra.resources;
 
 import com.amazonaws.services.iot.client.AWSIotException;
+import com.amazonaws.services.iot.model.CreateKeysAndCertificateRequest;
+import com.amazonaws.services.iot.model.CreateKeysAndCertificateResult;
 import com.amazonaws.services.iotdata.AWSIotData;
 import com.amazonaws.services.iotdata.model.GetThingShadowRequest;
 import com.amazonaws.services.iotdata.model.GetThingShadowResult;
@@ -14,10 +16,15 @@ import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 import org.kyantra.utils.AwsIotHelper;
+import org.kyantra.utils.StringConstants;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.io.PrintWriter;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -107,6 +114,47 @@ public class ThingResource extends BaseResource {
                 thing.setIp(ip);
                 thing.setParentUnit(UnitDAO.getInstance().get(parentUnitId));
 
+                //Generate certificates as strings
+                CreateKeysAndCertificateRequest request = new CreateKeysAndCertificateRequest();
+                request.withSetAsActive(true);
+                CreateKeysAndCertificateResult response = AwsIotHelper.getIotClient().createKeysAndCertificate(request);
+                String pem = response.getCertificatePem();
+                String privateKey = response.getKeyPair().getPrivateKey();
+                String publicKey = response.getKeyPair().getPublicKey();
+
+                //Create a directory for storing certificate files on server's filesystem
+                String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+                System.out.println(StringConstants.CERT_ROOT + timeStamp);
+                File certificateDir = new File(StringConstants.CERT_ROOT + timeStamp);
+                if (!certificateDir.exists()) {
+                    System.out.println("creating directory: " + certificateDir.getName());
+                    boolean result = false;
+
+                    try {
+
+                        if(certificateDir.mkdirs()) {
+                            //Storing certificate files in the directory
+                            PrintWriter file = new PrintWriter(certificateDir.getAbsolutePath() + "/certificate.crt.pem");
+                            file.write(pem);
+                            file.close();
+
+                            file = new PrintWriter(certificateDir.getAbsolutePath() + "/private.key.pem");
+                            file.write(privateKey);
+                            file.close();
+
+                            file = new PrintWriter(certificateDir.getAbsolutePath() + "/public.key.pem");
+                            file.write(publicKey);
+                            file.close();
+                        }
+
+                    }
+                    catch(SecurityException se) {
+                        //handle it
+                    }
+                }
+
+                thing.setCertificateDir(certificateDir.getName());
+
                 ThingBean thingBean = ThingDAO.getInstance().add(thing);
                 return gson.toJson(thingBean);
 
@@ -144,6 +192,10 @@ public class ThingResource extends BaseResource {
         client1.shutdown();
 
         return resultString;
+    }
 
+    @Path("certificate")
+    public CertificateResource getCertificateResource() {
+        return new CertificateResource();
     }
 }

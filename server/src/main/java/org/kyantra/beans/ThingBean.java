@@ -34,6 +34,9 @@ public class ThingBean {
     @Column(name = "ip")
     String ip;
 
+    @Column(name = "certificate_dir")
+    String certificateDir;
+
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "parentThing")
     @Expose
     private Set<DeviceBean> devices;
@@ -100,4 +103,13 @@ public class ThingBean {
     public void setParentUnit(UnitBean parentUnit) {
         this.parentUnit = parentUnit;
     }
+
+    public void setCertificateDir(String directory) {
+        this.certificateDir = directory;
+    }
+
+    public String getCertificateDir() {
+        return certificateDir;
+    }
+
 }
