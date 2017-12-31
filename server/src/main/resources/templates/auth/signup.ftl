@@ -7,9 +7,9 @@
                 <section class="login-form">
                     <form class="form-signin" method="post" action="" role="login">
                         <div style="text-align: center;font-size: 30px;"><a style="text-decoration: none;" href="#">Signup</a></div><br>
-                        <input type="text" id="inputName" class="form-control" placeholder="User Name" required="" autofocus="" autocomplete="off" >
-                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" autocomplete="off" >
-                        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" autocomplete="off" >
+                        <input name="name" type="text" id="inputName" class="form-control" placeholder="User Name" required="" autofocus="" autocomplete="off" >
+                        <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" autocomplete="off" >
+                        <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required="" autocomplete="off" >
                         <br>
                         <button v-on:click="signup" id="submit" class="btn btn-lg btn-primary btn-block" type="button">Sign up</button>
                     </form>
@@ -21,6 +21,42 @@
     </main>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<script>
+    var example1 = new Vue({
+        el: '#container-main',
+        data: {
+            error:false,
+            message: ""
+        },
+        methods: {
+            signup:function(){
+                var that = this;
+                $.ajax({
+                    type: 'POST',
+                    url: "/auth/signup",
+                    data: $('.form-signin').serialize(),
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                        "Authorization":"Basic grtrthj45h45h4j5h4kj5k45hjk4kh5j",
+                        "My-Second-Header":"second value"
+                    },
+                    success: function(data){
+
+                        if(!data.success){
+                            $.removeCookie('name');
+                            that.error = true;
+                            that.message = "Could not authenticate you. Please check email/password."
+
+                        }else{
+
+                            window.location = "/login";
+                        }
+                    }
+                });
+            }
+        }
+    })
+</script>
 
 <style>
     /*login form css */

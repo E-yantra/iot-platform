@@ -15,7 +15,7 @@
                     <div style="text-align: left" class="checkbox">
                             <input type="checkbox" value="remember-me"> Remember me
                     </div>
-                    <button v-on:click="login" id="submit" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
+                    <button v-on:click="signup" id="submit" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
                     <div>
                         <p>Don't have userid?&nbsp;<a href="signup">Signup</a></p>
 

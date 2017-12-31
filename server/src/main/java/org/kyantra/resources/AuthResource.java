@@ -68,4 +68,32 @@ public class AuthResource extends BaseResource {
         Map<String,String> map = new HashMap<>();
         return gson.toJson(map); //suggests failed authentication.
     }
+
+
+    @POST
+    @Path("signup")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String signup(@FormParam("name") String name,
+                         @FormParam("email") String email,
+                               @FormParam("password") String password,
+                               @Context HttpServletRequest request,
+                               @Context ContainerRequest containerRequest) throws Exception {
+
+        UserBean userBean = UserDAO.getInstance().getByEmail(email.toLowerCase());
+        if(userBean!=null){
+            Map<String,Object> map = new HashMap<>();
+            map.put("success",false);
+            map.put("error","User already exists");
+            return gson.toJson(map);
+        }
+        userBean = new UserBean();
+        userBean.setName(name);
+        userBean.setPassword(password);
+        userBean.setEmail(email);
+        UserDAO.getInstance().add(userBean);
+        Map<String,Object> map = new HashMap<>();
+        map.put("success",true);
+        return gson.toJson(map); //suggests failed authentication.
+    }
 }
