@@ -12,6 +12,5 @@ Setup
 3. In the table configset add three keys and their respective values
     - awsKey
     - awsSecret 
-    - endpoint (iot endpoint unique to your AWS account)
-    
- 
+    - endpoint (iot endpoint unique to your AWS account)    
+4. Change the CERT_ROOT under StringConstants class to point to the directory where you want to store thing certificates. 
