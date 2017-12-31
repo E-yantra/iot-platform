@@ -20,6 +20,7 @@
                     <div class="form-group">
                         <label>Password:</label>
                         <input name="password" type="text" class="form-control" v-model='createUser.password' placeholder="">
+                        <p>If the user is already in the system this password will be ignored.</p>
                     </div>
 
                     <div class="form-group">

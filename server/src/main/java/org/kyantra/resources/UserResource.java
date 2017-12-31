@@ -83,6 +83,12 @@ public class UserResource extends BaseResource{
                          @FormParam("email") String email,
                          @FormParam("password") String password){
         try {
+
+            UserBean u = UserDAO.getInstance().getByEmail(email);
+            if(u!=null){
+                return gson.toJson(u);
+            }
+
             String s = "Found something";
             UserBean user = new UserBean();
             user.setName(name);

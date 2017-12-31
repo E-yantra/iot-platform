@@ -68,7 +68,7 @@ public class RightsResource extends BaseResource{
     @Session
     public String create(@FormParam("unitId") Integer unitId,
                          @FormParam("userId") Integer userId,
-                         @FormParam("role") RoleEnum role){
+                         @FormParam("Role") RoleEnum role){
         try {
             RightsBean rights = new RightsBean();
             rights.setRole(role);

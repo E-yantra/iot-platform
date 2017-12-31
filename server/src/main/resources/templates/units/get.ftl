@@ -131,19 +131,19 @@
             things:[],
             deleteUnit:{}
         },
-        methods:{
-            "load":function(){
+        methods: {
+            "load": function () {
 
                 var that = this;
                 $.ajax({
-                    url: "/unit/rights/"+unitId+"/"+userId,
+                    url: "/unit/rights/" + unitId + "/" + userId,
                     success: function (data) {
                         that.role = data[0].role;
                     }
                 });
 
                 $.ajax({
-                    url: "/unit/get/"+unitId,
+                    url: "/unit/get/" + unitId,
                     success: function (data) {
                         that.unit = data;
                     }
@@ -151,60 +151,60 @@
 
 
                 $.ajax({
-                    url: "/unit/users/"+unitId,
+                    url: "/unit/users/" + unitId,
                     success: function (data) {
                         that.rights = data;
                     }
                 });
 
                 $.ajax({
-                    url: "/unit/subunits/"+unitId,
+                    url: "/unit/subunits/" + unitId,
                     success: function (data) {
                         that.subunits = data;
                     }
                 });
                 $.ajax({
-                    url: "/thing/unit/"+unitId,
+                    url: "/thing/unit/" + unitId,
                     success: function (data) {
                         that.things = data;
                     }
                 });
 
             },
-            "newUnit":function(){
+            "newUnit": function () {
                 this.createUnit = {
-                    "parentUnit_id":unitId
+                    "parentUnit_id": unitId
                 };
                 $("#create_unit").modal('show')
             },
-            "newThing":function(){
+            "newThing": function () {
                 this.createThing = {
-                    "parentUnitId":unitId
+                    "parentUnitId": unitId
                 };
                 $("#create_thing").modal('show')
             },
-            "editThing":function(thing){
+            "editThing": function (thing) {
                 this.createThing = thing;
                 $("#create_thing").modal('show')
             },
-            "newUser":function(){
+            "newUser": function () {
                 this.createUser = {
-                    "unitId":unitId,
-                    "userId":0
+                    "unitId": unitId,
+                    "userId": 0
                 };
                 $("#create_user").modal('show')
             },
-            "exportUnit":function(){
+            "exportUnit": function () {
                 alert(JSON.stringify(this.unit));
             },
-            "importUnit":function(){
+            "importUnit": function () {
                 //TODO
             },
-            "editUser":function(user){
+            "editUser": function (user) {
                 this.createUser = user;
                 $("#create_user").modal('show')
             },
-            "deleteUser":function(right) {
+            "deleteUser": function (right) {
                 var that = this;
 
                 if (confirm("Are you sure you want to delete rights of the user for this unit?") && confirm("Are you really sure?")) {
@@ -228,42 +228,42 @@
                     });
                 }
             },
-            "deleteRight":function(rightId) {
+            "deleteRight": function (rightId) {
                 alert(rightId);
-                    $.ajax({
-                        url: "/right/delete/" + rightId,
-                        "method": "DELETE",
-                        success: function (data) {
-                            alert('rights deleted');
-                            this.load();
-                        }
-                    });
+                $.ajax({
+                    url: "/right/delete/" + rightId,
+                    "method": "DELETE",
+                    success: function (data) {
+                        alert('rights deleted');
+                        this.load();
+                    }
+                });
             },
-            "edit":function(){
+            "edit": function () {
                 this.createUnit = this.unit;
                 $("#create_unit").modal('show')
             },
-            "saveThing":function(){
+            "saveThing": function () {
                 this.saveLoader = true;
                 var that = this;
-                if(!this.createThing.id) {
+                if (!this.createThing.id) {
                     that.createThing.parentUnitId = unitId;
                     $.ajax({
                         "url": "/thing/create",
-                        "method":"POST",
+                        "method": "POST",
                         "data": that.createThing,
-                        "success":function (data) {
+                        "success": function (data) {
                             that.saveLoader = false;
                             $("#create_thing").modal('hide');
                             that.load();
                         }
                     });
-                }else{
+                } else {
                     $.ajax({
-                        "url": "/thing/update/"+that.createThing.id,
-                        "method":"POST",
+                        "url": "/thing/update/" + that.createThing.id,
+                        "method": "POST",
                         "data": that.createThing,
-                        "success":function (data) {
+                        "success": function (data) {
                             that.saveLoader = false;
                             $("#create_thing").modal('hide');
                             that.load();
@@ -272,27 +272,27 @@
                     });
                 }
             },
-            "saveUnit":function(){
+            "saveUnit": function () {
                 this.saveLoader = true;
                 var that = this;
-                if(!this.createUnit.id) {
+                if (!this.createUnit.id) {
                     that.createUnit.parentUnitId = unitId;
                     $.ajax({
                         "url": "/unit/create",
-                        "method":"POST",
+                        "method": "POST",
                         "data": that.createUnit,
-                        "success":function (data) {
+                        "success": function (data) {
                             that.saveLoader = false;
                             $("#create_unit").modal('hide');
                             that.load();
                         }
                     });
-                }else{
+                } else {
                     $.ajax({
-                        "url": "/unit/update/"+unitId,
-                        "method":"POST",
+                        "url": "/unit/update/" + unitId,
+                        "method": "POST",
                         "data": that.createUnit,
-                        "success":function (data) {
+                        "success": function (data) {
                             that.saveLoader = false;
                             $("#create_unit").modal('hide');
                             that.load();
@@ -300,67 +300,69 @@
                     });
                 }
             },
-            "saveUser":function () {
+            "saveUser": function () {
                 this.saveLoader = true;
                 var that = this;
-                if(!this.createUser.id) {
+                if (!this.createUser.id) {
                     //
                     $.ajax({
                         "url": "/user/create",
-                        "method":"POST",
+                        "method": "POST",
                         "data": that.createUser,
-                        "success":function (data) {
+                        "success": function (data) {
                             that.saveLoader = false;
                             $("#create_user").modal('hide');
-                            that.createUser.userId  = data.id;
+                            that.createUser.userId = data.id;
                             that.saveRights(that.createUser);
                             that.load();
                         }
                     });
-                }else{
+                } else {
                     $.ajax({
-                        "url": "/user/update/"+userId,
-                        "method":"POST",
+                        "url": "/user/update/" + userId,
+                        "method": "POST",
                         "data": that.createUser,
-                        "success":function (data) {
+                        "success": function (data) {
                             that.saveLoader = false;
                             $("#create_user").modal('hide');
-                            that.createUser.userId  = data.id;
+                            that.createUser.userId = data.id;
                             that.saveRights(that.createUser);
                             that.load();
                         }
                     });
                 }
-            }
-        },
-        "saveRights":function (attributes) {
-            $.ajax({
-                "url": "/right/create",
-                "method": "POST",
-                "data": JSON.stringify(attributes),
-                contentType: "application/json; charset=utf-8",
-                "success": function (data) {
-                    that.saveLoader = false;
-                    that.load();
-                }
-            });
-        },
-        "deleteUnit":function() {
-            if (confirm("Are you sure you want to delete unit?") && confirm("Are you really sure?")){
+            },
+            "saveRights": function (attributes) {
+
+                var that = this;
                 $.ajax({
-                    url: "/unit/delete/" + unitId,
-                    "method": "DELETE",
-                    success: function (data) {
-                        alert('Unit deleted');
-                        this.load();
+                    "url": "/right/create",
+                    "method": "POST",
+                    "data": attributes,
+                    //contentType: "application/json; charset=utf-8",
+                    "success": function (data) {
+                        that.saveLoader = false;
+                        that.load();
                     }
                 });
+            },
+            "deleteUnit": function () {
+                if (confirm("Are you sure you want to delete unit?") && confirm("Are you really sure?")) {
+                    $.ajax({
+                        url: "/unit/delete/" + unitId,
+                        "method": "DELETE",
+                        success: function (data) {
+                            alert('Unit deleted');
+                            this.load();
+                        }
+                    });
+                }
             }
         },
         mounted:function(){
             this.load()
         }
-    })
+    });
 </script>
 </body>
 </html>
