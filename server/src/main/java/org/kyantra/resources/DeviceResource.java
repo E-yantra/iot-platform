@@ -115,11 +115,6 @@ public class DeviceResource extends BaseResource {
         ThingBean thing = ThingDAO.getInstance().get(thingId);
         Set<DeviceBean> devices = thing.getDevices();
 
-        AWSIot client = AwsIotHelper.getIotClient();
-        CreateThingResult response = client.createThing(new CreateThingRequest()
-                .withThingName("thing" + thing.getId()));
-       
-
         ShadowBean shadowBean = new ShadowBean();
         shadowBean.setThingBean(thing);
         StringBuilder sb = new StringBuilder();
