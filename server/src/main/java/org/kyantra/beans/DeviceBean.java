@@ -22,7 +22,7 @@ public class DeviceBean {
     @Expose
     String description;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentDevice")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentDevice", cascade = CascadeType.REMOVE)
     @Expose
     private List<DeviceAttributeBean> deviceAttributes;
 

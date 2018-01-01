@@ -37,6 +37,7 @@ public class DeviceAttributeBean {
     Boolean actuator = Boolean.FALSE;
     @OneToOne
     UnitBean ownerUnit;
+
     @OneToOne(fetch = FetchType.EAGER)
     DeviceBean parentDevice;
 
