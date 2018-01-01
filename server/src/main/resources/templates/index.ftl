@@ -18,7 +18,7 @@
                     <div class="card">
                         <div class="card-header">${unit.unitName}</div>
                         <div class="card-body">
-                            <img height=150 src="${unit.photo}" class="float-left p-1"> <p>${unit.description}</p>
+                            <img height=150 src="<#if (unit.photo)??>${unit.photo}<#else>http://via.placeholder.com/300</#if>" class="float-left p-1"> <p>${unit.description}</p>
                             <div class="clear"></div>
                         </div>
                         <div class="card-footer">
@@ -35,6 +35,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-<script src="/static/js/app.js">`</script>
+<script src="/static/js/app.js"></script>
 </body>
 </html>
