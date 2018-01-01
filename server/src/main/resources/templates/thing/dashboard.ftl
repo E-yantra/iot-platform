@@ -20,6 +20,13 @@
                                 <button v-if="!att.value" class="btn btn-danger"  v-on:click="toggle(att)">{{att.name}} OFF</button>
                             </div>
 
+                            <div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">
+                                <input class="input form-control" type="number" v-on:change="setValue(att)"/>
+                            </div>
+                            <div v-if="att.type=='Integer'" v-bind:id="'att_'+att.id">
+                                <input class="input form-control" type="number" v-on:change="setValue(att)"/>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -54,6 +61,18 @@
             devices: []
         },
         methods: {
+            "setValue":function(att){
+                $.ajax({
+                    url: "/pubsub/value/"+att.id,
+                    "method": "POST",
+                    "data":{ "value": $(document.getElementById('att_'+att.id)).val() } ,
+                    success: function (data) {
+                        setTimeout(function () {
+                            that.refresh();
+                        },3000);
+                    }
+                });
+            },
             "toggle":function (att) {
                 var that = this;
                 $.ajax({
@@ -69,7 +88,7 @@
                 });
             },
             "updateInteger":function (att){
-              $(document.getElementById('att_'+att.id)).html('<strong>'+att.value+'</strong>');
+                $(document.getElementById('att_'+att.id)).html(att.name+': &nbsp; <strong>'+att.value+'</strong>');
             },
             "updateGauge":function (att) {
 
