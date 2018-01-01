@@ -68,6 +68,9 @@
                     }
                 });
             },
+            "updateInteger":function (att){
+              $(document.getElementById('att_'+att.id)).html('<strong>'+att.value+'</strong>');
+            },
             "updateGauge":function (att) {
 
                 var data = google.visualization.arrayToDataTable([
@@ -97,7 +100,10 @@
                                         var att = device.deviceAttributes[ak];
                                         var dName = "device"+device.id+"."+att.id;
                                         if(dName===key){console.log(att);
-                                            if(att.type!=="Boolean"){
+                                            if(att.type==="Integer"){
+                                                Vue.set(att, 'value', val);
+                                                that.updateInteger(att);
+                                            } else if(att.type==="Double"){
                                                 Vue.set(att, 'value', val);
                                                 that.updateGauge(att);
                                             }else{
