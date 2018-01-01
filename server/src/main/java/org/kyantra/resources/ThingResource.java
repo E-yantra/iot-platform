@@ -1,6 +1,8 @@
 package org.kyantra.resources;
 
+import com.amazonaws.services.iot.AWSIot;
 import com.amazonaws.services.iot.client.AWSIotException;
+import com.amazonaws.services.iot.model.*;
 import com.amazonaws.services.iotdata.AWSIotData;
 import com.amazonaws.services.iotdata.model.GetThingShadowRequest;
 import com.amazonaws.services.iotdata.model.GetThingShadowResult;
@@ -14,10 +16,15 @@ import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 import org.kyantra.utils.AwsIotHelper;
+import org.kyantra.utils.StringConstants;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.io.PrintWriter;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -107,7 +114,66 @@ public class ThingResource extends BaseResource {
                 thing.setIp(ip);
                 thing.setParentUnit(UnitDAO.getInstance().get(parentUnitId));
 
+                //Generate certificates as strings
+                CreateKeysAndCertificateRequest certificateRequest = new CreateKeysAndCertificateRequest();
+                certificateRequest.withSetAsActive(true);
+                CreateKeysAndCertificateResult certificateResult= AwsIotHelper.getIotClient().createKeysAndCertificate(certificateRequest);
+                String pem = certificateResult.getCertificatePem();
+                String privateKey = certificateResult.getKeyPair().getPrivateKey();
+                String publicKey = certificateResult.getKeyPair().getPublicKey();
+
+                //Create a directory for storing certificate files on server's filesystem
+                String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+                //System.out.println(StringConstants.CERT_ROOT + timeStamp);
+                File certificateDir = new File(StringConstants.CERT_ROOT + timeStamp);
+                if (!certificateDir.exists()) {
+                    //System.out.println("creating directory: " + certificateDir.getName());
+
+                    try {
+
+                        if(certificateDir.mkdirs()) {
+                            //Storing certificate files in the directory
+                            PrintWriter file = new PrintWriter(certificateDir.getAbsolutePath() + "/certificate.crt.pem");
+                            file.write(pem);
+                            file.close();
+
+                            file = new PrintWriter(certificateDir.getAbsolutePath() + "/private.key.pem");
+                            file.write(privateKey);
+                            file.close();
+
+                            file = new PrintWriter(certificateDir.getAbsolutePath() + "/public.key.pem");
+                            file.write(publicKey);
+                            file.close();
+                        }
+
+                    }
+                    catch(SecurityException se) {
+                        //handle it
+                    }
+                }
+
+                thing.setCertificateDir(certificateDir.getName());
+
                 ThingBean thingBean = ThingDAO.getInstance().add(thing);
+
+                //Create thing in the AWS IoT
+                AWSIot client = AwsIotHelper.getIotClient();
+                CreateThingResult thingResult = client.createThing(new CreateThingRequest()
+                        .withThingName("thing" + thingBean.getId()));
+
+                //Get policy and attach it to certificate
+                AttachPrincipalPolicyRequest policyRequest = new AttachPrincipalPolicyRequest();
+                policyRequest.withPolicyName(StringConstants.DEFAULT_POLICY)
+                        .withPrincipal(certificateResult.getCertificateArn());
+                AwsIotHelper.getIotClient().attachPrincipalPolicy(policyRequest);
+                //TODO: Create and attach more secure policies
+
+                //Attach certificate to the thing
+                AttachThingPrincipalRequest thingPrincipalRequest = new AttachThingPrincipalRequest();
+                thingPrincipalRequest.withPrincipal(certificateResult.getCertificateArn())
+                        .withThingName(thingResult.getThingName());
+                AwsIotHelper.getIotClient().attachThingPrincipal(thingPrincipalRequest);
+
                 return gson.toJson(thingBean);
 
             } catch (Throwable t) {
@@ -144,6 +210,10 @@ public class ThingResource extends BaseResource {
         client1.shutdown();
 
         return resultString;
+    }
 
+    @Path("certificate")
+    public CertificateResource getCertificateResource() {
+        return new CertificateResource();
     }
 }
