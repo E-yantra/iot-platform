@@ -3,7 +3,7 @@
 <#include "../common/navbar.ftl"/>
 <div class="container-fluid" id="container-main">
 <#include "../common/sidenavbar.ftl"/>
-    <main role="main" class="main">
+    <main role="main" class="main col-sm-9 ml-sm-auto col-md-10 pt-3">
         <div class="row">
             <div v-for="d in devices" class="card col-md-6 p-0">
                 <div class="card-header p-d0">{{d.name}}</div>
