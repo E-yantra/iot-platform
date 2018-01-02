@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: Api Server
-Implementation-Version: 1.0-server
-Main-Class: org.kyantra.Main
-

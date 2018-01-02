@@ -220,4 +220,18 @@ public class HomeResource extends BaseResource {
         setCommonData(map);
         return map;
     }
+
+    @GET
+    @Path("/profile")
+    @Template(name = "/profile/profile.ftl")
+    @Session
+    public Map<String, Object> profile() throws URISyntaxException {
+        final Map<String, Object> map = new HashMap<>();
+        map.put("active","profile");
+        UserBean userBean = (UserBean) getSecurityContext().getUserPrincipal();
+        //Set<UnitBean> unitBeanList = RightsDAO.getInstance().getUnitsByUser(userBean);
+        map.put("user",userBean);
+        setCommonData(map);
+        return map;
+    }
 }

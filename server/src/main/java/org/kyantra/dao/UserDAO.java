@@ -87,7 +87,6 @@ public class UserDAO {
         session.close();
     }
 
-    //TODO complete the method -Done
     public UserBean addRights(UserBean userBean, UnitBean unitBean, RoleEnum role){
         RightsBean rightsBean = new RightsBean();
         rightsBean.setUnit(unitBean);
@@ -112,7 +111,6 @@ public class UserDAO {
         UserBean userBean = (UserBean) criteria.add(Restrictions.eq("email", email)).uniqueResult();
         session.close();
         return userBean;
-
     }
 
     public UserBean getByToken(String token) {
