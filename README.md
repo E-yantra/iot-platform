@@ -6,7 +6,7 @@ engineering institutes including IIT Bombay.
 
 Architecture
 =======
-
+![60c1f12a3f754657ac33b126ef4d0bbb](https://user-images.githubusercontent.com/1313078/34651772-de7ddc08-f3fa-11e7-9aae-7e0ba8abb6fc.png)
 
 Team
 ====
