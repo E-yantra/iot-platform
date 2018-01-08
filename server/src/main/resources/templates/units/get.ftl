@@ -129,7 +129,7 @@
             saveLoader:false,
             subunits:[],
             things:[],
-            deleteUnit:{}
+            // deleteUnit:{}
         },
         methods: {
             "load": function () {
