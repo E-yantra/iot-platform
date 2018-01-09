@@ -139,6 +139,7 @@
             },
             cttr: {},
             generateCode: "",
+            generateMessage: "",
             cron:{},
             cronDevice:{},
             cronAttribute:{},
@@ -359,9 +360,14 @@
                     "method": "GET",
                     success: function (data) {
                         that.saveLoader = false;
-                        that.generateCode = (data);
+                        that.generateCode = data.substr(0,data.search("{")-1);
+                        that.generateMessage = data.substr(data.search("{"));
                     }
                 });
+            },
+            "copyToClipboard": function () {
+                $("#shadow-message").select();
+                document.execCommand("Copy");
             },
             "importThing": function () {
                 //TODO
