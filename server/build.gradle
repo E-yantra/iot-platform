@@ -66,11 +66,8 @@ dependencies {
     compile group: 'com.amazonaws', name: 'aws-java-sdk-events', version: '1.11.238'
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-lambda
     compile group: 'com.amazonaws', name: 'aws-java-sdk-lambda', version: '1.11.240'
-
-
-
-
-
-
-
+    //hibernate-c3p0 connection pooling
+    compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '5.2.12.Final'
+    //c3p0
+    compile group: 'c3p0', name: 'c3p0', version: '0.9.1.2'
 }
