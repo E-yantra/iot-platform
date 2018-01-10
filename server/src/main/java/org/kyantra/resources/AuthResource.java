@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.kyantra.beans.CredentialBean;
 import org.kyantra.beans.SessionBean;
 import org.kyantra.beans.UserBean;
+import org.kyantra.dao.SessionDAO;
 import org.kyantra.dao.UserDAO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,11 +55,10 @@ public class AuthResource extends BaseResource {
 
                     sessionBean.setUser(userBean);
                     sessionBean.setToken(UUID.randomUUID().toString());
-                    Session session = getSession();
-                    session.save(sessionBean);
-                    session.close();
-
-                    return gson.toJson(sessionBean);
+//                    session.save(sessionBean);
+//                    session.close();
+//                    return gson.toJson(sessionBean);
+                    return gson.toJson(SessionDAO.getInstance().add(sessionBean));
                 }
             }
         }catch (Throwable t){
