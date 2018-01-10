@@ -1,5 +1,7 @@
 package org.kyantra.dao;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.logging.Log;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -12,6 +14,10 @@ import org.kyantra.beans.UserBean;
 import org.kyantra.services.HibernateService;
 
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Set;
 
@@ -115,8 +121,21 @@ public class UserDAO {
 
     public UserBean getByToken(String token) {
         Session session = mService.getSessionFactory().openSession();
-        Criteria criteria = session.createCriteria(SessionBean.class);
-        SessionBean sessionBean = (SessionBean) criteria.add(Restrictions.eq("token", token)).uniqueResult();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<SessionBean> criteriaQuery = builder.createQuery(SessionBean.class);
+        SessionBean sessionBean = (SessionBean)session.createQuery("FROM SessionBean WHERE token = :token")
+//                        .setProperties(SessionBean.class)
+                        .setParameter("token", token)
+                        .uniqueResult();
+//        Root<SessionBean> root = criteriaQuery.from(SessionBean.class);
+//        criteriaQuery.select(root)
+//                .where(builder.equal( root.get( "token" ), token ))
+//                .distinct(true)
+
+//        SessionBean sessionBean =
+//                (SessionBean)criteriaQuery
+//                        .where()
+//                        .uniqueResult();
         sessionBean.getUser();
         session.close();
         return sessionBean.getUser();
