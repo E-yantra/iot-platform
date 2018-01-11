@@ -52,7 +52,9 @@ public class UnitDAO extends BaseDAO{
     //returns child unit
     public UnitBean add(UnitBean currentUnit){
         Session session = getService().getSessionFactory().openSession();
+        session.beginTransaction();
         session.save(currentUnit);
+        session.getTransaction().commit();
         session.close();
         return currentUnit;
     }
