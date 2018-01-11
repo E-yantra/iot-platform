@@ -18,7 +18,8 @@
                     <div class="card">
                         <div class="card-header">${unit.unitName}</div>
                         <div class="card-body">
-                            <img height=150 src="<#if (unit.photo)??>${unit.photo}<#else>http://via.placeholder.com/300</#if>" class="float-left p-1"> <p>${unit.description}</p>
+                            <img height=150 src="<#if (unit.photo)??>${unit.photo}<#else>http://via.placeholder.com/300</#if>" class="float-left p-1">
+                            <#if (unit.description)??><p>${unit.description}</p></#if>
                             <div class="clear"></div>
                         </div>
                         <div class="card-footer">
