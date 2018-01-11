@@ -27,7 +27,7 @@ public class UserResource extends BaseResource{
 
         Principal principal = getSecurityContext().getUserPrincipal();
         UserBean currentUser = (UserBean) principal;
-        //TODO code ot check if currentUser has permission to read this user.
+        //TODO code to check if currentUser has permission to read this user.
 
 
         return gson.toJson(userBean);
@@ -48,11 +48,19 @@ public class UserResource extends BaseResource{
     @Session
     @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
                          @FormParam("email") String email,
                          @FormParam("password") String password){
+        name = name.trim();
+        email = email.trim();
+        password = password.trim();
+        //return {} meaning no update if any of the fields are blank
+        //Check if id is present in the returned json on client-side to check
+        // if update was made
+        if(name.equals("") || email.equals("") || password.equals(""))
+            return "{}";
         UserDAO.getInstance().update(id,name,email,password);
         UserBean userBean = UserDAO.getInstance().get(id);
         return gson.toJson(userBean);

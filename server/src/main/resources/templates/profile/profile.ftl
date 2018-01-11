@@ -3,8 +3,8 @@
 <#include "../common/navbar.ftl"/>
 <div class="container-fluid" id="container-main">
 <#include "../common/sidenavbar.ftl"/>
-    <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
-        <form>
+    <main role="main" class="main col-sm-9 ml-sm-auto col-md-10 pt-3">
+        <form class="user-info-form">
             <div class="form-group">
 
                 <input type="hidden" class="form-control" id="inputUserId" value="${user.id}" >
@@ -12,17 +12,17 @@
 
             <div class="form-group">
                 <label for="inputEmail4">User Name:</label>
-                <input type="text" class="form-control" id="inputUsername" value="${user.name}" >
+                <input type="text" name="name" class="form-control" id="inputUsername" value="${user.name}" required="">
             </div>
 
             <div class="form-group">
-                <label for="comment">email:</label>
-                <input type="email"  class="form-control" id="userEmail" value="${user.email}" >
+                <label for="comment">E-mail:</label>
+                <input type="email" name="email" class="form-control" id="userEmail" value="${user.email}" required="">
             </div>
 
             <div class="form-group">
                 <label for="inputAddress">Password:</label>
-                <input type="password" class="form-control" id="userPassword" value="${user.password}" >
+                <input type="password" name="password" class="form-control" id="userPassword" value="${user.password}" required="">
             </div>
 
             <button type="button" class="btn btn-primary" id="userUpdate"><i class="fa fa-pencil" aria-hidden="true"></i>Update</button>
@@ -44,11 +44,16 @@
             $.ajax({
                 type: 'POST',
                 url: '/user/update/' + userId,
-                data: JSON.stringify({name:username,email:userEmail,password:userPassword}),
-                contentType: "application/json; charset=utf-8",
+                data: $('.user-info-form').serialize(),
+                // data: JSON.stringify({name:username,email:userEmail,password:userPassword}),
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
                 dataType: 'json',
                 success: function(data) {
-                    alert("User info updated");
+
+                    if(!data.id) {
+                        alert("User info not updated! Verify your fields and try again.");
+                    }
+                    else alert("User info updated");
                 },
             });
         })
