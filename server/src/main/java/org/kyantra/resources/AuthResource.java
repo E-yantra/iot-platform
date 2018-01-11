@@ -55,10 +55,8 @@ public class AuthResource extends BaseResource {
 
                     sessionBean.setUser(userBean);
                     sessionBean.setToken(UUID.randomUUID().toString());
-//                    session.save(sessionBean);
-//                    session.close();
-//                    return gson.toJson(sessionBean);
-                    return gson.toJson(SessionDAO.getInstance().add(sessionBean));
+                    SessionBean resultBean = SessionDAO.getInstance().add(sessionBean);
+                    return gson.toJson(resultBean);
                 }
             }
         }catch (Throwable t){

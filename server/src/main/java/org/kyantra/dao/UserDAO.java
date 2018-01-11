@@ -123,19 +123,12 @@ public class UserDAO {
         Session session = mService.getSessionFactory().openSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<SessionBean> criteriaQuery = builder.createQuery(SessionBean.class);
-        SessionBean sessionBean = (SessionBean)session.createQuery("FROM SessionBean WHERE token = :token")
-//                        .setProperties(SessionBean.class)
+        SessionBean sessionBean = (SessionBean)session.createQuery("FROM SessionBean WHERE Token = :token")
                         .setParameter("token", token)
                         .uniqueResult();
-//        Root<SessionBean> root = criteriaQuery.from(SessionBean.class);
-//        criteriaQuery.select(root)
-//                .where(builder.equal( root.get( "token" ), token ))
-//                .distinct(true)
 
-//        SessionBean sessionBean =
-//                (SessionBean)criteriaQuery
-//                        .where()
-//                        .uniqueResult();
+        if(sessionBean==null)
+            return null;
         sessionBean.getUser();
         session.close();
         return sessionBean.getUser();

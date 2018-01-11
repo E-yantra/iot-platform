@@ -22,7 +22,7 @@ public class AuthorizationDAO extends BaseDAO{
 
 
             Session session = getService().getSessionFactory().openSession();
-            Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
+            Query query = session.createQuery("from RightsBean where UserId = :userId and unit_id = :unitId");
             query.setParameter("userId", user.getId());
             query.setParameter("unitId", unit.getId());
             List<RightsBean> rights = query.getResultList();
@@ -41,7 +41,7 @@ public class AuthorizationDAO extends BaseDAO{
 
         try {
             Session session = getService().getSessionFactory().openSession();
-            Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
+            Query query = session.createQuery("from RightsBean where UserId = :userId and unit_id = :unitId");
             query.setParameter("userId", user.getId());
             query.setParameter("unitId", thing.getParentUnit().getId());
             List<RightsBean> rights = query.getResultList();
@@ -60,7 +60,7 @@ public class AuthorizationDAO extends BaseDAO{
 
         try {
             Session session = getService().getSessionFactory().openSession();
-            Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
+            Query query = session.createQuery("from RightsBean where UserId = :userId and unit_id = :unitId");
             query.setParameter("userId", user.getId());
             query.setParameter("unitId", device.getOwnerUnit().getId());
             List<RightsBean> rights = query.getResultList();
@@ -78,7 +78,7 @@ public class AuthorizationDAO extends BaseDAO{
     public boolean ownsDeviceAttributes(UserBean user, DeviceAttributeBean deviceAttribute){
         try {
             Session session = getService().getSessionFactory().openSession();
-            Query query = session.createQuery("from RightsBean where UserId = :userId and UnitId = :unitId");
+            Query query = session.createQuery("from RightsBean where UserId = :userId and unit_id = :unitId");
             query.setParameter("userId", user.getId());
             query.setParameter("unitId", deviceAttribute.getOwnerUnit().getId());
             List<RightsBean> rights = query.getResultList();
