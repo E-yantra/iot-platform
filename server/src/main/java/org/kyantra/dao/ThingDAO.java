@@ -1,6 +1,7 @@
 package org.kyantra.dao;
 
 import com.amazonaws.services.iot.AWSIotClient;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kyantra.beans.DeviceBean;
@@ -19,13 +20,22 @@ public class ThingDAO extends BaseDAO{
     static ThingDAO instance = new ThingDAO();
     public static ThingDAO getInstance(){ return instance; }
 
-    public ThingBean add(ThingBean bean){
+    public ThingBean add(ThingBean bean) {
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
-        session.save(bean);
+//        session.save(bean);
+//        session.close();
+        UnitBean unitBean = UnitDAO.getInstance().get(bean.getParentUnit().getId());
+//        Hibernate.isInitialized()
+//        Hibernate.initialize(unitBean);
+        ThingBean thingBean = unitBean.addThing(bean);
+        session.saveOrUpdate(unitBean);
+
+//        Session session = getService().getSessionFactory().openSession();
+//        session.flush();
         session.getTransaction().commit();
         session.close();
-        return bean;
+        return thingBean;
     }
 
     /**
@@ -34,7 +44,7 @@ public class ThingDAO extends BaseDAO{
      * @param limit
      * @return
      */
-    public List<ThingBean> list(int page, int limit){
+    public List<ThingBean> list(int page, int limit) {
         Session session = getService().getSessionFactory().openSession();
         String ql = "from ThingBean";
         Query query = session.createQuery(ql);
@@ -70,7 +80,9 @@ public class ThingDAO extends BaseDAO{
         Session session = getService().getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         ThingBean thing = session.get(ThingBean.class, id);
-        session.delete(thing);
+        thing.getParentUnit().removeThing(thing);
+//        session.delete(thing);
+//        session.flush();
         tx.commit();
         session.close();
     }
