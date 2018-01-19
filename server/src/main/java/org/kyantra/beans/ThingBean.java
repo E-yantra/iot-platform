@@ -3,15 +3,7 @@ package org.kyantra.beans;
 
 import com.google.gson.annotations.Expose;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -40,12 +32,16 @@ public class ThingBean {
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "parentThing")
     @Expose
     private Set<DeviceBean> devices;
+
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "parentThing")
     private Set<CronBean> crons;
-    @OneToOne(fetch = FetchType.EAGER)
+
+//    @OneToOne(fetch = FetchType.EAGER)
+//    @Expose
+//    private UnitBean parentUnit;
+    @ManyToOne(fetch = FetchType.EAGER)
     @Expose
     private UnitBean parentUnit;
-
 
 
     public Set<CronBean> getCrons() {
