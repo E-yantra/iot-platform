@@ -160,6 +160,9 @@
                 $.ajax({
                     url: "/unit/subunits/" + unitId,
                     success: function (data) {
+                        data.sort(function (a,b) {
+                           return a.unitName < b.unitName ? -1 : 1;
+                        });
                         that.subunits = data;
                     }
                 });

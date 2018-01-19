@@ -116,6 +116,9 @@
             color: #fff;
         }
 
+        .footer {
+
+        }
     </style>
 
 </head>

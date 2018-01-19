@@ -62,6 +62,7 @@
         },
         methods: {
             "setValue":function(att){
+                var that = this;
                 $.ajax({
                     url: "/pubsub/value/"+att.id,
                     "method": "POST",
@@ -87,7 +88,7 @@
                     }
                 });
             },
-            "updateInteger":function (att){
+            "updateInteger":function (att) {
                 $(document.getElementById('att_'+att.id)).html(att.name+': &nbsp; <strong>'+att.value+'</strong>');
             },
             "updateGauge":function (att) {
@@ -103,6 +104,19 @@
                 chart.draw(data, options);
 
             },
+            "updateLineChart" : function (att) {
+                var data = google.visualization.DataTable();
+                data.addColumn('string', 'Time');
+                data.addColumn('number', 'Sensor Value');
+                var date = new Date();
+                data.addRows(date.getHours()+':'+date.getMinutes(), att.value);
+                var options = {
+                    width: 600, height: 300
+                };
+                var chart = new google.visualization.Gauge(document.getElementById('att_'+att.id));
+                chart.draw(data, options);
+            },
+
             "refresh": function () {
                 var that = this;
 
@@ -124,7 +138,8 @@
                                                 that.updateInteger(att);
                                             } else if(att.type==="Double"){
                                                 Vue.set(att, 'value', val);
-                                                that.updateGauge(att);
+                                                // that.updateGauge(att);
+                                                that.updateLineChart(att);
                                             }else{
                                                 Vue.set(att, 'value', val !== 0);
 
@@ -175,7 +190,7 @@
             }
         },
         mounted: function () {
-            this.load()
+            this.load();
             var that = this;
 
             setInterval(function () {
