@@ -10,14 +10,21 @@
                 <div class="card-body p-1">
                     <div class="m-1" v-for="att in d.deviceAttributes">
                         <div v-if="!att.actuator">
-                            <div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">
-                                <img src="/static/img/ajax-loader.gif"/>
-                            </div>
+                        <#--<div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">-->
+                        <#--<img src="/static/img/ajax-loader.gif"/>-->
+                        <#--</div>-->
+                            <canvas v-if="att.type=='Double' || att.type=='Integer'" v-bind:id="'att_'+att.id" width="400" height="300">
+                            <#--<img src="/static/img/ajax-loader.gif"/>-->
+                            </canvas>
                         </div>
                         <div v-if="att.actuator">
                             <div v-if="att.type=='Boolean'" v-bind:id="'att_'+att.id">
-                                <button v-if="att.value" class="btn btn-success" v-on:click="toggle(att)">{{att.name}} ON</button>
-                                <button v-if="!att.value" class="btn btn-danger"  v-on:click="toggle(att)">{{att.name}} OFF</button>
+                                <button v-if="att.value" class="btn btn-success" v-on:click="toggle(att)">{{att.name}}
+                                    ON
+                                </button>
+                                <button v-if="!att.value" class="btn btn-danger" v-on:click="toggle(att)">{{att.name}}
+                                    OFF
+                                </button>
                             </div>
 
                             <div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">
@@ -32,19 +39,17 @@
                 </div>
             </div>
         </div>
-
     </main>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="/static/js/app.js"></script>
 <script>
-    google.charts.load('current', {'packages':['gauge']});
+    // google.charts.load('current', {'packages':['gauge', 'corechart']});
     var token = $.cookie("authorization");
     var userId = ${user.id};
     var thingId = ${thing.id};
-    var series = {
-
-    };
+    var series = {};
 
     var app = new Vue({
         el: '#container-main',
@@ -58,100 +63,185 @@
             role: "",
             unit: {},
             thing: {},
-            devices: []
+            devices: [],
+            // hold chart objects to modify them later
+            doubleCharts: {},
+            integerCharts: {},
+            // chart max data limit
+            maxDataLimit: 20,
+            // chart colors
+            chartColors: {
+                red: 'rgb(255, 99, 132)',
+                orange: 'rgb(255, 159, 64)',
+                yellow: 'rgb(255, 205, 86)',
+                green: 'rgb(75, 192, 192)',
+                blue: 'rgb(54, 162, 235)',
+                purple: 'rgb(153, 102, 255)',
+                grey: 'rgb(201, 203, 207)'
+            }
+        },
+        computed: {
+          chartColorList: function() {
+              var list = [];
+              for(var color in this.chartColors){
+                  list.push(this.chartColors[color]);
+              }
+              return list;
+          }
         },
         methods: {
-            "setValue":function(att){
-                var that = this;
+            "setValue": function (att) {
                 $.ajax({
-                    url: "/pubsub/value/"+att.id,
+                    url: "/pubsub/value/" + att.id,
                     "method": "POST",
-                    "data":{ "value": $(document.getElementById('att_'+att.id)).val() } ,
+                    "data": {"value": $(document.getElementById('att_' + att.id)).val()},
                     success: function (data) {
                         setTimeout(function () {
                             that.refresh();
-                        },3000);
+                        }, 3000);
                     }
                 });
             },
-            "toggle":function (att) {
+            "toggle": function (att) {
                 var that = this;
                 $.ajax({
-                    url: "/pubsub/value/"+att.id,
+                    url: "/pubsub/value/" + att.id,
                     "method": "POST",
-                    "data":{ "value": att.value?0:1} ,
+                    "data": {"value": att.value ? 0 : 1},
                     success: function (data) {
                         setTimeout(function () {
                             that.refresh();
-                        },3000);
+                        }, 3000);
+                    }
+                });
+            },
+            "setIntegerChart": function (att) {
+                // $(document.getElementById('att_' + att.id)).html(att.name + ': &nbsp; <strong>' + att.value + '</strong>');
 
-                    }
+                var ctx = document.getElementById('att_' + att.id).getContext('2d');
+                var chart = new Chart(ctx, {
+                    // The type of chart we want to create
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: att.name,
+                            backgroundColor: this.chartColorList[att.id % this.chartColorList.length],
+                            borderColor: this.chartColorList[att.id % this.chartColorList.length],
+                            data: []
+                        }]
+                    },
+
+                    // Configuration options go here
+                    options: {}
                 });
+                this.integerCharts[att.id] = chart;
             },
-            "updateInteger":function (att) {
-                $(document.getElementById('att_'+att.id)).html(att.name+': &nbsp; <strong>'+att.value+'</strong>');
+            "updateIntegerChart": function (att) {
+                var date = new Date();
+                var labels = this.integerCharts[att.id].config.data.labels;
+                var data = this.integerCharts[att.id].config.data.datasets[0].data;
+                labels.push(date.toLocaleTimeString());
+                data.push(att.value);
+                var removeLength = labels.length - this.maxDataLimit;
+                if(removeLength > 0) {
+                    labels.splice(0, removeLength);
+                    data.splice(0, removeLength);
+                }
+                this.integerCharts[att.id].update();
             },
-            "updateGauge":function (att) {
+            "updateGauge": function (att) {
 
                 var data = google.visualization.arrayToDataTable([
                     ['Label', 'Value'],
-                    [att.name,att.value]
+                    [att.name, att.value]
                 ]);
                 var options = {
                     width: 400, height: 120
                 };
-                var chart = new google.visualization.Gauge(document.getElementById('att_'+att.id));
+                var chart = new google.visualization.Gauge(document.getElementById('att_' + att.id));
                 chart.draw(data, options);
 
             },
-            "updateLineChart" : function (att) {
-                var data = google.visualization.DataTable();
-                data.addColumn('string', 'Time');
-                data.addColumn('number', 'Sensor Value');
+            "setDoubleChart": function (att) {
+                // $(document.getElementById('att_' + att.id)).html(att.name + ': &nbsp; <strong>' + att.value + '</strong>');
+
+                var ctx = document.getElementById('att_' + att.id).getContext('2d');
+                var chart = new Chart(ctx, {
+                    // The type of chart we want to create
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: att.name,
+                            backgroundColor: this.chartColorList[att.id % this.chartColorList.length],
+                            borderColor: this.chartColorList[att.id % this.chartColorList.length],
+                            data: []
+                        }]
+                    },
+
+                    // Configuration options go here
+                    options: {}
+                });
+                this.doubleCharts[att.id] = chart;
+            },
+            "updateDoubleChart": function (att) {
                 var date = new Date();
-                data.addRows(date.getHours()+':'+date.getMinutes(), att.value);
-                var options = {
-                    width: 600, height: 300
-                };
-                var chart = new google.visualization.Gauge(document.getElementById('att_'+att.id));
-                chart.draw(data, options);
+                var labels = this.doubleCharts[att.id].config.data.labels;
+                var data = this.doubleCharts[att.id].config.data.datasets[0].data;
+                labels.push(date.toLocaleTimeString());
+                data.push(att.value);
+                var removeLength = labels.length - this.maxDataLimit;
+                if(removeLength > 0) {
+                    labels.splice(0, removeLength);
+                    data.splice(0, removeLength);
+                }
+                this.doubleCharts[att.id].update();
             },
-
-            "refresh": function () {
+            "refresh": function (isInit) {
                 var that = this;
 
                 $.ajax({
-                        url: "/pubsub/shadow/"+thingId,
-                        "method": "GET",
-                        success: function (data) {
-                            data = data["state"];
-                            for(var key in data["reported"]){
-                                var val = data["reported"][key];
-                                for(var d in that.devices){
-                                    var device = that.devices[d];
-                                    for(var ak in device.deviceAttributes){
-                                        var att = device.deviceAttributes[ak];
-                                        var dName = "device"+device.id+"."+att.id;
-                                        if(dName===key){console.log(att);
-                                            if(att.type==="Integer"){
-                                                Vue.set(att, 'value', val);
-                                                that.updateInteger(att);
-                                            } else if(att.type==="Double"){
-                                                Vue.set(att, 'value', val);
-                                                // that.updateGauge(att);
-                                                that.updateLineChart(att);
-                                            }else{
-                                                Vue.set(att, 'value', val !== 0);
-
-                                            }
-
+                    url: "/pubsub/shadow/" + thingId,
+                    "method": "GET",
+                    success: function (data) {
+                        data = data["state"];
+                        for (var key in data["reported"]) {
+                            var val = data["reported"][key];
+                            for (var d in that.devices) {
+                                var device = that.devices[d];
+                                for (var ak in device.deviceAttributes) {
+                                    var att = device.deviceAttributes[ak];
+                                    var dName = "device" + device.id + "." + att.id;
+                                    if (dName === key) {
+                                        console.log(att);
+                                        if (att.type === "Integer") {
+                                            Vue.set(att, 'value', val);
+                                            if (isInit)
+                                                that.setIntegerChart(att);
+                                            else
+                                                that.updateIntegerChart(att);
+                                        } else if (att.type === "Double") {
+                                            Vue.set(att, 'value', val);
+                                            if (isInit)
+                                                that.setDoubleChart(att);
+                                            else
+                                                that.updateDoubleChart(att);
+                                            // that.updateGauge(att);
+                                        } else {
+                                            Vue.set(att, 'value', val !== 0);
                                         }
                                     }
                                 }
                             }
-
                         }
-                    });
+
+                    }
+                });
 
             },
             "publish": function () {
@@ -177,7 +267,7 @@
                         that.thing = data;
                         that.unit = that.thing.parentUnit;
                         that.devices = data.devices;
-                        that.refresh();
+                        that.refresh(true);
                         $.ajax({
                             url: "/unit/rights/" + that.unit.id + "/" + userId,
                             success: function (data) {
@@ -190,12 +280,12 @@
             }
         },
         mounted: function () {
-            this.load();
+            this.load()
             var that = this;
 
             setInterval(function () {
                 that.refresh();
-            },10000);
+            }, 10000);
         }
     })
 </script>
