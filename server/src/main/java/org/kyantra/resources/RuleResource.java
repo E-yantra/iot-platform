@@ -28,9 +28,8 @@ public class RuleResource {
                       .withRangeKeyValue("${timestamp()}")
                       .withRoleArn("arn:aws:iam::418796160904:role/my-iot-role");
 
+        // add actions as required
         Action action = new Action().withDynamoDB(dynamoDBAction);
-
-        // add other actions as required
         List<Action> actionList = new ArrayList<>();
         actionList.add(action);
 
@@ -46,7 +45,7 @@ public class RuleResource {
                         .withTopicRulePayload(rulePayload);
 
         AwsIotHelper.getIotClient().createTopicRule(topicRuleRequest);
-        return "Done!";
+        return "{\"success\":true}";
     }
 
     @POST
@@ -67,6 +66,7 @@ public class RuleResource {
             AwsIotHelper.getIotClient().disableTopicRule(topicRuleRequest);
         }
 
-        return "done";
+        return "{\"success\":true}";
     }
+
 }
