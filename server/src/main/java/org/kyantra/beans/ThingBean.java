@@ -2,6 +2,9 @@ package org.kyantra.beans;
 
 
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Subselect;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -29,7 +32,8 @@ public class ThingBean {
     @Column(name = "certificate_dir")
     String certificateDir;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "parentThing")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentThing", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
     @Expose
     private Set<DeviceBean> devices;
 
@@ -106,6 +110,17 @@ public class ThingBean {
 
     public String getCertificateDir() {
         return certificateDir;
+    }
+
+    public DeviceBean addDevice(DeviceBean deviceBean) {
+        this.devices.add(deviceBean);
+        deviceBean.setParentThing(this);
+        return deviceBean;
+    }
+
+    public void removeDevice(DeviceBean deviceBean) {
+        this.devices.remove(deviceBean);
+        deviceBean.setParentThing(null);
     }
 
 }

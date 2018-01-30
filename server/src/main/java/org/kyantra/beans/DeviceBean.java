@@ -1,6 +1,8 @@
 package org.kyantra.beans;
 
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -22,14 +24,15 @@ public class DeviceBean {
     @Expose
     String description;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentDevice", cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentDevice", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
     @Expose
     private List<DeviceAttributeBean> deviceAttributes;
 
     @OneToOne
     private UnitBean ownerUnit;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private ThingBean parentThing;
 
     public ThingBean getParentThing() {
@@ -79,4 +82,16 @@ public class DeviceBean {
     public void setOwnerUnit(UnitBean ownerUnit) {
         this.ownerUnit = ownerUnit;
     }
+
+    public DeviceAttributeBean addDeviceAttribute(DeviceAttributeBean deviceAttributeBean) {
+        this.deviceAttributes.add(deviceAttributeBean);
+        deviceAttributeBean.setParentDevice(this);
+        return deviceAttributeBean;
+    }
+
+    public void removeDeviceAttribute(DeviceAttributeBean deviceAttributeBean) {
+        this.deviceAttributes.remove(deviceAttributeBean);
+        deviceAttributeBean.setParentDevice(null);
+    }
+
 }
