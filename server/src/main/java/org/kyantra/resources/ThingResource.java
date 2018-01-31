@@ -17,6 +17,7 @@ import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 import org.kyantra.utils.AwsIotHelper;
 import org.kyantra.utils.StringConstants;
+import org.kyantra.utils.ThingHelper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -113,6 +114,7 @@ public class ThingResource extends BaseResource {
                 thing.setDescription(description);
                 thing.setIp(ip);
                 thing.setParentUnit(UnitDAO.getInstance().get(parentUnitId));
+                thing.setStorageEnabled(false);
 
                 //Generate certificates as strings
                 CreateKeysAndCertificateRequest certificateRequest = new CreateKeysAndCertificateRequest();
@@ -174,6 +176,8 @@ public class ThingResource extends BaseResource {
                         .withThingName(thingResult.getThingName());
                 AwsIotHelper.getIotClient().attachThingPrincipal(thingPrincipalRequest);
 
+                // call createStorageRule to create a rule by default
+                ThingHelper.getThingHelper().createStorageRule(thingBean.getId());
                 return gson.toJson(thingBean);
 
             } catch (Throwable t) {

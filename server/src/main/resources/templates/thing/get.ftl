@@ -22,7 +22,7 @@
                         {{ thing.name }}
                         <div class="float-right">
                             <label class="badge badge-primary" for="storage" style="margin-right: 2em">Enable storage</label>
-                            <input type="checkbox" id="storage" class="form-check-input" v-on:change="">
+                            <input type="checkbox" id="storage" class="form-check-input" v-model="storageEnabled" v-on:change="enableStorage">
                         </div>
                     </div>
                     <div class="card-body p-0">
@@ -152,9 +152,25 @@
             cronAttribute: {},
             cronExpression: "",
             cronAttributeValue: "",
-            crons: []
+            crons: [],
+            storageEnabled: ""
         },
         methods: {
+            "enableStorage": function () {
+                var that = this;
+                $.ajax({
+                    url: "/thing/rule/enable/" + thingId,
+                    "method": "POST",
+                    "data": {
+                        enable: that.storageEnabled
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        alert("Storage settings updated!");
+                    }
+                });
+            },
+
             "dashboard": function () {
                 window.location = "/things/dashboard/" + thingId;
             },
@@ -166,6 +182,7 @@
                     window.open("/thing/certificate/get/" + fileName + "/" + thingId, "_blank");
                 });
             },
+
             "publish": function () {
                 var that = this;
                 $.ajax({
@@ -180,6 +197,7 @@
                     }
                 });
             },
+
             "subscribe": function () {
                 try {
                     clearInterval(this.subscribeHandle);
@@ -216,6 +234,7 @@
                     });
                 }, 8000);
             },
+
             "load": function () {
 
                 var that = this;
@@ -224,6 +243,7 @@
                     success: function (data) {
                         that.thing = data;
                         that.unit = that.thing.parentUnit;
+                        that.storageEnabled = data.storageEnabled;
                         $.ajax({
                             url: "/unit/rights/" + that.unit.id + "/" + userId,
                             success: function (data) {
@@ -242,16 +262,19 @@
                 that.getCrons();
 
             },
+
             "removeAttr": function (key) {
                 if (key !== -1) {
                     array.splice(key, 1);
                 }
             },
+
             "addAttr": function () {
                 if (this.cttr.name && this.cttr.type) {
                     this.createDevice.deviceAttributes.push(Object.assign({}, this.cttr));
                 }
             },
+
             "deleteDevice": function (device) {
                 alert(device.id);
                 this.saveLoader = true;
@@ -270,6 +293,7 @@
                     });
                 }
             },
+
             "deleteDeviceAttributes": function (deviceId) {
                 if (confirm("Are you sure you want to delete device?") && confirm("Are you really sure?")) {
                     $.ajax({
@@ -282,6 +306,7 @@
                     });
                 }
             },
+
             "deleteThing": function () {
                 alert(thingId);
                 if (confirm("Are you sure you want to delete thing?") && confirm("Are you really sure?")) {
@@ -295,19 +320,23 @@
                     });
                 }
             },
+
             "newDevice": function () {
                 this.createDevice = {
                     deviceAttributes: []
                 };
                 $("#create_device").modal('show');
             },
+
             "addCron": function () {
 
                 $("#create_cron").modal('show');
             },
+
             "edit": function () {
 
             },
+
             "deleteCron": function (cron) {
                 var that = this;
                 if (confirm("Are you sure you want to delete this cron?")) {
@@ -321,6 +350,7 @@
 
                 }
             },
+
             "getCrons": function () {
                 var that = this;
                 $.ajax({
@@ -331,6 +361,7 @@
                     }
                 });
             },
+
             "saveCron": function () {
 
                 var that = this;
@@ -355,9 +386,8 @@
                         that.getCrons();
                     }
                 });
-
-
             },
+
             "generate": function () {
                 $("#generate_code").modal('show');
                 saveLoader = true;
@@ -372,13 +402,16 @@
                     }
                 });
             },
+
             "copyToClipboard": function () {
                 $("#shadow-message").select();
                 document.execCommand("Copy");
             },
+
             "importThing": function () {
                 //TODO
             },
+
             "saveDevice": function () {
                 var that = this;
                 this.saveLoader = true;
@@ -408,10 +441,12 @@
                     });
                 }
             },
+
             "editDevice": function (device) {
                 this.createDevice = device;
                 $("#create_device").modal('show');
             },
+
             "saveAttributes": function (deviceId, attributes) {
                 $.ajax({
                     "url": "/attribute/add/" + deviceId,
@@ -424,6 +459,7 @@
                     }
                 });
             },
+
             "saveUnit": function () {
                 this.saveLoader = true;
                 var that = this;
@@ -454,6 +490,7 @@
                 }
             }
         },
+
         mounted: function () {
             this.load()
         }

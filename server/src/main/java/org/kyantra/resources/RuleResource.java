@@ -3,6 +3,8 @@ package org.kyantra.resources;
 import com.amazonaws.services.iot.AWSIot;
 import com.amazonaws.services.iot.model.*;
 import org.glassfish.hk2.api.messaging.Topic;
+import org.kyantra.beans.ThingBean;
+import org.kyantra.dao.ThingDAO;
 import org.kyantra.utils.AwsIotHelper;
 
 import javax.ws.rs.*;
@@ -16,7 +18,9 @@ public class RuleResource {
     @Path("/create/{id}")
     @Produces(MediaType.TEXT_PLAIN)
     public String create(@PathParam("id") Integer id) {
+
         String thingName = "thing" + id;
+
         // create actions
         DynamoDBAction dynamoDBAction = new DynamoDBAction();
         dynamoDBAction.withTableName("ThingDB")
@@ -36,7 +40,7 @@ public class RuleResource {
         TopicRulePayload rulePayload = new TopicRulePayload();
         rulePayload.withDescription("Rule for " + thingName)
                    .withSql("SELECT * FROM '$aws/things/" + thingName + "/shadow/update'")
-                   .withRuleDisabled(false)
+                   .withRuleDisabled(true)
                    .withAwsIotSqlVersion("2016-03-23")
                    .withActions(actionList);
 
@@ -46,6 +50,7 @@ public class RuleResource {
 
         AwsIotHelper.getIotClient().createTopicRule(topicRuleRequest);
         return "{\"success\":true}";
+
     }
 
     @POST
@@ -65,6 +70,8 @@ public class RuleResource {
             topicRuleRequest.withRuleName(ruleName);
             AwsIotHelper.getIotClient().disableTopicRule(topicRuleRequest);
         }
+
+        ThingDAO.getInstance().setStorageEnabled(id, enable);
 
         return "{\"success\":true}";
     }
