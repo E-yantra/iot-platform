@@ -13,9 +13,19 @@
                         <#--<div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">-->
                         <#--<img src="/static/img/ajax-loader.gif"/>-->
                         <#--</div>-->
-                            <canvas v-if="att.type=='Double' || att.type=='Integer'" v-bind:id="'att_'+att.id" width="400" height="300">
+                            <select v-model="chartTypesSelected(att.id)">
+                                <option v-for="chartType in chartTypesSelected" v-bind:value="chartType.value">
+                                    {{ chartType.text }}
+                                </option>
+                            </select>
+                            <#--<span>Selected: {{ selected }}</span>-->
+                            <canvas v-if="!renderGuage(att.id)" v-bind:id="'att_'+att.id"
+                                    width="400" height="300">
                             <#--<img src="/static/img/ajax-loader.gif"/>-->
                             </canvas>
+                            <div v-else v-bind:id="'att_'+att.id">
+                                <img src="/static/img/ajax-loader.gif"/>
+                            </div>
                         </div>
                         <div v-if="att.actuator">
                             <div v-if="att.type=='Boolean'" v-bind:id="'att_'+att.id">
@@ -26,14 +36,12 @@
                                     OFF
                                 </button>
                             </div>
-
                             <div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">
                                 <input class="input form-control" type="number" v-on:change="setValue(att)"/>
                             </div>
                             <div v-if="att.type=='Integer'" v-bind:id="'att_'+att.id">
                                 <input class="input form-control" type="number" v-on:change="setValue(att)"/>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -78,16 +86,25 @@
                 blue: 'rgb(54, 162, 235)',
                 purple: 'rgb(153, 102, 255)',
                 grey: 'rgb(201, 203, 207)'
-            }
+            },
+            chartTypes: [
+                { text: 'Guage', value: 'Guage' },
+                { text: 'Line', value: 'Line' }
+            ],
+            chartTypesSelected: {}
         },
         computed: {
-          chartColorList: function() {
-              var list = [];
-              for(var color in this.chartColors){
-                  list.push(this.chartColors[color]);
-              }
-              return list;
-          }
+            chartColorList: function () {
+                var list = [];
+                for (var color in this.chartColors) {
+                    list.push(this.chartColors[color]);
+                }
+                return list;
+            },
+
+            renderGuage: function (id) {
+                return this.chartType[id] == true && (att.type == 'Double' || att.type=='Integer');
+            }
         },
         methods: {
             "setValue": function (att) {
@@ -146,7 +163,7 @@
                 labels.push(date.toLocaleTimeString());
                 data.push(att.value);
                 var removeLength = labels.length - this.maxDataLimit;
-                if(removeLength > 0) {
+                if (removeLength > 0) {
                     labels.splice(0, removeLength);
                     data.splice(0, removeLength);
                 }
@@ -196,7 +213,7 @@
                 labels.push(date.toLocaleTimeString());
                 data.push(att.value);
                 var removeLength = labels.length - this.maxDataLimit;
-                if(removeLength > 0) {
+                if (removeLength > 0) {
                     labels.splice(0, removeLength);
                     data.splice(0, removeLength);
                 }
@@ -223,12 +240,16 @@
                                             Vue.set(att, 'value', val);
                                             if (isInit)
                                                 that.setIntegerChart(att);
+                                            else if(this.isGauge)
+                                                that.updateGauge(att);
                                             else
                                                 that.updateIntegerChart(att);
                                         } else if (att.type === "Double") {
                                             Vue.set(att, 'value', val);
                                             if (isInit)
                                                 that.setDoubleChart(att);
+                                            else if(this.isGauge)
+                                                that.updateGauge(att);
                                             else
                                                 that.updateDoubleChart(att);
                                             // that.updateGauge(att);
