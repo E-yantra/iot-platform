@@ -10,7 +10,7 @@
                 <div class="card-body p-1">
                     <div class="m-1" v-for="att in d.deviceAttributes">
                         <div v-if="!att.actuator">
-                            <select v-model="chartTypesSelected[att.id]"
+                            <select class="form-control" v-model="chartTypesSelected[att.id]"
                                     v-on:change="(chartInitFunctions[chartTypesSelected[att.id]])(att)">
                                 <option disabled value="">Please select one</option>
                                 <option v-for="chartType in chartTypes[att.type]" v-bind:value="chartType.value">
