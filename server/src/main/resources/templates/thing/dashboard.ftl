@@ -10,19 +10,19 @@
                 <div class="card-body p-1">
                     <div class="m-1" v-for="att in d.deviceAttributes">
                         <div v-if="!att.actuator">
-                        <#--<div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">-->
-                        <#--<img src="/static/img/ajax-loader.gif"/>-->
-                        <#--</div>-->
-                            <select v-model="chartTypesSelected(att.id)">
-                                <option v-for="chartType in chartTypesSelected" v-bind:value="chartType.value">
+                            <select v-model="chartTypesSelected[att.id]"
+                                    v-on:change="(chartInitFunctions[chartTypesSelected[att.id]])(att)">
+                                <option disabled value="">Please select one</option>
+                                <option v-for="chartType in chartTypes[att.type]" v-bind:value="chartType.value">
                                     {{ chartType.text }}
                                 </option>
                             </select>
-                            <#--<span>Selected: {{ selected }}</span>-->
-                            <canvas v-if="!renderGuage(att.id)" v-bind:id="'att_'+att.id"
+                        <#--canvas is required by chartsJS-->
+                            <canvas v-if="chartTypeRequires[chartTypesSelected[att.id]]=='canvas'"
+                                    v-bind:id="'att_'+att.id"
                                     width="400" height="300">
-                            <#--<img src="/static/img/ajax-loader.gif"/>-->
                             </canvas>
+                        <#--div is required by GCharts-->
                             <div v-else v-bind:id="'att_'+att.id">
                                 <img src="/static/img/ajax-loader.gif"/>
                             </div>
@@ -53,7 +53,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="/static/js/app.js"></script>
 <script>
-    // google.charts.load('current', {'packages':['gauge', 'corechart']});
+    google.charts.load('current', {'packages': ['gauge']});
     var token = $.cookie("authorization");
     var userId = ${user.id};
     var thingId = ${thing.id};
@@ -72,9 +72,9 @@
             unit: {},
             thing: {},
             devices: [],
+            interval: 10000,
             // hold chart objects to modify them later
-            doubleCharts: {},
-            integerCharts: {},
+            chartObjects: {},
             // chart max data limit
             maxDataLimit: 20,
             // chart colors
@@ -87,24 +87,52 @@
                 purple: 'rgb(153, 102, 255)',
                 grey: 'rgb(201, 203, 207)'
             },
-            chartTypes: [
-                { text: 'Guage', value: 'Guage' },
-                { text: 'Line', value: 'Line' }
-            ],
+            chartTypes: {
+                // define charts for other types here
+                // add multiple charts for a type in array
+                'Double': [
+                    {text: 'Gauge', value: 'Gauge'},
+                    {text: 'Line', value: 'Line'}
+                ],
+                'Integer': [
+                    {text: 'Gauge', value: 'Gauge'},
+                    {text: 'Line', value: 'Line'}
+                ]
+            },
+            chartTypeRequires: {
+                // chartsjs requires canvas; google charts need div
+                'Gauge': 'div',
+                'Line': 'canvas'
+            },
+            // value of selected chart type for individual device attributes
             chartTypesSelected: {}
         },
         computed: {
             chartColorList: function () {
+                // generates allowed colors array for chartColors
                 var list = [];
                 for (var color in this.chartColors) {
                     list.push(this.chartColors[color]);
                 }
                 return list;
             },
-
-            renderGuage: function (id) {
-                return this.chartType[id] == true && (att.type == 'Double' || att.type=='Integer');
+            chartInitFunctions: function () {
+                // initialise charts
+                return {
+                    'Gauge': this.updateGauge,
+                    'Line': this.setLineChart
+                };
+            },
+            chartUpdateFunctions: function () {
+                // update charts
+                return {
+                    'Gauge': this.updateGauge,
+                    'Line': this.updateLineChart
+                };
             }
+            // renderGauge: function (id) {
+            //     return this.chartType[id] == true && (att.type == 'Double' || att.type=='Integer');
+            // }
         },
         methods: {
             "setValue": function (att) {
@@ -132,34 +160,34 @@
                     }
                 });
             },
-            "setIntegerChart": function (att) {
-                // $(document.getElementById('att_' + att.id)).html(att.name + ': &nbsp; <strong>' + att.value + '</strong>');
-
-                var ctx = document.getElementById('att_' + att.id).getContext('2d');
-                var chart = new Chart(ctx, {
-                    // The type of chart we want to create
-                    type: 'line',
-
-                    // The data for our dataset
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: att.name,
-                            backgroundColor: this.chartColorList[att.id % this.chartColorList.length],
-                            borderColor: this.chartColorList[att.id % this.chartColorList.length],
-                            data: []
-                        }]
-                    },
-
-                    // Configuration options go here
-                    options: {}
-                });
-                this.integerCharts[att.id] = chart;
+            "setLineChart": function (att) {
+                var that = this;
+                setTimeout(function () {
+                    var ctx = document.getElementById('att_' + att.id).getContext('2d');
+                    var chart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: att.name,
+                                backgroundColor: that.chartColorList[att.id % that.chartColorList.length],
+                                borderColor: that.chartColorList[att.id % that.chartColorList.length],
+                                data: []
+                            }]
+                        },
+                        // Configuration options go here
+                        options: {}
+                    });
+                    that.chartObjects[att.id] = chart;
+                    console.log(att.id);
+                    console.log(that.chartObjects[att.id]);
+                }, 1500);
             },
-            "updateIntegerChart": function (att) {
+            "updateLineChart": function (att) {
+                console.log(att.id);
                 var date = new Date();
-                var labels = this.integerCharts[att.id].config.data.labels;
-                var data = this.integerCharts[att.id].config.data.datasets[0].data;
+                var labels = this.chartObjects[att.id].config.data.labels;
+                var data = this.chartObjects[att.id].config.data.datasets[0].data;
                 labels.push(date.toLocaleTimeString());
                 data.push(att.value);
                 var removeLength = labels.length - this.maxDataLimit;
@@ -167,7 +195,7 @@
                     labels.splice(0, removeLength);
                     data.splice(0, removeLength);
                 }
-                this.integerCharts[att.id].update();
+                this.chartObjects[att.id].update();
             },
             "updateGauge": function (att) {
 
@@ -180,44 +208,6 @@
                 };
                 var chart = new google.visualization.Gauge(document.getElementById('att_' + att.id));
                 chart.draw(data, options);
-
-            },
-            "setDoubleChart": function (att) {
-                // $(document.getElementById('att_' + att.id)).html(att.name + ': &nbsp; <strong>' + att.value + '</strong>');
-
-                var ctx = document.getElementById('att_' + att.id).getContext('2d');
-                var chart = new Chart(ctx, {
-                    // The type of chart we want to create
-                    type: 'line',
-
-                    // The data for our dataset
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: att.name,
-                            backgroundColor: this.chartColorList[att.id % this.chartColorList.length],
-                            borderColor: this.chartColorList[att.id % this.chartColorList.length],
-                            data: []
-                        }]
-                    },
-
-                    // Configuration options go here
-                    options: {}
-                });
-                this.doubleCharts[att.id] = chart;
-            },
-            "updateDoubleChart": function (att) {
-                var date = new Date();
-                var labels = this.doubleCharts[att.id].config.data.labels;
-                var data = this.doubleCharts[att.id].config.data.datasets[0].data;
-                labels.push(date.toLocaleTimeString());
-                data.push(att.value);
-                var removeLength = labels.length - this.maxDataLimit;
-                if (removeLength > 0) {
-                    labels.splice(0, removeLength);
-                    data.splice(0, removeLength);
-                }
-                this.doubleCharts[att.id].update();
             },
             "refresh": function (isInit) {
                 var that = this;
@@ -238,21 +228,20 @@
                                         console.log(att);
                                         if (att.type === "Integer") {
                                             Vue.set(att, 'value', val);
-                                            if (isInit)
-                                                that.setIntegerChart(att);
-                                            else if(this.isGauge)
+                                            if (isInit){
+                                                // that.chartTypesSelected[att.id] = 'Gauge';
                                                 that.updateGauge(att);
+                                            }
                                             else
-                                                that.updateIntegerChart(att);
+                                                (that.chartUpdateFunctions[that.chartTypesSelected[att.id]])(att);
                                         } else if (att.type === "Double") {
                                             Vue.set(att, 'value', val);
-                                            if (isInit)
-                                                that.setDoubleChart(att);
-                                            else if(this.isGauge)
+                                            if (isInit){
+                                                // that.chartTypesSelected[att.id] = 'Gauge';
                                                 that.updateGauge(att);
+                                            }
                                             else
-                                                that.updateDoubleChart(att);
-                                            // that.updateGauge(att);
+                                                (that.chartUpdateFunctions[that.chartTypesSelected[att.id]])(att);
                                         } else {
                                             Vue.set(att, 'value', val !== 0);
                                         }
@@ -306,9 +295,9 @@
 
             setInterval(function () {
                 that.refresh();
-            }, 10000);
+            }, that.interval);
         }
-    })
+    });
 </script>
 </body>
 </html>
