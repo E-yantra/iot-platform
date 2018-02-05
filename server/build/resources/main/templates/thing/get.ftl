@@ -42,6 +42,7 @@
                         <div class="float-right">
                             <button v-on:click="edit" class="btn btn-primary btn-sm">EDIT</button>
                             <button v-on:click="generate" class="btn btn-primary btn-sm">GENERATE CLIENT</button>
+                            <button v-on:click="downloadCertificates" class="btn btn-primary btn-sm">DOWNLOAD CERTIFICATES</button>
                             <button v-on:click="dashboard" class="btn btn-primary btn-sm">DASHBOARD</button>
                         </div>
                         <button v-on:click="deleteThing" class="btn btn-danger btn-sm float-left text-white"><i class="fa fa-trash-o fa-lg"></i>DELETE
@@ -138,6 +139,7 @@
             },
             cttr: {},
             generateCode: "",
+            generateMessage: "",
             cron:{},
             cronDevice:{},
             cronAttribute:{},
@@ -146,10 +148,18 @@
             crons:[]
         },
         methods: {
-            "dashboard":function () {
+            "dashboard": function() {
               window.location = "/things/dashboard/"+thingId;
             },
-            "publish": function () {
+
+            "downloadCertificates": function() {
+                var that = this;
+                var fileNames = ["certificate.crt", "private.key", "public.key"];
+                fileNames.forEach(function(fileName) {
+                    window.open("/thing/certificate/get/"+fileName+"/"+thingId, "_blank");
+                });
+            },
+            "publish": function() {
                 var that = this;
                 $.ajax({
                     url: "/pubsub/publish",
@@ -350,9 +360,14 @@
                     "method": "GET",
                     success: function (data) {
                         that.saveLoader = false;
-                        that.generateCode = (data);
+                        that.generateCode = data.substr(0,data.search("{")-1);
+                        that.generateMessage = data.substr(data.search("{"));
                     }
                 });
+            },
+            "copyToClipboard": function () {
+                $("#shadow-message").select();
+                document.execCommand("Copy");
             },
             "importThing": function () {
                 //TODO

@@ -10,41 +10,54 @@
                 <div class="card-body p-1">
                     <div class="m-1" v-for="att in d.deviceAttributes">
                         <div v-if="!att.actuator">
-                            <div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">
+                            <select v-model="chartTypesSelected[att.id]"
+                                    v-on:change="(chartInitFunctions[chartTypesSelected[att.id]])(att)">
+                                <option disabled value="">Please select one</option>
+                                <option v-for="chartType in chartTypes[att.type]" v-bind:value="chartType.value">
+                                    {{ chartType.text }}
+                                </option>
+                            </select>
+                        <#--canvas is required by chartsJS-->
+                            <canvas v-if="chartTypeRequires[chartTypesSelected[att.id]]=='canvas'"
+                                    v-bind:id="'att_'+att.id"
+                                    width="400" height="300">
+                            </canvas>
+                        <#--div is required by GCharts-->
+                            <div v-else v-bind:id="'att_'+att.id">
                                 <img src="/static/img/ajax-loader.gif"/>
                             </div>
                         </div>
                         <div v-if="att.actuator">
                             <div v-if="att.type=='Boolean'" v-bind:id="'att_'+att.id">
-                                <button v-if="att.value" class="btn btn-success" v-on:click="toggle(att)">{{att.name}} ON</button>
-                                <button v-if="!att.value" class="btn btn-danger"  v-on:click="toggle(att)">{{att.name}} OFF</button>
+                                <button v-if="att.value" class="btn btn-success" v-on:click="toggle(att)">{{att.name}}
+                                    ON
+                                </button>
+                                <button v-if="!att.value" class="btn btn-danger" v-on:click="toggle(att)">{{att.name}}
+                                    OFF
+                                </button>
                             </div>
-
                             <div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">
                                 <input class="input form-control" type="number" v-on:change="setValue(att)"/>
                             </div>
                             <div v-if="att.type=='Integer'" v-bind:id="'att_'+att.id">
                                 <input class="input form-control" type="number" v-on:change="setValue(att)"/>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </main>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="/static/js/app.js"></script>
 <script>
-    google.charts.load('current', {'packages':['gauge']});
+    google.charts.load('current', {'packages': ['gauge']});
     var token = $.cookie("authorization");
     var userId = ${user.id};
     var thingId = ${thing.id};
-    var series = {
-
-    };
+    var series = {};
 
     var app = new Vue({
         el: '#container-main',
@@ -58,85 +71,187 @@
             role: "",
             unit: {},
             thing: {},
-            devices: []
+            devices: [],
+            interval: 10000,
+            // hold chart objects to modify them later
+            chartObjects: {},
+            // chart max data limit
+            maxDataLimit: 20,
+            // chart colors
+            chartColors: {
+                red: 'rgb(255, 99, 132)',
+                orange: 'rgb(255, 159, 64)',
+                yellow: 'rgb(255, 205, 86)',
+                green: 'rgb(75, 192, 192)',
+                blue: 'rgb(54, 162, 235)',
+                purple: 'rgb(153, 102, 255)',
+                grey: 'rgb(201, 203, 207)'
+            },
+            chartTypes: {
+                // define charts for other types here
+                // add multiple charts for a type in array
+                'Double': [
+                    {text: 'Gauge', value: 'Gauge'},
+                    {text: 'Line', value: 'Line'}
+                ],
+                'Integer': [
+                    {text: 'Gauge', value: 'Gauge'},
+                    {text: 'Line', value: 'Line'}
+                ]
+            },
+            chartTypeRequires: {
+                // chartsjs requires canvas; google charts need div
+                'Gauge': 'div',
+                'Line': 'canvas'
+            },
+            // value of selected chart type for individual device attributes
+            chartTypesSelected: {}
+        },
+        computed: {
+            chartColorList: function () {
+                // generates allowed colors array for chartColors
+                var list = [];
+                for (var color in this.chartColors) {
+                    list.push(this.chartColors[color]);
+                }
+                return list;
+            },
+            chartInitFunctions: function () {
+                // initialise charts
+                return {
+                    'Gauge': this.updateGauge,
+                    'Line': this.setLineChart
+                };
+            },
+            chartUpdateFunctions: function () {
+                // update charts
+                return {
+                    'Gauge': this.updateGauge,
+                    'Line': this.updateLineChart
+                };
+            }
+            // renderGauge: function (id) {
+            //     return this.chartType[id] == true && (att.type == 'Double' || att.type=='Integer');
+            // }
         },
         methods: {
-            "setValue":function(att){
+            "setValue": function (att) {
                 $.ajax({
-                    url: "/pubsub/value/"+att.id,
+                    url: "/pubsub/value/" + att.id,
                     "method": "POST",
-                    "data":{ "value": $(document.getElementById('att_'+att.id)).val() } ,
+                    "data": {"value": $(document.getElementById('att_' + att.id)).val()},
                     success: function (data) {
                         setTimeout(function () {
                             that.refresh();
-                        },3000);
+                        }, 3000);
                     }
                 });
             },
-            "toggle":function (att) {
+            "toggle": function (att) {
                 var that = this;
                 $.ajax({
-                    url: "/pubsub/value/"+att.id,
+                    url: "/pubsub/value/" + att.id,
                     "method": "POST",
-                    "data":{ "value": att.value?0:1} ,
+                    "data": {"value": att.value ? 0 : 1},
                     success: function (data) {
                         setTimeout(function () {
                             that.refresh();
-                        },3000);
-
+                        }, 3000);
                     }
                 });
             },
-            "updateInteger":function (att){
-                $(document.getElementById('att_'+att.id)).html(att.name+': &nbsp; <strong>'+att.value+'</strong>');
+            "setLineChart": function (att) {
+                var that = this;
+                setTimeout(function () {
+                    var ctx = document.getElementById('att_' + att.id).getContext('2d');
+                    var chart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: att.name,
+                                backgroundColor: that.chartColorList[att.id % that.chartColorList.length],
+                                borderColor: that.chartColorList[att.id % that.chartColorList.length],
+                                data: []
+                            }]
+                        },
+                        // Configuration options go here
+                        options: {}
+                    });
+                    that.chartObjects[att.id] = chart;
+                    console.log(att.id);
+                    console.log(that.chartObjects[att.id]);
+                }, 1500);
             },
-            "updateGauge":function (att) {
+            "updateLineChart": function (att) {
+                console.log(att.id);
+                var date = new Date();
+                var labels = this.chartObjects[att.id].config.data.labels;
+                var data = this.chartObjects[att.id].config.data.datasets[0].data;
+                labels.push(date.toLocaleTimeString());
+                data.push(att.value);
+                var removeLength = labels.length - this.maxDataLimit;
+                if (removeLength > 0) {
+                    labels.splice(0, removeLength);
+                    data.splice(0, removeLength);
+                }
+                this.chartObjects[att.id].update();
+            },
+            "updateGauge": function (att) {
 
                 var data = google.visualization.arrayToDataTable([
                     ['Label', 'Value'],
-                    [att.name,att.value]
+                    [att.name, att.value]
                 ]);
                 var options = {
                     width: 400, height: 120
                 };
-                var chart = new google.visualization.Gauge(document.getElementById('att_'+att.id));
+                var chart = new google.visualization.Gauge(document.getElementById('att_' + att.id));
                 chart.draw(data, options);
-
             },
-            "refresh": function () {
+            "refresh": function (isInit) {
                 var that = this;
 
                 $.ajax({
-                        url: "/pubsub/shadow/"+thingId,
-                        "method": "GET",
-                        success: function (data) {
-                            data = data["state"];
-                            for(var key in data["reported"]){
-                                var val = data["reported"][key];
-                                for(var d in that.devices){
-                                    var device = that.devices[d];
-                                    for(var ak in device.deviceAttributes){
-                                        var att = device.deviceAttributes[ak];
-                                        var dName = "device"+device.id+"."+att.id;
-                                        if(dName===key){console.log(att);
-                                            if(att.type==="Integer"){
-                                                Vue.set(att, 'value', val);
-                                                that.updateInteger(att);
-                                            } else if(att.type==="Double"){
-                                                Vue.set(att, 'value', val);
+                    url: "/pubsub/shadow/" + thingId,
+                    "method": "GET",
+                    success: function (data) {
+                        data = data["state"];
+                        for (var key in data["reported"]) {
+                            var val = data["reported"][key];
+                            for (var d in that.devices) {
+                                var device = that.devices[d];
+                                for (var ak in device.deviceAttributes) {
+                                    var att = device.deviceAttributes[ak];
+                                    var dName = "device" + device.id + "." + att.id;
+                                    if (dName === key) {
+                                        console.log(att);
+                                        if (att.type === "Integer") {
+                                            Vue.set(att, 'value', val);
+                                            if (isInit){
+                                                // that.chartTypesSelected[att.id] = 'Gauge';
                                                 that.updateGauge(att);
-                                            }else{
-                                                Vue.set(att, 'value', val !== 0);
-
                                             }
-
+                                            else
+                                                (that.chartUpdateFunctions[that.chartTypesSelected[att.id]])(att);
+                                        } else if (att.type === "Double") {
+                                            Vue.set(att, 'value', val);
+                                            if (isInit){
+                                                // that.chartTypesSelected[att.id] = 'Gauge';
+                                                that.updateGauge(att);
+                                            }
+                                            else
+                                                (that.chartUpdateFunctions[that.chartTypesSelected[att.id]])(att);
+                                        } else {
+                                            Vue.set(att, 'value', val !== 0);
                                         }
                                     }
                                 }
                             }
-
                         }
-                    });
+
+                    }
+                });
 
             },
             "publish": function () {
@@ -162,7 +277,7 @@
                         that.thing = data;
                         that.unit = that.thing.parentUnit;
                         that.devices = data.devices;
-                        that.refresh();
+                        that.refresh(true);
                         $.ajax({
                             url: "/unit/rights/" + that.unit.id + "/" + userId,
                             success: function (data) {
@@ -180,9 +295,9 @@
 
             setInterval(function () {
                 that.refresh();
-            },10000);
+            }, that.interval);
         }
-    })
+    });
 </script>
 </body>
 </html>

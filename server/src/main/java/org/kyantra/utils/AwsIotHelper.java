@@ -64,6 +64,5 @@ public class AwsIotHelper {
         String endPoint = ConfigDAO.getInstance().get("endpoint").getValue();
         AWSIotMqttClient client = new AWSIotMqttClient(endPoint, "server", awsKey, awsSecret);
         return client;
-
     }
 }

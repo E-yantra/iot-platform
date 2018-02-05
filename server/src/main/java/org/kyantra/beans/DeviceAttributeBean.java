@@ -2,15 +2,7 @@ package org.kyantra.beans;
 
 import com.google.gson.annotations.Expose;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "deviceAttributes" ,uniqueConstraints = @UniqueConstraint(columnNames={"name", "parentDevice_id"}))
@@ -38,7 +30,7 @@ public class DeviceAttributeBean {
     @OneToOne
     UnitBean ownerUnit;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     DeviceBean parentDevice;
 
     public Boolean getActuator() {

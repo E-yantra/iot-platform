@@ -8,7 +8,7 @@ public class ShadowBean {
     Map<String,HashMap<String,Object>> map;
     ThingBean thingBean;
 
-    public ShadowBean(){
+    public ShadowBean() {
         map = new HashMap<>();
         map.put("state", new HashMap<>());
     }
@@ -38,7 +38,7 @@ public class ShadowBean {
         map.get("state").clear();
     }
 
-    public void setDesired(DeviceAttributeBean bean, String property,Object value){
+    public void setDesired(DeviceAttributeBean bean, String property, Object value){
         map.get("state").putIfAbsent("desired", new HashMap<>());
         HashMap<Object, Object> submap = (HashMap<Object, Object>) map.get("state").get("desired");
         property = "device"+bean.getParentDevice().getId()+"."+property;
