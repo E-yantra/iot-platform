@@ -60,8 +60,8 @@ dependencies {
     compile group: 'io.swagger', name: 'swagger-jersey2-jaxrs', version: '1.5.17'
     // https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-json-jackson
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.26'
-    compile 'com.amazonaws:aws-java-sdk-core:1.11.221'
-    compile 'com.amazonaws:aws-java-sdk-iot:1.11.221'
+    compile 'com.amazonaws:aws-java-sdk-core:1.11.271'
+    compile 'com.amazonaws:aws-java-sdk-iot:1.11.271'
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-events
     compile group: 'com.amazonaws', name: 'aws-java-sdk-events', version: '1.11.238'
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-lambda
