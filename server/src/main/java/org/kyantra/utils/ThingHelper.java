@@ -5,6 +5,7 @@ package org.kyantra.utils;
  * certificates, attaching policies, etc.*/
 
 import com.amazonaws.services.iot.model.*;
+import org.kyantra.dao.ConfigDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ThingHelper {
                 .withRangeKeyField("timestamp")
                 .withRangeKeyType("NUMBER")
                 .withRangeKeyValue("${timestamp()}")
-                .withRoleArn("arn:aws:iam::418796160904:role/my-iot-role");
+                .withRoleArn(ConfigDAO.getInstance().get("IoTRoleARN").getValue());
 
         // add actions as required
         Action action = new Action().withDynamoDB(dynamoDBAction);
