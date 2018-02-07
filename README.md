@@ -24,4 +24,5 @@ Setup
     - awsKey
     - awsSecret 
     - endpoint (iot endpoint unique to your AWS account)    
+    - IoTRoleARN (role that grants iot access to dynamoDB and other services)
 4. Change the CERT_ROOT under StringConstants class to point to the directory where you want to store thing certificates. 
