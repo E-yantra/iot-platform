@@ -21,8 +21,10 @@
                     <div class="card-header">
                         {{ thing.name }}
                         <div class="float-right">
-                            <label class="badge badge-primary" for="storage" style="margin-right: 2em">Enable storage</label>
-                            <input type="checkbox" id="storage" class="form-check-input" v-model="storageEnabled" v-on:change="enableStorage">
+                            <div class="row clearfix">
+                                <div class="col"><label class="badge badge-primary" for="storage">Enable storage</label></div>
+                                <div class="col"><input type="checkbox" id="storage" class="form-check-input" v-model="storageEnabled" v-on:change="enableStorage"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body p-0">
