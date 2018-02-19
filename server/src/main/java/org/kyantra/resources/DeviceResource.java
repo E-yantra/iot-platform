@@ -146,7 +146,7 @@ public class DeviceResource extends BaseResource {
         ShadowBean shadowBean = new ShadowBean();
         shadowBean.setThingBean(thing);
         StringBuilder sb = new StringBuilder();
-        sb.append("clientId:");
+        sb.append("ThingID:");
         sb.append("thing"+ thing.getId());
         sb.append("\n");
         sb.append("Subscribe to Delta Topic : "+shadowBean.getDeltaTopic());

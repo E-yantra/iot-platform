@@ -253,6 +253,7 @@
                             console.log(that.lastMessageTime);
                             console.log(data.version);
                         }
+
                         data = data["state"];
                         for (var key in data["reported"]) {
                             var val = data["reported"][key];
@@ -327,7 +328,7 @@
             }
         },
         mounted: function () {
-            this.load()
+            this.load();
             var that = this;
 
             setInterval(function () {

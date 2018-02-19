@@ -26,8 +26,16 @@ public class CertificateResource {
 
         ThingBean bean = ThingDAO.getInstance().get(id);
         String certificateDirectory = Paths.get(StringConstants.CERT_ROOT,bean.getCertificateDir(),name+".pem").toString();
+
+        File rootCA = new File(StringConstants.CERT_ROOT + "rootCA.pem");
         File certificateFile = new File(certificateDirectory);
         System.out.println(certificateFile.getAbsolutePath()+"\nExists: " + certificateFile.exists());
+
+        if(name.equals("rootCA") && rootCA.exists()) {
+            return Response.ok(rootCA, MediaType.APPLICATION_OCTET_STREAM)
+                    .header("Content-Disposition", "attachment; filename=\"" + rootCA.getName() + "\"" )
+                    .build();
+        }
 
         if(certificateFile.exists()) {
             return Response.ok(certificateFile, MediaType.APPLICATION_OCTET_STREAM)

@@ -183,6 +183,7 @@
                 fileNames.forEach(function (fileName) {
                     window.open("/thing/certificate/get/" + fileName + "/" + thingId, "_blank");
                 });
+                window.open("/thing/certificate/get/" + "rootCA" + "/" + thingId, "_blank");
             },
 
             "publish": function () {
