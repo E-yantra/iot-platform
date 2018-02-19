@@ -5,6 +5,13 @@
 <#include "../common/sidenavbar.ftl"/>
     <main role="main" class="main col-sm-9 ml-sm-auto col-md-10 pt-3">
         <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="float-right p-1">
+                    Last message from device: {{lastMessageTime}}
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div v-for="d in devices" class="card col-md-6 p-0">
                 <div class="card-header p-d0">{{d.name}}</div>
                 <div class="card-body p-1">
@@ -62,6 +69,8 @@
     var app = new Vue({
         el: '#container-main',
         data: {
+            lastMessageTime: "N.A.",
+            lastMessageVersion: 0,
             subscribeHandle: null,
             subscribed: [],
             testTopic: "",
@@ -135,6 +144,22 @@
             // }
         },
         methods: {
+            "largestTimestamp": function (obj, timestamp, that) {
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        if(typeof obj[key] == 'object') {
+                            timestamp = that.largestTimestamp(obj[key], timestamp, that);
+                        }
+                        else if(key == 'timestamp') {
+                            // console.log(obj[key]);
+                            if (obj[key] > timestamp) {
+                                timestamp = obj[key];
+                            }
+                        }
+                    }
+                }
+                return timestamp;
+            },
             "setValue": function (att) {
                 $.ajax({
                     url: "/pubsub/value/" + att.id,
@@ -216,6 +241,18 @@
                     url: "/pubsub/shadow/" + thingId,
                     "method": "GET",
                     success: function (data) {
+                        if (that.lastMessageVersion < data.version) {
+                            that.lastMessageVersion = data.version;
+
+                            var reportedObj = data.metadata.reported;
+                            var timestamp = that.largestTimestamp(reportedObj, 0, that).toString();
+                            timestamp = parseInt(timestamp.padEnd(13,"0"));
+
+                            that.lastMessageTime = new Date(timestamp).toLocaleString();
+
+                            console.log(that.lastMessageTime);
+                            console.log(data.version);
+                        }
                         data = data["state"];
                         for (var key in data["reported"]) {
                             var val = data["reported"][key];
