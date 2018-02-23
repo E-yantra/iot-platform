@@ -11,49 +11,78 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div v-for="d in devices" class="card col-md-6 p-0">
-                <div class="card-header p-d0">{{d.name}}</div>
-                <div class="card-body p-1">
-                    <div class="m-1" v-for="att in d.deviceAttributes">
-                        <div v-if="!att.actuator">
-                            <select class="form-control" v-model="chartTypesSelected[att.id]"
-                                    v-on:change="(chartInitFunctions[chartTypesSelected[att.id]])(att)">
-                                <option disabled value="">Please select one</option>
-                                <option v-for="chartType in chartTypes[att.type]" v-bind:value="chartType.value">
-                                    {{ chartType.text }}
-                                </option>
-                            </select>
-                        <#--canvas is required by chartsJS-->
-                            <canvas v-if="chartTypeRequires[chartTypesSelected[att.id]]=='canvas'"
-                                    v-bind:id="'att_'+att.id"
-                                    width="400" height="300">
-                            </canvas>
-                        <#--div is required by GCharts-->
-                            <div v-else v-bind:id="'att_'+att.id">
-                                <img src="/static/img/ajax-loader.gif"/>
+        <div v-for="d in devices" class="card row mb-3">
+            <h5 class="card-header">{{d.name}}</h5>
+            <div class="card-body">
+                <div class="row d-flex justify-content-around">
+                    <div class="card col p-0 mx-1" v-for="att in d.deviceAttributes">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col">{{att.name}}</div>
+                                <div class="col d-flex justify-content-end" v-if="!att.actuator">
+                                    <div class="btn btn-sm btn-secondary mr-1" >
+                                        <i class="fa fa-cog"></i>
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                            {{chartTypesSelected[att.id]}}
+                                        </button>
+                                        <div class="dropdown-menu" v-on:click="selectOption(att, $event)"
+                                             aria-labelledby="dropdownMenuButton">
+                                            <button class="dropdown-item" type="button"
+                                                    v-for="chartType in chartTypes[att.type]"
+                                                    v-bind:id="chartType.value">{{chartType.text}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div v-if="att.actuator">
-                            <div v-if="att.type=='Boolean'" v-bind:id="'att_'+att.id">
-                                <button v-if="att.value" class="btn btn-success" v-on:click="toggle(att)">{{att.name}}
-                                    ON
-                                </button>
-                                <button v-if="!att.value" class="btn btn-danger" v-on:click="toggle(att)">{{att.name}}
-                                    OFF
-                                </button>
-                            </div>
-                            <div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">
-                                <input class="input form-control" type="number" v-on:change="setValue(att)"/>
-                            </div>
-                            <div v-if="att.type=='Integer'" v-bind:id="'att_'+att.id">
-                                <input class="input form-control" type="number" v-on:change="setValue(att)"/>
+                        <div class="card-body p-1 d-flex justify-content-center align-content-center">
+                            <div class="m-1 w-100 h-100 mw-100 mh-100">
+                                <div v-if="!att.actuator">
+                                <#--<select class="form-control" v-model="chartTypesSelected[att.id]"-->
+                                <#--v-on:change="(chartInitFunctions[chartTypesSelected[att.id]])(att)">-->
+                                <#--<option disabled value="">Please select one</option>-->
+                                <#--<option v-for="chartType in chartTypes[att.type]"-->
+                                <#--v-bind:value="chartType.value">-->
+                                <#--{{ chartType.text }}-->
+                                <#--</option>-->
+                                <#--</select>-->
+                                <#--canvas is required by chartsJS-->
+                                    <canvas v-if="chartTypeRequires[chartTypesSelected[att.id]]=='canvas'"
+                                            v-bind:id="'att_'+att.id">
+                                    </canvas>
+                                <#--div is required by GCharts-->
+                                    <div v-else v-bind:id="'att_'+att.id">
+                                        <img src="/static/img/ajax-loader.gif"/>
+                                    </div>
+                                </div>
+                                <div v-if="att.actuator">
+                                    <div v-if="att.type=='Boolean'" v-bind:id="'att_'+att.id">
+                                        <button v-if="att.value" class="btn btn-success" v-on:click="toggle(att)">
+                                            {{att.name}}
+                                            ON
+                                        </button>
+                                        <button v-if="!att.value" class="btn btn-danger" v-on:click="toggle(att)">
+                                            {{att.name}}
+                                            OFF
+                                        </button>
+                                    </div>
+                                    <div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">
+                                        <input class="input form-control" type="number" v-on:change="setValue(att)"/>
+                                    </div>
+                                    <div v-if="att.type=='Integer'" v-bind:id="'att_'+att.id">
+                                        <input class="input form-control" type="number" v-on:change="setValue(att)"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </main>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
@@ -144,13 +173,19 @@
             // }
         },
         methods: {
+            "selectOption": function (att, event) {
+                // this.chartTypesSelected[att.id] = event.target.id;
+                Vue.set(app.chartTypesSelected, att.id, event.target.id);
+                (this.chartInitFunctions[this.chartTypesSelected[att.id]])(att);
+                console.log(att, event);
+            },
             "largestTimestamp": function (obj, timestamp, that) {
                 for (var key in obj) {
                     if (obj.hasOwnProperty(key)) {
-                        if(typeof obj[key] == 'object') {
+                        if (typeof obj[key] == 'object') {
                             timestamp = that.largestTimestamp(obj[key], timestamp, that);
                         }
-                        else if(key == 'timestamp') {
+                        else if (key == 'timestamp') {
                             // console.log(obj[key]);
                             if (obj[key] > timestamp) {
                                 timestamp = obj[key];
@@ -204,12 +239,12 @@
                         options: {}
                     });
                     that.chartObjects[att.id] = chart;
-                    console.log(att.id);
-                    console.log(that.chartObjects[att.id]);
+                    // console.log(att.id);
+                    // console.log(that.chartObjects[att.id]);
                 }, 1500);
             },
             "updateLineChart": function (att) {
-                console.log(att.id);
+                // console.log(att.id);
                 var date = new Date();
                 var labels = this.chartObjects[att.id].config.data.labels;
                 var data = this.chartObjects[att.id].config.data.datasets[0].data;
@@ -229,7 +264,7 @@
                     [att.name, att.value]
                 ]);
                 var options = {
-                    width: 400, height: 120
+                    width: 400, height: 200
                 };
                 var chart = new google.visualization.Gauge(document.getElementById('att_' + att.id));
                 chart.draw(data, options);
@@ -246,12 +281,12 @@
 
                             var reportedObj = data.metadata.reported;
                             var timestamp = that.largestTimestamp(reportedObj, 0, that).toString();
-                            timestamp = parseInt(timestamp.padEnd(13,"0"));
+                            timestamp = parseInt(timestamp.padEnd(13, "0"));
 
                             that.lastMessageTime = new Date(timestamp).toLocaleString();
 
-                            console.log(that.lastMessageTime);
-                            console.log(data.version);
+                            // console.log(that.lastMessageTime);
+                            // console.log(data.version);
                         }
 
                         data = data["state"];
@@ -263,19 +298,19 @@
                                     var att = device.deviceAttributes[ak];
                                     var dName = "device" + device.id + "." + att.id;
                                     if (dName === key) {
-                                        console.log(att);
+                                        // console.log(att);
                                         if (att.type === "Integer") {
                                             Vue.set(att, 'value', val);
-                                            if (isInit){
-                                                // that.chartTypesSelected[att.id] = 'Gauge';
+                                            if (isInit) {
+                                                Vue.set(app.chartTypesSelected, att.id, 'Gauge');
                                                 that.updateGauge(att);
                                             }
                                             else
                                                 (that.chartUpdateFunctions[that.chartTypesSelected[att.id]])(att);
                                         } else if (att.type === "Double") {
                                             Vue.set(att, 'value', val);
-                                            if (isInit){
-                                                // that.chartTypesSelected[att.id] = 'Gauge';
+                                            if (isInit) {
+                                                Vue.set(app.chartTypesSelected, att.id, 'Gauge');
                                                 that.updateGauge(att);
                                             }
                                             else
