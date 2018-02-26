@@ -429,6 +429,7 @@
                             that.saveLoader = false;
                             that.saveAttributes(data.id, that.createDevice.deviceAttributes);
                             that.load();
+                            $("#create_device").modal("hide");
                         }
                     });
                 } else {

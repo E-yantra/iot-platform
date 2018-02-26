@@ -20,7 +20,7 @@
                             <div class="row">
                                 <div class="col">{{att.name}}</div>
                                 <div class="col d-flex justify-content-end" v-if="!att.actuator">
-                                    <div class="btn btn-sm btn-secondary mr-1" >
+                                    <div class="btn btn-sm btn-secondary mr-1" v-on:click="showSettingsModal(att, $event)">
                                         <i class="fa fa-cog"></i>
                                     </div>
                                     <div class="dropdown">
@@ -29,7 +29,7 @@
                                                 aria-expanded="false">
                                             {{chartTypesSelected[att.id]}}
                                         </button>
-                                        <div class="dropdown-menu" v-on:click="selectOption(att, $event)"
+                                        <div class="dropdown-menu" v-on:click="selectChartType(att, $event)"
                                              aria-labelledby="dropdownMenuButton">
                                             <button class="dropdown-item" type="button"
                                                     v-for="chartType in chartTypes[att.type]"
@@ -84,6 +84,7 @@
                 </div>
             </div>
     </main>
+    <#include "../modals/chart_config.ftl"/>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
@@ -143,7 +144,8 @@
                 'Line': 'canvas'
             },
             // value of selected chart type for individual device attributes
-            chartTypesSelected: {}
+            chartTypesSelected: {},
+            chartConfig: {}
         },
         computed: {
             chartColorList: function () {
@@ -173,11 +175,20 @@
             // }
         },
         methods: {
-            "selectOption": function (att, event) {
+            "selectChartType": function (att, event) {
                 // this.chartTypesSelected[att.id] = event.target.id;
                 Vue.set(app.chartTypesSelected, att.id, event.target.id);
                 (this.chartInitFunctions[this.chartTypesSelected[att.id]])(att);
                 console.log(att, event);
+            },
+            "showSettingsModal": function (att, event) {
+                if(!this.chartConfig.hasOwnProperty(att.id)) {
+                    this.chartConfig[att.id] = {
+                        'Gauge': {},
+                        'Line': {}
+                    };
+                }
+                $('#chart_config').modal('show');
             },
             "largestTimestamp": function (obj, timestamp, that) {
                 for (var key in obj) {
@@ -255,7 +266,8 @@
                     labels.splice(0, removeLength);
                     data.splice(0, removeLength);
                 }
-                this.chartObjects[att.id].update();
+                console.log(this.chartObjects[att.id].update());
+                // this.chartObjects[att.id].update();
             },
             "updateGauge": function (att) {
 
@@ -267,6 +279,8 @@
                     width: 400, height: 200
                 };
                 var chart = new google.visualization.Gauge(document.getElementById('att_' + att.id));
+                this.chartObjects[att.id] = chart;
+                // Vue.set(app.chartObjects, att.id, chart);
                 chart.draw(data, options);
             },
             "refresh": function (isInit) {
