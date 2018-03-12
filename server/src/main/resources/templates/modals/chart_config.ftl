@@ -1,4 +1,4 @@
-<div id="gauge_settings" class="modal" tabindex="-1" role="dialog">
+<div id="gauge_settings" class="modal" tabindex="-1" role="dialog" v-show="selectedAttribute!=-1">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -15,7 +15,7 @@
                                 <label>Max limit:</label>
                             </div>
                             <div class="col">
-                                <input type="text" name="name" class="form-control" v-model='chartConfig[att.id].Gauge.maxLimit' placeholder="Gauge upper limit">
+                                <input type="text" name="name" class="form-control" v-model='chartConfig[selectedAttribute].Gauge.maxLimit' placeholder="Gauge upper limit">
                             </div>
                         </div>
                     </div>
@@ -25,7 +25,7 @@
                                 <label>Min limit:</label>
                             </div>
                             <div class="col">
-                                <input type="text" name="name" class="form-control" v-model='chartConfig[att.id].Gauge.minLimit' placeholder="Gauge lower limit">
+                                <input type="text" name="name" class="form-control" v-model='chartConfig[selectedAttribute].Gauge.minLimit' placeholder="Gauge lower limit">
                             </div>
                         </div>
                     </div>
@@ -35,13 +35,13 @@
                                 <label>Red region from:</label>
                             </div>
                             <div class="col">
-                                <input type="text" name="name" class="form-control" v-model='chartConfig[att.id].Gauge.redFrom' placeholder="Between min to max">
+                                <input type="text" name="name" class="form-control" v-model='chartConfig[selectedAttribute].Gauge.redFrom' placeholder="Between min to max">
                             </div>
                             <div class="col">
                                 <label> to:</label>
                             </div>
                             <div class="col">
-                                <input type="text" name="name" class="form-control" v-model='chartConfig[att.id].Gauge.redTo' placeholder="Between min to max greater ">
+                                <input type="text" name="name" class="form-control" v-model='chartConfig[selectedAttribute].Gauge.redTo' placeholder="Between min to max greater ">
                             </div>
                         </div>
                     </div>

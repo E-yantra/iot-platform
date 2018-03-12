@@ -112,6 +112,7 @@
             thing: {},
             devices: [],
             interval: 10000,
+            selectedAttribute: -1,
             // hold chart objects to modify them later
             chartObjects: {},
             // chart max data limit
@@ -181,13 +182,24 @@
                 (this.chartInitFunctions[this.chartTypesSelected[att.id]])(att);
                 console.log(att, event);
             },
+            "initChartConfigSettings": function (att, event) {
+                this.chartConfig[att.id] = {
+                    'Gauge': {
+                        'maxLimit': 100,
+                        'minLimit': 0,
+                        'redFrom': '',
+                        'redTo': ''
+                    },
+                    'Line': {
+
+                    }
+                };
+            },
             "showSettingsModal": function (att, event) {
                 if(!this.chartConfig.hasOwnProperty(att.id)) {
-                    this.chartConfig[att.id] = {
-                        'Gauge': {},
-                        'Line': {}
-                    };
+                    this.initChartConfigSettings(att, event);
                 }
+                this.selectedAttribute = att.id;
                 $('#chart_config').modal('show');
             },
             "largestTimestamp": function (obj, timestamp, that) {

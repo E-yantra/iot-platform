@@ -11,6 +11,8 @@ import com.amazonaws.services.iotdata.AWSIotData;
 import com.amazonaws.services.iotdata.AWSIotDataClientBuilder;
 import com.amazonaws.services.lambda.AWSLambda;
 import com.amazonaws.services.lambda.AWSLambdaClientBuilder;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import org.kyantra.config.AWSCredsProvider;
 import org.kyantra.dao.ConfigDAO;
 
@@ -64,5 +66,15 @@ public class AwsIotHelper {
         String endPoint = ConfigDAO.getInstance().get("endpoint").getValue();
         AWSIotMqttClient client = new AWSIotMqttClient(endPoint, "server", awsKey, awsSecret);
         return client;
+    }
+
+    public static AmazonSNS getAmazonSNSClient() {
+        String awsKey = ConfigDAO.getInstance().get("awsKey").getValue();
+        String awsSecret = ConfigDAO.getInstance().get("awsSecret").getValue();
+        String endPoint = ConfigDAO.getInstance().get("endpoint").getValue();
+        AmazonSNSClientBuilder clientBuilder = AmazonSNSClientBuilder.standard();
+        clientBuilder.setCredentials(new AWSCredsProvider(new BasicAWSCredentials(awsKey, awsSecret)));
+        clientBuilder.setRegion(Regions.AP_SOUTHEAST_1.getName());
+        return clientBuilder.build();
     }
 }
