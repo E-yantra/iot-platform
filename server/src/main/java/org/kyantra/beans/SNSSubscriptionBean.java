@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "")
+@Table(name = "snsSubscription")
 public class SNSSubscriptionBean {
     @Id
     @Expose

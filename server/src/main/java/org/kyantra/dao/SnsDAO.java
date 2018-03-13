@@ -17,6 +17,7 @@ public class SnsDAO extends BaseDAO {
         //TODO: Handle thrown exceptions
         CreateTopicResult createTopicResult = amazonSNSClient.createTopic(createTopicRequest);
         snsBean.setTopicARN(createTopicResult.getTopicArn());
+
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
         session.save(snsBean);
@@ -24,4 +25,12 @@ public class SnsDAO extends BaseDAO {
         session.close();
         return  snsBean;
     }
+
+    public SNSBean get(Integer id) {
+        Session session = getService().getSessionFactory().openSession();
+        SNSBean snsBean = session.get(SNSBean.class, id);
+        session.close();
+        return snsBean;
+    }
+
 }
