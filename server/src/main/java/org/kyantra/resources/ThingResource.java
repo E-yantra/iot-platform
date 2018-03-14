@@ -221,9 +221,4 @@ public class ThingResource extends BaseResource {
         return new CertificateResource();
     }
 
-    @Path("rule")
-    public RuleResource getRuleResource() {
-        return new RuleResource();
-    }
-
 }

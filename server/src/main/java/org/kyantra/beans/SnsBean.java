@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "sns")
-public class SNSBean {
+public class SnsBean {
     @Id
     @Expose
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class SNSBean {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentSNSBean", orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     @Expose
-    private Set<SNSSubscriptionBean> subscriptions;
+    private Set<SnsSubscriptionBean> subscriptions;
 
     public Integer getId() {
         return id;
@@ -52,21 +52,21 @@ public class SNSBean {
         this.topicARN = topicARN;
     }
 
-    public Set<SNSSubscriptionBean> getSubscriptions() {
+    public Set<SnsSubscriptionBean> getSubscriptions() {
         return subscriptions;
     }
 
-    public void setSubscriptions(Set<SNSSubscriptionBean> subscriptions) {
+    public void setSubscriptions(Set<SnsSubscriptionBean> subscriptions) {
         this.subscriptions = subscriptions;
     }
 
-    public SNSSubscriptionBean addSubscription(SNSSubscriptionBean snsSubscriptionBean) {
+    public SnsSubscriptionBean addSubscription(SnsSubscriptionBean snsSubscriptionBean) {
         this.subscriptions.add(snsSubscriptionBean);
         snsSubscriptionBean.setParentSNSBean(this);
         return snsSubscriptionBean;
     }
 
-    public void removeSubscription(SNSSubscriptionBean snsSubscriptionBean) {
+    public void removeSubscription(SnsSubscriptionBean snsSubscriptionBean) {
         this.subscriptions.remove(snsSubscriptionBean);
         snsSubscriptionBean.setParentSNSBean(null);
     }

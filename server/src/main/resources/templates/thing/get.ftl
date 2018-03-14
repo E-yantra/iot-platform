@@ -161,7 +161,7 @@
             "enableStorage": function () {
                 var that = this;
                 $.ajax({
-                    url: "/thing/rule/enable/" + thingId,
+                    url: "/rule/ddb/enable/" + thingId,
                     "method": "POST",
                     "data": {
                         enable: that.storageEnabled

@@ -22,8 +22,8 @@ public class HibernateService {
                 .addAnnotatedClass(SessionBean.class)
                 .addAnnotatedClass(ConfigBean.class)
                 .addAnnotatedClass(CronBean.class)
-                .addAnnotatedClass(SNSBean.class)
-                .addAnnotatedClass(SNSSubscriptionBean.class);
+                .addAnnotatedClass(SnsBean.class)
+                .addAnnotatedClass(SnsSubscriptionBean.class);
 
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
         sessionFactory = configuration.buildSessionFactory(builder.build());

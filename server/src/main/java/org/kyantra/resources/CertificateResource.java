@@ -2,6 +2,8 @@ package org.kyantra.resources;
 
 import com.amazonaws.services.iot.model.CreateKeysAndCertificateRequest;
 import com.amazonaws.services.iot.model.CreateKeysAndCertificateResult;
+import io.swagger.annotations.Api;
+import org.glassfish.grizzly.compression.lzma.impl.Base;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.dao.ThingDAO;
 import org.kyantra.utils.AwsIotHelper;
@@ -16,7 +18,7 @@ import javax.ws.rs.core.Response;
 import java.io.*;
 import java.nio.file.Paths;
 
-public class CertificateResource {
+public class CertificateResource extends BaseResource {
 
     @GET
     @Path("get/{name}/{id}")

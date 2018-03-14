@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "snsSubscription")
-public class SNSSubscriptionBean {
+public class SnsSubscriptionBean {
     @Id
     @Expose
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class SNSSubscriptionBean {
     String value;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private SNSBean parentSNSBean;
+    private SnsBean parentSNSBean;
 
 
     public Integer getId() {
@@ -48,11 +48,11 @@ public class SNSSubscriptionBean {
         this.value = value;
     }
 
-    public SNSBean getParentSNSBean() {
+    public SnsBean getParentSNSBean() {
         return parentSNSBean;
     }
 
-    public void setParentSNSBean(SNSBean parentSNSBean) {
+    public void setParentSNSBean(SnsBean parentSNSBean) {
         this.parentSNSBean = parentSNSBean;
     }
 }
