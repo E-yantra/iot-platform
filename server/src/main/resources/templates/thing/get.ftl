@@ -89,6 +89,34 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p>&nbsp;</p>
+                <div class="card">
+                    <div class="card-header">
+                        Rules
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <tr v-for="cron in crons">
+                                <td>
+                                    {{cron.cronExpression}}
+                                </td>
+                                <td>
+                                    {{cron.desiredState}}
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger" v-on:click="deleteCron(cron)">Delete</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <button v-on:click="addCron" class="btn btn-outline-primary">Add Cron</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row hidden hide" style="display: none;">
             <div class="col-md-6">
                 <p>&nbsp;</p>
