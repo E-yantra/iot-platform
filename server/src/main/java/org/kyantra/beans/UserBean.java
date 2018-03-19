@@ -33,6 +33,7 @@ public class UserBean implements Principal {
     @Column(name="email" ,unique = true)
     @Expose
     String email;
+
     @NotNull
     @Column(name="password")
     String password;

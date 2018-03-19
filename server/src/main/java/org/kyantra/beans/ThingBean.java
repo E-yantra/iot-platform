@@ -36,20 +36,21 @@ public class ThingBean {
     @Expose
     private Set<DeviceBean> devices;
 
+    @Expose
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentThing")
     private Set<CronBean> crons;
 
-    //    @OneToOne(fetch = FetchType.EAGER)
-//    @Expose
-//    private UnitBean parentUnit;
-    @ManyToOne(fetch = FetchType.EAGER)
     @Expose
+    @ManyToOne(fetch = FetchType.EAGER)
     private UnitBean parentUnit;
 
     // required by storage rule
     @Expose
     public Boolean storageEnabled;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentThing", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private Set<RuleBean> rules;
 
     public Set<CronBean> getCrons() {
         return crons;
@@ -133,6 +134,17 @@ public class ThingBean {
     public void removeDevice(DeviceBean deviceBean) {
         this.devices.remove(deviceBean);
         deviceBean.setParentThing(null);
+    }
+
+    public RuleBean addRule(RuleBean ruleBean) {
+        this.rules.add(ruleBean);
+        ruleBean.setParentThing(this);
+        return ruleBean;
+    }
+
+    public void removeRule(RuleBean ruleBean) {
+        this.rules.remove(ruleBean);
+        ruleBean.setParentThing(null);
     }
 
 }

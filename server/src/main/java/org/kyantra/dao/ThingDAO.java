@@ -23,11 +23,9 @@ public class ThingDAO extends BaseDAO{
     public ThingBean add(ThingBean bean) {
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
-//        session.save(bean);
-//        session.close();
+
         UnitBean unitBean = UnitDAO.getInstance().get(bean.getParentUnit().getId());
-//        Hibernate.isInitialized()
-//        Hibernate.initialize(unitBean);
+
         ThingBean thingBean = unitBean.addThing(bean);
         session.saveOrUpdate(unitBean);
 

@@ -4,9 +4,9 @@ import org.hibernate.Session;
 import org.kyantra.beans.SnsBean;
 import org.kyantra.beans.SnsSubscriptionBean;
 
-public class SNSSubscriptionDAO extends BaseDAO{
-    static SNSSubscriptionDAO instance = new SNSSubscriptionDAO();
-    public static SNSSubscriptionDAO getInstance() {
+public class SnsSubscriptionDAO extends BaseDAO{
+    static SnsSubscriptionDAO instance = new SnsSubscriptionDAO();
+    public static SnsSubscriptionDAO getInstance() {
         return instance;
     }
 
@@ -18,11 +18,16 @@ public class SNSSubscriptionDAO extends BaseDAO{
         SnsBean snsBean = SnsDAO.getInstance().get(subscriptionBean.getParentSNSBean().getId());
         SnsSubscriptionBean snsSubscriptionBean = snsBean.addSubscription(subscriptionBean);
 
-        System.out.println(subscriptionBean.hashCode());
-        System.out.println(snsSubscriptionBean.hashCode());
-
         session.saveOrUpdate(snsBean);
         session.getTransaction().commit();
+        session.close();
+        return snsSubscriptionBean;
+    }
+
+    public  SnsSubscriptionBean get(Integer id) {
+
+        Session session = getService().getSessionFactory().openSession();
+        SnsSubscriptionBean snsSubscriptionBean = session.get(SnsSubscriptionBean.class, id);
         session.close();
         return snsSubscriptionBean;
     }

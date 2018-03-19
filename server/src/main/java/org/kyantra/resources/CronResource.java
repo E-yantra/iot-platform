@@ -30,7 +30,7 @@ public class CronResource extends BaseResource {
     @GET
     @Path("get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@PathParam("id") Integer id){
+    public String get(@PathParam("id") Integer id) {
         CronBean bean = CronDAO.getInstance().get(id);
         return gson.toJson(bean);
     }
@@ -39,7 +39,7 @@ public class CronResource extends BaseResource {
     @GET
     @Path("thing/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByThing(@PathParam("id") Integer id){
+    public String getByThing(@PathParam("id") Integer id) {
         Set<CronBean> bean = CronDAO.getInstance().getByThingId(id);
         return gson.toJson(bean);
     }
@@ -50,7 +50,7 @@ public class CronResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
     @Session
-    public String delete(@PathParam("id") Integer id){
+    public String delete(@PathParam("id") Integer id) {
         try {
             CronDAO.getInstance().delete(id);
             return "{}";
@@ -69,7 +69,7 @@ public class CronResource extends BaseResource {
     public String create(
             @FormParam("thingId") Integer thingId,
             @FormParam("cronExpression") String cronExpression,
-            @FormParam("desiredState") String desiredState){
+            @FormParam("desiredState") String desiredState) {
 
         try {
             CronBean bean = new CronBean();
@@ -79,7 +79,7 @@ public class CronResource extends BaseResource {
             bean = CronDAO.getInstance().add(bean);
             return gson.toJson(bean);
 
-        }catch (Throwable t){
+        }catch (Throwable t) {
             t.printStackTrace();
         }
         return "{\"success\":false}";

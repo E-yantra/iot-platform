@@ -10,23 +10,37 @@ import java.util.Set;
 @Entity
 @Table(name = "sns")
 public class SnsBean {
+
     @Id
     @Expose
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @Column(name = "topic")
     @Expose
+    @Column(name = "topic")
     String topic;
 
-    @Column(name = "topicARN")
     @Expose
+    @Column(name = "topicARN")
     String topicARN;
 
+    @Expose
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentSNSBean", orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
-    @Expose
     private Set<SnsSubscriptionBean> subscriptions;
+
+    @Expose
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "rule_id")
+    private RuleBean parentRule;
+
+    public RuleBean getParentRule() {
+        return parentRule;
+    }
+
+    public void setParentRule(RuleBean parentRule) {
+        this.parentRule = parentRule;
+    }
 
     public Integer getId() {
         return id;

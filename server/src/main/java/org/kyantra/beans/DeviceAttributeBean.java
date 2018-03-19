@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "deviceAttributes" ,uniqueConstraints = @UniqueConstraint(columnNames={"name", "parentDevice_id"}))
+@Table(name = "deviceAttributes", uniqueConstraints = @UniqueConstraint(columnNames={"name", "parentDevice_id"}))
 public class DeviceAttributeBean {
 
     @Id
@@ -24,9 +24,11 @@ public class DeviceAttributeBean {
     @Column(name="def")
     @Expose
     String def;
+
     @Column(name="actuator")
     @Expose
     Boolean actuator = Boolean.FALSE;
+
     @OneToOne
     UnitBean ownerUnit;
 

@@ -6,7 +6,7 @@ import org.kyantra.aws.SNSHelper;
 import org.kyantra.beans.SnsBean;
 import org.kyantra.beans.SnsSubscriptionBean;
 import org.kyantra.dao.ConfigDAO;
-import org.kyantra.dao.SNSSubscriptionDAO;
+import org.kyantra.dao.SnsSubscriptionDAO;
 import org.kyantra.dao.SnsDAO;
 import org.kyantra.utils.AwsIotHelper;
 
@@ -84,7 +84,7 @@ public class SNSRuleResource extends BaseResource {
         snsSubscriptionBean.setValue(value);
         snsSubscriptionBean.setParentSNSBean(SnsDAO.getInstance().get(parentId));
         SNSHelper.getInstance().subscibeTopic(snsSubscriptionBean);
-        SNSSubscriptionDAO.getInstance().add(snsSubscriptionBean);
+        SnsSubscriptionDAO.getInstance().add(snsSubscriptionBean);
         return "success";
     }
 

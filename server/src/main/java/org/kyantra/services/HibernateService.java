@@ -22,6 +22,7 @@ public class HibernateService {
                 .addAnnotatedClass(SessionBean.class)
                 .addAnnotatedClass(ConfigBean.class)
                 .addAnnotatedClass(CronBean.class)
+                .addAnnotatedClass(RuleBean.class)
                 .addAnnotatedClass(SnsBean.class)
                 .addAnnotatedClass(SnsSubscriptionBean.class);
 
