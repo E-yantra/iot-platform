@@ -31,9 +31,9 @@ public class ThingBean {
     @Column(name = "certificate_dir")
     String certificateDir;
 
+    @Expose
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentThing", orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
-    @Expose
     private Set<DeviceBean> devices;
 
     @Expose
@@ -48,6 +48,7 @@ public class ThingBean {
     @Expose
     public Boolean storageEnabled;
 
+    @Expose
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentThing", orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private Set<RuleBean> rules;

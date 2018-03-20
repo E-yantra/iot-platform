@@ -98,21 +98,21 @@
                     </div>
                     <div class="card-body">
                         <table class="table">
-                            <tr v-for="cron in crons">
+                            <tr v-for="rule in rules">
                                 <td>
-                                    {{cron.cronExpression}}
+                                    {{rule.name}}
                                 </td>
                                 <td>
-                                    {{cron.desiredState}}
+                                    {{rule.description}}
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger" v-on:click="deleteCron(cron)">Delete</button>
+                                    <button class="btn btn-danger" v-on:click="deleteRule(rule)">Delete</button>
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div class="card-footer">
-                        <button v-on:click="addCron" class="btn btn-outline-primary">Add Cron</button>
+                        <button v-on:click="newRule" class="btn btn-outline-primary">Create Rule</button>
                     </div>
                 </div>
             </div>
@@ -150,6 +150,7 @@
 <#include "../modals/crud_device.ftl"/>
 <#include "../modals/crud_cron.ftl"/>
 <#include "../modals/generate.ftl"/>
+<#include "../modals/crud_rule.ftl"/>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
@@ -171,9 +172,11 @@
             unit: {},
             thing: {},
             devices: [],
+            rules: [],
             createDevice: {
                 "deviceAttributes": []
             },
+            createRule: {},
             cttr: {},
             generateCode: "",
             generateMessage: "",
@@ -197,6 +200,42 @@
                     success: function (data) {
                         console.log(data);
                         alert("Storage settings updated!");
+                    }
+                });
+            },
+
+            "newRule": function () {
+                this.createRule = {
+                    name: "",
+                    description: "",
+                    data: "",
+                    condition: "",
+                    topic: "",
+                    action: "",
+                    actionList: ["sns"]
+                };
+                $('#create_rule').modal('show');
+            },
+
+            "deleteRule": function (rule) {
+
+            },
+
+            "saveRule": function () {
+                var that = this;
+                $.ajax({
+                    "url": "/rule/" + this.createRule.action + "/create/" + thingId,
+                    "method": "POST",
+                    "data": {
+                        "name": that.createRule.name,
+                        "description": that.createRule.description,
+                        "data": that.createRule.data,
+                        "topic": that.createRule.data,
+                        "condition": that.createRule.condition,
+                        "action": that.createRule.action
+                    },
+                    success: function (data) {
+
                     }
                 });
             },

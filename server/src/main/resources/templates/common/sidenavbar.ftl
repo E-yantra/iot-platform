@@ -8,9 +8,6 @@
                 <a class="nav-link <#if active?? && active=="profile">active</#if>" href="/profile">My Profile<i style="float: right;"  class="fa fa-user fa-lg" aria-hidden="true"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <#if active?? && active=="rules">active</#if>" href="/rules">Rules<i style="float: right;"  class="fa fa-book fa-lg" aria-hidden="true"></i></a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link text-red" href="/logout">Logout <i style="float: right;" class="fa fa-sign-out fa-lg" aria-hidden="true"></i></a>
             </li>
         </ul>

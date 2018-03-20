@@ -18,12 +18,20 @@ import java.util.List;
 public class SNSRuleResource extends BaseResource {
 
     @POST
-    @Path("/createrule/{id}")
+    @Path("/create/{id}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String createRule(@PathParam("id") Integer thingId,
-                             @FormParam("topic") String topic) {
+                             @FormParam("name") String ruleName,
+                             @FormParam("description") String description,
+                             @FormParam("topic") String topic,
+                             @FormParam("data") String data,
+                             @FormParam("condition") String condition) {
 
+        // create sns action
+        // add sns action details to db
+        // create rule action
+        // add rule action to db
         SnsBean snsBean = new SnsBean();
         snsBean.setTopic(topic);
 
