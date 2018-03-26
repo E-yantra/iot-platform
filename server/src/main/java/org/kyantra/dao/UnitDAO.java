@@ -108,7 +108,7 @@ public class UnitDAO extends BaseDAO{
         session.close();
     }
 
-    public Set<UnitBean> getAllparents(UnitBean unitBean){
+    public Set<UnitBean> getAllParents(UnitBean unitBean){
         Set<UnitBean> unitBeans = new HashSet<>();
         unitBeans.add(unitBean);
         while(unitBean.getParent()!=null){

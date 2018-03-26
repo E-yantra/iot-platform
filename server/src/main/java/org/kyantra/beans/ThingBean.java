@@ -48,7 +48,6 @@ public class ThingBean {
     @Expose
     public Boolean storageEnabled;
 
-    @Expose
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentThing", orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private Set<RuleBean> rules;
@@ -79,6 +78,14 @@ public class ThingBean {
 
     public String getName() {
         return name;
+    }
+
+    public Set<RuleBean> getRules() {
+        return rules;
+    }
+
+    public void setRules(Set<RuleBean> rules) {
+        this.rules = rules;
     }
 
     public void setName(String name) {

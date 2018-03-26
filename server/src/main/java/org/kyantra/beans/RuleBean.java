@@ -43,7 +43,6 @@ public class RuleBean {
     @OneToOne(mappedBy = "parentRule", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private SnsBean snsAction;
 
-    @Expose
     @ManyToOne(fetch = FetchType.EAGER)
     private ThingBean parentThing;
 

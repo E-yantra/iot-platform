@@ -22,8 +22,10 @@
                         {{ thing.name }}
                         <div class="float-right">
                             <div class="row clearfix">
-                                <div class="col"><label class="badge badge-primary" for="storage">Enable storage</label></div>
-                                <div class="col"><input type="checkbox" id="storage" class="form-check-input" v-model="storageEnabled" v-on:change="enableStorage"></div>
+                                <div class="col"><label class="badge badge-primary" for="storage">Enable storage</label>
+                                </div>
+                                <div class="col"><input type="checkbox" id="storage" class="form-check-input"
+                                                        v-model="storageEnabled" v-on:change="enableStorage"></div>
                             </div>
                         </div>
                     </div>
@@ -68,7 +70,7 @@
                     <div class="card-header">
                         Crons
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-0">
                         <table class="table">
                             <tr v-for="cron in crons">
                                 <td>
@@ -96,8 +98,13 @@
                     <div class="card-header">
                         Rules
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-0">
                         <table class="table">
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
                             <tr v-for="rule in rules">
                                 <td>
                                     {{rule.name}}
@@ -107,6 +114,9 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-danger" v-on:click="deleteRule(rule)">Delete</button>
+                                </td>
+                                <td>
+                                    <a href="#">{{}}</a>
                                 </td>
                             </tr>
                         </table>
@@ -129,7 +139,8 @@
                         <form>
                             <div class="form-group">
                                 <label class="col-form-label" for="formGroupExampleInput">Topic Name</label>
-                                <input v-model="testTopic" type="text" class="form-control" id="formGroupExampleInput" placeholder="/topic_name">
+                                <input v-model="testTopic" type="text" class="form-control" id="formGroupExampleInput"
+                                       placeholder="/topic_name">
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" v-model="payload" placeholder="payload">
@@ -204,6 +215,7 @@
                 });
             },
 
+            //TODO: Fetch list of supported rule actoins from server
             "newRule": function () {
                 this.createRule = {
                     name: "",
@@ -212,7 +224,8 @@
                     condition: "",
                     topic: "",
                     action: "",
-                    actionList: ["sns"]
+                    actionList: ["sns"],
+                    sns_topic: ""
                 };
                 $('#create_rule').modal('show');
             },
@@ -223,19 +236,28 @@
 
             "saveRule": function () {
                 var that = this;
+                that.saveLoader = true;
+
+                var data = {
+                    "name": that.createRule.name,
+                    "description": that.createRule.description,
+                    "data": that.createRule.data,
+                    "topic": that.createRule.topic,
+                    "condition": that.createRule.condition,
+                    "action": that.createRule.action
+                };
+
+                if (that.createRule.action == 'sns') {
+                    data.sns_topic = that.createRule.sns_topic;
+                }
+
                 $.ajax({
                     "url": "/rule/" + this.createRule.action + "/create/" + thingId,
                     "method": "POST",
-                    "data": {
-                        "name": that.createRule.name,
-                        "description": that.createRule.description,
-                        "data": that.createRule.data,
-                        "topic": that.createRule.data,
-                        "condition": that.createRule.condition,
-                        "action": that.createRule.action
-                    },
+                    "data": data,
                     success: function (data) {
-
+                        that.saveLoader = false;
+                        $('#create_rule').modal('hide');
                     }
                 });
             },
@@ -328,7 +350,12 @@
                         that.devices = data;
                     }
                 });
-
+                $.ajax({
+                    url: "/rule/sns/thing/" + thingId,
+                    success: function (data) {
+                        that.rules = data;
+                    }
+                });
                 that.getCrons();
 
             },

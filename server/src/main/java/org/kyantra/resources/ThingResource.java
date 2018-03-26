@@ -183,8 +183,10 @@ public class ThingResource extends BaseResource {
             } catch (Throwable t) {
                 t.printStackTrace();
             }
+
             return "{\"success\":false}";
-        }else{
+
+        } else {
             throw new AccessDeniedException();
         }
     }
@@ -192,7 +194,7 @@ public class ThingResource extends BaseResource {
     @GET
     @Path("unit/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByUnit(@PathParam("id") Integer id){
+    public String getByUnit(@PathParam("id") Integer id) {
         Set<ThingBean> things = ThingDAO.getInstance().getByUnitId(id);
         return gson.toJson(things);
     }

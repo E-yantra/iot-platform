@@ -29,7 +29,6 @@ public class SnsBean {
     @Fetch(value = FetchMode.SUBSELECT)
     private Set<SnsSubscriptionBean> subscriptions;
 
-    @Expose
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rule_id")
     private RuleBean parentRule;

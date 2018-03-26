@@ -38,6 +38,7 @@ public class AuthResource extends BaseResource {
                                @Context ContainerRequest containerRequest){
 
         try {
+
             CredentialBean credentialBean = new CredentialBean();
             credentialBean.setEmail(email);
             credentialBean.setPassword(password);
@@ -58,8 +59,10 @@ public class AuthResource extends BaseResource {
                     SessionBean resultBean = SessionDAO.getInstance().add(sessionBean);
                     return gson.toJson(resultBean);
                 }
+
             }
-        }catch (Throwable t){
+
+        } catch (Throwable t) {
             t.printStackTrace();
         }
 
