@@ -80,7 +80,7 @@
                                     {{cron.desiredState}}
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger" v-on:click="deleteCron(cron)">Delete</button>
+                                    <button class="btn btn-danger btn-sm float-left text-white" v-on:click="deleteCron(cron)">Delete</button>
                                 </td>
                             </tr>
                         </table>
@@ -100,25 +100,30 @@
                     </div>
                     <div class="card-body p-0">
                         <table class="table">
-                            <tr>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Actions</th>
-                            </tr>
-                            <tr v-for="rule in rules">
-                                <td>
-                                    {{rule.name}}
-                                </td>
-                                <td>
-                                    {{rule.description}}
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger" v-on:click="deleteRule(rule)">Delete</button>
-                                </td>
-                                <td>
-                                    <a href="#">{{}}</a>
-                                </td>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                    <th>Settings</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="rule in rules">
+                                    <td>
+                                        {{rule.name}}
+                                    </td>
+                                    <td>
+                                        {{rule.description}}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm float-left text-white" v-on:click="deleteRule(rule)">DELETE</button>
+                                    </td>
+                                    <td>
+                                        <a href="#">Action</a>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                     <div class="card-footer">
@@ -231,7 +236,9 @@
             },
 
             "deleteRule": function (rule) {
-
+                $.ajax({
+                    "url": "/rule/"
+                })
             },
 
             "saveRule": function () {
@@ -257,6 +264,7 @@
                     "data": data,
                     success: function (data) {
                         that.saveLoader = false;
+                        that.rules.push(data);
                         $('#create_rule').modal('hide');
                     }
                 });

@@ -13,6 +13,7 @@
                         <label>Name: </label>
                         <input type="text" name="name" class="form-control" v-model='createRule.name'
                                placeholder="Name for your rule">
+                        <small>Name of the rule will be prefixed with &lt;thing-id&gt;_&lt;rule-type&gt;</small>
                     </div>
                     <div class="form-group">
                         <label>Description: </label>

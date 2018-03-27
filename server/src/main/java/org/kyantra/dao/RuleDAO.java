@@ -1,6 +1,7 @@
 package org.kyantra.dao;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.kyantra.beans.DeviceBean;
 import org.kyantra.beans.RuleBean;
 import org.kyantra.beans.ThingBean;
@@ -35,6 +36,15 @@ public class RuleDAO extends BaseDAO {
         RuleBean ruleBean = session.get(RuleBean.class,id);
         session.close();
         return ruleBean;
+    }
+
+    public void delete(Integer id) {
+        Session session = getService().getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        RuleBean ruleBean = session.get(RuleBean.class, id);
+        ruleBean.getParentThing().removeRule(ruleBean);
+        tx.commit();
+        session.close();
     }
 
     public Set<RuleBean> getByThing(Integer thingId) {

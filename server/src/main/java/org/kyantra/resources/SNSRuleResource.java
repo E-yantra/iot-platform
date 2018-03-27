@@ -1,5 +1,6 @@
 package org.kyantra.resources;
 
+import com.amazonaws.services.iot.AWSIot;
 import com.amazonaws.services.iot.model.*;
 import com.amazonaws.services.sns.model.CreateTopicResult;
 import org.kyantra.aws.SNSHelper;
@@ -27,24 +28,23 @@ public class SNSRuleResource extends BaseResource {
     @Path("/create/{id}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "rule", subjectField = "parentId")
-    public String createRule(@PathParam("id") Integer thingId,
+    @Secure(roles = {RoleEnum.ALL, RoleEnum.WRITE}, subjectType = "rule", subjectField = "parentId")
+    public String createRule(@PathParam("id") Integer parentThingId,
                              @FormParam("name") String ruleName,
                              @FormParam("description") String description,
                              @FormParam("topic") String topic,
                              @FormParam("data") String data,
                              @FormParam("condition") String condition,
                              @FormParam("sns_topic") String snsTopic) {
-
         /*
-         Steps:
-         1. create SnsBean
-         2. create SNSAction in AWS
-         3. create rule in AWS
-         4. create RuleBean
-         5. add rule to DB
-         6. link rule and SNS in DB
-        */
+        * Steps:
+        * 1. create SnsBean
+        * 2. create SNSAction in AWS
+        * 3. create rule in AWS
+        * 4. create RuleBean
+        * 5. add rule to DB
+        * 6. link rule and SNS in DB
+        * */
 
         // create SnsBean
         SnsBean snsBean = new SnsBean();
@@ -54,9 +54,7 @@ public class SNSRuleResource extends BaseResource {
         CreateTopicResult createTopicResult = SNSHelper.getInstance().createTopic(snsBean);
         snsBean.setTopicARN(createTopicResult.getTopicArn());
 
-//        SnsDAO.getInstance().add(snsBean);
-
-        String thingName = "thing" + thingId;
+        String thingName = "thing" + parentThingId;
 
         // create rule in AWS
         SnsAction snsAction = new SnsAction();
@@ -88,7 +86,7 @@ public class SNSRuleResource extends BaseResource {
         ruleBean.setTopic(topic);
         ruleBean.setData(data);
         ruleBean.setCondition(condition);
-        ruleBean.setParentThing(ThingDAO.getInstance().get(thingId));
+        ruleBean.setParentThing(ThingDAO.getInstance().get(parentThingId));
 
         RuleDAO.getInstance().add(ruleBean);
 
@@ -96,15 +94,68 @@ public class SNSRuleResource extends BaseResource {
         snsBean.setParentRule(ruleBean);
         SnsDAO.getInstance().add(snsBean);
 
-        return "{\"success\":true}";
+        return gson.toJson(ruleBean);
+    }
+
+    @GET
+    @Path("/get/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String get(@PathParam("id") Integer ruleId) {
+        RuleBean ruleBean = RuleDAO.getInstance().get(ruleId);
+        return gson.toJson(ruleBean);
+    }
+
+    @GET
+    @Path("/delete/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String delete(@PathParam("id") Integer ruleId) {
+        /*
+        * Steps:
+        * 1. Get ruleBean
+        * 2. delete rule in AWS
+        * 3. delete rule in DB which should also delete entries from SNS and SNSSubscriptions
+        * */
+
+        // get ruleBean
+        RuleBean ruleBean = RuleDAO.getInstance().get(ruleId);
+
+        // delete rule in AWS
+        DeleteTopicRuleRequest deleteTopicRuleRequest = new DeleteTopicRuleRequest();
+        deleteTopicRuleRequest.withRuleName("thing10_sns_"+ruleBean.getName());
+
+        DeleteTopicRuleResult deleteTopicRuleResult =
+                AwsIotHelper.getIotClient().deleteTopicRule(deleteTopicRuleRequest);
+
+        // delete rule bean which should also delete entries from SNS and SNSSubscriptions
+        RuleDAO.getInstance().delete(ruleId);
+        return "{\"success\": true}";
+    }
+
+    @POST
+    @Path("/subscribe/{id}")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String subscribeSNSTopic(@PathParam("id") Integer snsId,
+                                    @FormParam("type") String type,
+                                    @FormParam("value") String value) {
+        SnsSubscriptionBean snsSubscriptionBean = new SnsSubscriptionBean();
+        snsSubscriptionBean.setType(type);
+        snsSubscriptionBean.setValue(value);
+        snsSubscriptionBean.setParentSNSBean(SnsDAO.getInstance().get(snsId));
+
+        SNSHelper.getInstance().subscibeTopic(snsSubscriptionBean);
+
+        SnsSubscriptionDAO.getInstance().add(snsSubscriptionBean);
+
+        return gson.toJson(snsSubscriptionBean);
     }
 
     @GET
     @Session
     @Path("/thing/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByThing(@PathParam("id") Integer thingId) {
-        Set<RuleBean> ruleBean = RuleDAO.getInstance().getByThing(thingId);
+    public String getByThing(@PathParam("id") Integer parentThingId) {
+        Set<RuleBean> ruleBean = RuleDAO.getInstance().getByThing(parentThingId);
         return gson.toJson(ruleBean);
     }
 }

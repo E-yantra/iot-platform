@@ -26,9 +26,11 @@ public class UnitBean {
     @Column(name = "unit_name")
     @Expose
     String unitName;
+
     @Column(name = "description")
     @Expose
     String description;
+
     @Column(name = "photo")
     @Expose
     String photo;
