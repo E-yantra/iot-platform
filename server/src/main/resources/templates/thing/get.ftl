@@ -11,6 +11,8 @@
                 <div class="float-right p-1" v-if="role=='ALL' || role=='WRITE'">
                     <button v-on:click="newDevice" class="btn btn-outline-primary">Add Device</button>
                     <button v-on:click="importThing" class="btn btn-outline-primary">Import Device</button>
+                    <button v-on:click="addCron" class="btn btn-outline-primary">Add Cron</button>
+                    <button v-on:click="newRule" class="btn btn-outline-primary">Create Rule</button>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -63,7 +65,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div v-if="crons.length != 0" class="row">
             <div class="col-md-12">
                 <p>&nbsp;</p>
                 <div class="card">
@@ -80,18 +82,19 @@
                                     {{cron.desiredState}}
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger btn-sm float-left text-white" v-on:click="deleteCron(cron)">Delete</button>
+                                    <button class="btn btn-danger btn-sm text-white" v-on:click="deleteCron(cron)">Delete</button>
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div class="card-footer">
                         <button v-on:click="addCron" class="btn btn-outline-primary">Add Cron</button>
+                        <#--<button v-on:click="deleteCron(cron)" class="btn btn-sm btn-default">EDIT</button>-->
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div v-if="rules.length != 0" class="row">
             <div class="col-md-12">
                 <p>&nbsp;</p>
                 <div class="card">
@@ -117,10 +120,11 @@
                                         {{rule.description}}
                                     </td>
                                     <td>
-                                        <button class="btn btn-danger btn-sm float-left text-white" v-on:click="deleteRule(rule)">DELETE</button>
+                                        <button class="btn btn-danger btn-sm text-white" v-on:click="deleteRule(rule)">DELETE</button>
+                                        <button class="btn btn-sm btn-default">EDIT</button>
                                     </td>
                                     <td>
-                                        <a href="#">Action</a>
+                                        <button v-on:click="" class="btn btn-sm btn-success">CHANGE</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -193,6 +197,7 @@
                 "deviceAttributes": []
             },
             createRule: {},
+            createSubscription: {},
             cttr: {},
             generateCode: "",
             generateMessage: "",
@@ -235,11 +240,6 @@
                 $('#create_rule').modal('show');
             },
 
-            "deleteRule": function (rule) {
-                $.ajax({
-                    "url": "/rule/"
-                })
-            },
 
             "saveRule": function () {
                 var that = this;
@@ -268,6 +268,19 @@
                         $('#create_rule').modal('hide');
                     }
                 });
+            },
+
+            "deleteRule": function (rule) {
+                $.ajax({
+                    "url": "/rule/" + rule.type + "/delete/" + rule.id,
+                    "method": "GET",
+                    "success": function (data) {
+                        if(data.success === true) {
+                            alert("Rule deleted!");
+                        }
+                    }
+
+                })
             },
 
             "dashboard": function () {

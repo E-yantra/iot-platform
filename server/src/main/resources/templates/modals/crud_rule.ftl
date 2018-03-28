@@ -12,27 +12,27 @@
                     <div class="form-group">
                         <label>Name: </label>
                         <input type="text" name="name" class="form-control" v-model='createRule.name'
-                               placeholder="Name for your rule">
-                        <small>Name of the rule will be prefixed with &lt;thing-id&gt;_&lt;rule-type&gt;</small>
+                               placeholder="my_sns_rule">
+                        <small class="text-muted">Name of the rule will be prefixed with &lt;thing-id&gt;_&lt;rule-type&gt;</small>
                     </div>
                     <div class="form-group">
                         <label>Description: </label>
                         <input name="description" type="text" class="form-control" v-model='createRule.description'
-                               placeholder="test@e-yantra.org">
+                               placeholder="Rule to send notifications via SMS">
                     </div>
                     <div class="form-group">
                         <label>Data: </label>
-                        <input name="data" type="text" class="form-control" v-model='createRule.data' placeholder="">
+                        <input name="data" type="text" class="form-control" v-model='createRule.data' placeholder="e.g. * or state.reported.deviceXX.XX, ...">
                     </div>
                     <div class="form-group">
-                        <label for="comment">Action: </label>
+                        <label for="comment">Type: </label>
                         <select class="form-control combo-box" id="rightRoles" v-model='createRule.action'>
                             <option v-for="action in createRule.actionList" v-bind:value="action">{{action}}</option>
                         </select>
                     </div>
                     <div class="form-group" v-if="createRule.action == 'sns'">
-                        <label>Topic: </label>
-                        <input name="topic" type="text" class="form-control" v-model='createRule.sns_topic' placeholder="Name of SNS topic">
+                        <label>SNS Topic: </label>
+                        <input name="topic" type="text" class="form-control" v-model='createRule.sns_topic' placeholder="my_subscription_topic">
                     </div>
                 </form>
             </div>

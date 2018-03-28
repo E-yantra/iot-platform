@@ -3,6 +3,7 @@ package org.kyantra.resources;
 import com.amazonaws.services.iot.AWSIot;
 import com.amazonaws.services.iot.model.*;
 import com.amazonaws.services.sns.model.CreateTopicResult;
+import org.kyantra.aws.RuleHelper;
 import org.kyantra.aws.SNSHelper;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.RuleBean;
@@ -22,15 +23,17 @@ import java.util.Set;
 
 public class SNSRuleResource extends BaseResource {
 
-    // TODO: Atomicity with AWS and DB
+    /* TODO: Atomicity with AWS and DB
+    * For transactions, like if DB transactions don't commit properly rollback the AWS operations too*/
+
     @POST
     @Session
     @Path("/create/{id}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     @Secure(roles = {RoleEnum.ALL, RoleEnum.WRITE}, subjectType = "rule", subjectField = "parentId")
-    public String createRule(@PathParam("id") Integer parentThingId,
-                             @FormParam("name") String ruleName,
+    public String create(@PathParam("id") Integer parentThingId,
+                             @FormParam("name") String name,
                              @FormParam("description") String description,
                              @FormParam("topic") String topic,
                              @FormParam("data") String data,
@@ -54,7 +57,9 @@ public class SNSRuleResource extends BaseResource {
         CreateTopicResult createTopicResult = SNSHelper.getInstance().createTopic(snsBean);
         snsBean.setTopicARN(createTopicResult.getTopicArn());
 
+        //constructed names of entities
         String thingName = "thing" + parentThingId;
+        String ruleName = thingName + "_sns_" + name;
 
         // create rule in AWS
         SnsAction snsAction = new SnsAction();
@@ -74,7 +79,7 @@ public class SNSRuleResource extends BaseResource {
                 .withActions(actionList);
 
         CreateTopicRuleRequest topicRuleRequest = new CreateTopicRuleRequest();
-        topicRuleRequest.withRuleName(thingName + "_sns_" + ruleName)
+        topicRuleRequest.withRuleName(ruleName)
                 .withTopicRulePayload(rulePayload);
 
         AwsIotHelper.getIotClient().createTopicRule(topicRuleRequest);
@@ -86,6 +91,7 @@ public class SNSRuleResource extends BaseResource {
         ruleBean.setTopic(topic);
         ruleBean.setData(data);
         ruleBean.setCondition(condition);
+        ruleBean.setType("sns");
         ruleBean.setParentThing(ThingDAO.getInstance().get(parentThingId));
 
         RuleDAO.getInstance().add(ruleBean);
@@ -105,6 +111,7 @@ public class SNSRuleResource extends BaseResource {
         return gson.toJson(ruleBean);
     }
 
+    /*TODO: Delete SNS topics when there is no rule in AWS pointing to it*/
     @GET
     @Path("/delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -121,7 +128,7 @@ public class SNSRuleResource extends BaseResource {
 
         // delete rule in AWS
         DeleteTopicRuleRequest deleteTopicRuleRequest = new DeleteTopicRuleRequest();
-        deleteTopicRuleRequest.withRuleName("thing10_sns_"+ruleBean.getName());
+        deleteTopicRuleRequest.withRuleName(ruleBean.getName());
 
         DeleteTopicRuleResult deleteTopicRuleResult =
                 AwsIotHelper.getIotClient().deleteTopicRule(deleteTopicRuleRequest);
@@ -130,6 +137,30 @@ public class SNSRuleResource extends BaseResource {
         RuleDAO.getInstance().delete(ruleId);
         return "{\"success\": true}";
     }
+
+    @POST
+    @Path("/delete/")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteByName(@FormParam("name") String ruleName) {
+        /*
+         * Steps:
+         * 1. Get ruleBean
+         * 2. delete rule in AWS
+         * 3. delete rule in DB which should also delete entries from SNS and SNSSubscriptions
+         * */
+
+        // get ruleBean
+        RuleBean ruleBean = RuleDAO.getInstance().getByName(ruleName);
+
+        // delete rule in AWS
+        DeleteTopicRuleResult deleteTopicRuleResult = RuleHelper.getInstance().deleteRule(ruleBean);
+
+        // delete rule bean which should also delete entries from SNS and SNSSubscriptions
+        RuleDAO.getInstance().deleteByName(ruleName);
+        return "{\"success\": true}";
+    }
+
 
     @POST
     @Path("/subscribe/{id}")

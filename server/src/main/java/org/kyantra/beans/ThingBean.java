@@ -40,6 +40,7 @@ public class ThingBean {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentThing")
     private Set<CronBean> crons;
 
+    @Expose
     @ManyToOne(fetch = FetchType.EAGER)
     private UnitBean parentUnit;
 

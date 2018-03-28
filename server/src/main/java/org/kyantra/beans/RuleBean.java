@@ -15,11 +15,11 @@ public class RuleBean {
     Integer id;
 
     @Expose
-    @Column(name = "`name`")//, unique = true)
+    @Column(name = "`name`", unique = true)//, unique = true)
     String name;
 
     @Expose
-    @Column(name = "`description`")
+    @Column(name = "`description`", length = 50)
     String description;
 
     //TODO: To have an association with the user who created this
@@ -38,6 +38,10 @@ public class RuleBean {
     @Expose
     @Column(name = "`condition`")
     String condition;
+
+    @Expose
+    @Column(name = "`type`", length = 25)
+    String type;
 
     @Expose
     @OneToOne(mappedBy = "parentRule", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -129,4 +133,11 @@ public class RuleBean {
         }
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }
