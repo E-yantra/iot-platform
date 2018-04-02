@@ -1,13 +1,11 @@
 package org.kyantra.resources;
 
 import org.glassfish.jersey.server.mvc.Template;
+import org.kyantra.beans.SnsBean;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
-import org.kyantra.dao.AuthorizationDAO;
-import org.kyantra.dao.RightsDAO;
-import org.kyantra.dao.ThingDAO;
-import org.kyantra.dao.UnitDAO;
+import org.kyantra.dao.*;
 import org.kyantra.interfaces.Session;
 
 import javax.servlet.http.HttpServletRequest;
@@ -181,7 +179,6 @@ public class HomeResource extends BaseResource {
         map.put("user",getSecurityContext().getUserPrincipal());
     }
 
-
     @GET
     @Path("/units/get/{id}")
     @Template(name = "/units/get.ftl")
@@ -231,6 +228,19 @@ public class HomeResource extends BaseResource {
         UserBean userBean = (UserBean) getSecurityContext().getUserPrincipal();
         //Set<UnitBean> unitBeanList = RightsDAO.getInstance().getUnitsByUser(userBean);
         map.put("user",userBean);
+        setCommonData(map);
+        return map;
+    }
+
+    @GET
+    @Path("/rules/sns/{id}")
+    @Template(name = "/rules/sns/get.ftl")
+    @Session
+    public Map<String, Object> getSnsRules(@PathParam("id") Integer id) {
+        final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("active","sns");
+        SnsBean sns = SnsDAO.getInstance().get(id);
+        map.put("sns", sns);
         setCommonData(map);
         return map;
     }

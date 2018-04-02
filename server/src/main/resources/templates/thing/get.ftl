@@ -24,6 +24,7 @@
                         {{ thing.name }}
                         <div class="float-right">
                             <div class="row clearfix">
+                                <img src="/static/img/ajax-loader.gif" v-if="saveLoader">
                                 <div class="col"><label class="badge badge-primary" for="storage">Enable storage</label>
                                 </div>
                                 <div class="col"><input type="checkbox" id="storage" class="form-check-input"
@@ -124,10 +125,10 @@
                                         <button class="btn btn-sm btn-default">EDIT</button>
                                     </td>
                                     <td>
-                                        <button v-on:click="" class="btn btn-sm btn-success">CHANGE</button>
+                                        <a v-bind:href="'/rules/' + rule.type + '/' + rule.snsAction.id" class="btn btn-primary btn-sm btn-primary" role="button" aria-pressed="true">CHANGE</a>
+                                        <#--<button v-on:click="" class="btn btn-sm btn-success">CHANGE</button>-->
                                     </td>
                                 </tr>
-                            </tbody>
                         </table>
                     </div>
                     <div class="card-footer">
@@ -212,6 +213,7 @@
         methods: {
             "enableStorage": function () {
                 var that = this;
+                that.saveLoader = true;
                 $.ajax({
                     url: "/rule/ddb/enable/" + thingId,
                     "method": "POST",
@@ -219,8 +221,9 @@
                         enable: that.storageEnabled
                     },
                     success: function (data) {
-                        console.log(data);
-                        alert("Storage settings updated!");
+                        // console.log(data);
+                        that.saveLoader = false;
+                        // alert("Storage settings updated!");
                     }
                 });
             },
