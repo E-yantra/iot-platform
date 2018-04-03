@@ -122,8 +122,10 @@
                                         {{rule.description}}
                                     </td>
                                     <td>
-                                        <button class="btn btn-danger btn-sm text-white" v-on:click="deleteRule(rule, idx)">DELETE</button>
-                                        <button class="btn btn-sm btn-default">EDIT</button>
+                                        <button class="btn btn-danger btn-sm text-white"
+                                                v-on:click="deleteRule(rule, idx)">DELETE</button>
+                                        <button class="btn btn-sm btn-default"
+                                                v-on:click="editRule(rule, idx)">EDIT</button>
                                     </td>
                                     <td>
                                         <a v-bind:href="'/rules/' + rule.type + '/' + rule.snsAction.id"
@@ -291,6 +293,11 @@
                     }
 
                 })
+            },
+
+            "editRule": function () {
+                var that = this;
+
             },
 
             "dashboard": function () {
