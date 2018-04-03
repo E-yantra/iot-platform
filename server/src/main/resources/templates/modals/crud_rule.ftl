@@ -25,6 +25,10 @@
                         <input name="data" type="text" class="form-control" v-model='createRule.data' placeholder="e.g. * or state.reported.deviceXX.XX, ...">
                     </div>
                     <div class="form-group">
+                        <label>Condition: (Optional)</label>
+                        <input name="condition" type="text" class="form-control" v-model='createRule.condition' placeholder="e.g. where state.reported.deviceXX.XX > 50">
+                    </div>
+                    <div class="form-group">
                         <label for="comment">Type: </label>
                         <select class="form-control combo-box" id="rightRoles" v-model='createRule.action'>
                             <option v-for="action in createRule.actionList" v-bind:value="action">{{action}}</option>

@@ -11,8 +11,8 @@
                 <div class="float-right p-1" v-if="role=='ALL' || role=='WRITE'">
                     <button v-on:click="newDevice" class="btn btn-outline-primary">Add Device</button>
                     <button v-on:click="importThing" class="btn btn-outline-primary">Import Device</button>
-                    <button v-on:click="addCron" class="btn btn-outline-primary">Add Cron</button>
-                    <button v-on:click="newRule" class="btn btn-outline-primary">Create Rule</button>
+                    <#--<button v-on:click="addCron" class="btn btn-outline-primary">Add Cron</button>-->
+                    <#--<button v-on:click="newRule" class="btn btn-outline-primary">Create Rule</button>-->
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -51,7 +51,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="float-right">
-                            <button v-on:click="edit" class="btn btn-primary btn-sm">EDIT</button>
+                            <#--<button v-on:click="edit" class="btn btn-primary btn-sm">EDIT</button>-->
                             <button v-on:click="generate" class="btn btn-primary btn-sm">GENERATE CLIENT</button>
                             <button v-on:click="downloadCertificates" class="btn btn-primary btn-sm">DOWNLOAD
                                 CERTIFICATES
@@ -66,7 +66,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="crons.length != 0" class="row">
+        <div class="row">
             <div class="col-md-12">
                 <p>&nbsp;</p>
                 <div class="card">
@@ -74,7 +74,7 @@
                         Crons
                     </div>
                     <div class="card-body p-0">
-                        <table class="table">
+                        <table class="table" v-if="crons.length != 0">
                             <tr v-for="cron in crons">
                                 <td>
                                     {{cron.cronExpression}}
@@ -87,15 +87,16 @@
                                 </td>
                             </tr>
                         </table>
+                        <div v-else class="h3 pt-2 pb-2 text-center text-muted" v-else>No crons</div>
                     </div>
                     <div class="card-footer">
-                        <button v-on:click="addCron" class="btn btn-outline-primary">Add Cron</button>
+                        <button v-on:click="addCron" class="float-right btn btn-sm btn-primary">ADD CRON</button>
                         <#--<button v-on:click="deleteCron(cron)" class="btn btn-sm btn-default">EDIT</button>-->
                     </div>
                 </div>
             </div>
         </div>
-        <div v-if="rules.length != 0" class="row">
+        <div class="row">
             <div class="col-md-12">
                 <p>&nbsp;</p>
                 <div class="card">
@@ -103,7 +104,7 @@
                         Rules
                     </div>
                     <div class="card-body p-0">
-                        <table class="table">
+                        <table class="table" v-if="rules.length != 0">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -125,14 +126,17 @@
                                         <button class="btn btn-sm btn-default">EDIT</button>
                                     </td>
                                     <td>
-                                        <a v-bind:href="'/rules/' + rule.type + '/' + rule.snsAction.id" class="btn btn-primary btn-sm btn-primary" role="button" aria-pressed="true">CHANGE</a>
+                                        <a v-bind:href="'/rules/' + rule.type + '/' + rule.snsAction.id"
+                                           class="btn btn-secondary btn-sm" role="button"
+                                           aria-pressed="true">CHANGE</a>
                                         <#--<button v-on:click="" class="btn btn-sm btn-success">CHANGE</button>-->
                                     </td>
                                 </tr>
                         </table>
+                        <div v-else class="h3 pt-2 pb-2 text-center text-muted" v-else>No rules</div>
                     </div>
                     <div class="card-footer">
-                        <button v-on:click="newRule" class="btn btn-outline-primary">Create Rule</button>
+                        <button v-on:click="newRule" class="float-right btn btn-sm btn-primary">CREATE RULE</button>
                     </div>
                 </div>
             </div>
@@ -457,9 +461,9 @@
                 $("#create_cron").modal('show');
             },
 
-            "edit": function () {
-
-            },
+            // "edit": function () {
+            //
+            // },
 
             "deleteCron": function (cron) {
                 var that = this;
