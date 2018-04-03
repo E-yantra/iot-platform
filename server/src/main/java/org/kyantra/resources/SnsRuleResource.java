@@ -48,7 +48,7 @@ public class SnsRuleResource extends BaseResource {
         * 5. add rule to DB
         * 6. link rule and SNS in DB
         * */
-
+        System.out.println(condition);
         // create SnsBean
         SnsBean snsBean = new SnsBean();
         snsBean.setTopic(snsTopic);
@@ -73,7 +73,7 @@ public class SnsRuleResource extends BaseResource {
 
         TopicRulePayload rulePayload = new TopicRulePayload();
         rulePayload.withDescription(description)
-                .withSql("SELECT " + data + " FROM '$aws/things/" + thingName + "/shadow/update'")
+                .withSql("SELECT " + data + " FROM '$aws/things/" + thingName + "/shadow/update' " + condition)
                 .withRuleDisabled(false)
                 .withAwsIotSqlVersion("2016-03-23")
                 .withActions(actionList);
