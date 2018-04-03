@@ -140,4 +140,19 @@ public class RuleBean {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "RuleBean{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", data='" + data + '\'' +
+                ", topic='" + topic + '\'' +
+                ", condition='" + condition + '\'' +
+                ", type='" + type + '\'' +
+                ", snsAction=" + snsAction +
+                ", parentThing=" + parentThing +
+                '}';
+    }
 }
