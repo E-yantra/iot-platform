@@ -100,6 +100,8 @@ public class SnsRuleResource extends BaseResource {
         snsBean.setParentRule(ruleBean);
         SnsDAO.getInstance().add(snsBean);
 
+        // Get updated ruleBean
+        ruleBean = RuleDAO.getInstance().get(ruleBean.getId());
         return gson.toJson(ruleBean);
     }
 
