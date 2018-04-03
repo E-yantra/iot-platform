@@ -24,7 +24,7 @@
                         {{ thing.name }}
                         <div class="float-right">
                             <div class="row clearfix">
-                                <img src="/static/img/ajax-loader.gif" v-if="saveLoader">
+                                <img src="/static/img/ajax-loader.gif" v-if="saveLoaderStorage">
                                 <div class="col"><label class="badge badge-primary" for="storage">Enable storage</label>
                                 </div>
                                 <div class="col"><input type="checkbox" id="storage" class="form-check-input"
@@ -113,7 +113,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="rule in rules">
+                                <tr v-for="(rule,idx) in rules">
                                     <td>
                                         {{rule.name}}
                                     </td>
@@ -121,7 +121,7 @@
                                         {{rule.description}}
                                     </td>
                                     <td>
-                                        <button class="btn btn-danger btn-sm text-white" v-on:click="deleteRule(rule)">DELETE</button>
+                                        <button class="btn btn-danger btn-sm text-white" v-on:click="deleteRule(rule, idx)">DELETE</button>
                                         <button class="btn btn-sm btn-default">EDIT</button>
                                     </td>
                                     <td>
@@ -189,6 +189,7 @@
             payload: "",
             device: {},
             saveLoader: false,
+            saveLoaderStorage: false,
             role: "",
             unit: {},
             thing: {},
@@ -213,7 +214,7 @@
         methods: {
             "enableStorage": function () {
                 var that = this;
-                that.saveLoader = true;
+                that.saveLoaderStorage = true;
                 $.ajax({
                     url: "/rule/ddb/enable/" + thingId,
                     "method": "POST",
@@ -222,7 +223,7 @@
                     },
                     success: function (data) {
                         // console.log(data);
-                        that.saveLoader = false;
+                        that.saveLoaderStorage = false;
                         // alert("Storage settings updated!");
                     }
                 });
@@ -273,13 +274,15 @@
                 });
             },
 
-            "deleteRule": function (rule) {
+            "deleteRule": function (rule, idx) {
+                var that = this;
                 $.ajax({
                     "url": "/rule/" + rule.type + "/delete/" + rule.id,
                     "method": "GET",
                     "success": function (data) {
                         if(data.success === true) {
                             alert("Rule deleted!");
+                            that.rules.splice(idx, 1);
                         }
                     }
 
