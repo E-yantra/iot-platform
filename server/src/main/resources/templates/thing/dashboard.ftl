@@ -6,7 +6,7 @@
     <main role="main" class="main col-sm-9 ml-sm-auto col-md-10 pt-3">
         <div class="row">
             <div class="col-md-12 clearfix">
-                <div class="float-right p-1">
+                <div class="float-right p-1 alert alert-info" role="alert">
                     Last message from device: {{lastMessageTime}}
                 </div>
             </div>
@@ -84,7 +84,7 @@
                 </div>
             </div>
     </main>
-    <#include "../modals/chart_config.ftl"/>
+    <#--<#include "../modals/chart_config.ftl"/>-->
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
