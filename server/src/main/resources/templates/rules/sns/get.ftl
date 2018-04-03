@@ -6,7 +6,7 @@
     <main role="main" class="main col-sm-9 ml-sm-auto col-md-10 pt-3 pb-5">
         <h2 class="pt-2">Settings</h2>
         <hr/>
-        <div class="row pb-2 pt-2">
+        <div class="row pb-3 pt-3">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <div class="row pb-2">
+        <div class="row pb-3 pt-3">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
@@ -71,10 +71,10 @@
                             </tr>
                             </tbody>
                         </table>
-                        <h5 class="text-center text-muted" v-else>No subscriptions</h5>
+                        <div class="h3 pt-2 pb-2 text-center text-muted" v-else>No subscriptions</div>
                     </div>
                     <div class="card-footer">
-                        <button type="button" v-on:click="openSubscriptionModal"
+                        <button type="button" v-on:click="newSubscription"
                                 class="float-right btn btn-sm btn-primary">ADD SUBSCRIPTION
                         </button>
                     </div>
@@ -94,11 +94,12 @@
         el: '#container-main',
         data: {
             sns: {},
-            createSubscription: {}
+            createSubscription: {},
+            saveLoader: false
         },
         methods: {
 
-            openSubscriptionModal: function () {
+            newSubscription: function () {
                 this.createSubscription = {
                     type: '',
                     value: ''
@@ -109,8 +110,9 @@
             addSubscription: function () {
                 var that = this;
                 that.saveLoader = true;
+                console.log('Inside add subscription!');
                 $.ajax({
-                    'url': '/rule/sns/subscribe' + snsId,
+                    'url': '/rule/sns/subscribe/' + snsId,
                     'method': 'POST',
                     'data': {
                         'type': that.createSubscription.type,
@@ -118,8 +120,10 @@
                     },
                     success: function (data) {
                         that.saveLoader = false;
-                        sns.subscriptions.push(data);
-                        $('#add_subscription').modal('close');
+                        if(!that.sns.subscriptions)
+                            that.sns.subscriptions = [];
+                        that.sns.subscriptions.push(data);
+                        $('#add_subscription').modal('hide');
                     }
                 });
             },
