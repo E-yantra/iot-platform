@@ -11,11 +11,11 @@
                 <form>
                     <div class="form-group">
                         <label>Protocol:</label>
-                        <input type="text" name="name" class="form-control" v-model='createSubscription.type' placeholder="E-mail">
+                        <input type="text" name="type" class="form-control" v-model='createSubscription.type' placeholder="email">
                     </div>
                     <div class="form-group">
-                        <label>Subscriber:</label>
-                        <input name="email" type="text" class="form-control" v-model='createSubscription.value' placeholder="test@e-yantra.org">
+                        <label>Endpoint:</label>
+                        <input name="value" type="text" class="form-control" v-model='createSubscription.value' placeholder="test@e-yantra.org">
                     </div>
                     <#--<div class="form-group">-->
                         <#--<label for="comment">Roles:</label>-->
