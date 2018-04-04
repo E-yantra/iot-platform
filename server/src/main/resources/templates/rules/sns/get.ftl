@@ -13,7 +13,7 @@
                         SNS Settings
                     </div>
                     <div class="card-body p-0">
-                        <table class="table">
+                        <table class="table mb-0">
                             <thead>
                             <tr>
                                 <th>Name</th>
@@ -53,7 +53,7 @@
                         SNS Subscriptions
                     </div>
                     <div class="card-body p-0">
-                        <table class="table" v-if="sns.subscriptions.length != 0">
+                        <table class="table mb-0" v-if="sns.subscriptions.length != 0">
                             <thead>
                             <tr>
                                 <th>Protocol</th>

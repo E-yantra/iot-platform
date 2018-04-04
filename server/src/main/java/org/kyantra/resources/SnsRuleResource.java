@@ -66,7 +66,7 @@ public class SnsRuleResource extends BaseResource {
         // create rule in AWS
         SnsAction snsAction = new SnsAction();
         snsAction.withTargetArn(snsBean.getTopicARN())
-                .withMessageFormat(MessageFormat.JSON)
+                .withMessageFormat(MessageFormat.RAW)
                 .withRoleArn(ConfigDAO.getInstance().get("IoTRoleARN").getValue());
 
         Action action = new Action().withSns(snsAction);
@@ -114,6 +114,14 @@ public class SnsRuleResource extends BaseResource {
         RuleBean ruleBean = RuleDAO.getInstance().get(ruleId);
         return gson.toJson(ruleBean);
     }
+
+//    @POST
+//    @Path("/update/{id}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+//    public String update(@PathParam("id") Integer ruleId) {
+//
+//    }
 
     /*TODO: Delete SNS topics when there is no rule in AWS pointing to it*/
     @GET
