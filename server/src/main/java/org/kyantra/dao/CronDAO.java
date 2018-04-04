@@ -37,7 +37,7 @@ public class CronDAO extends BaseDAO {
 
     }
 
-    public static CronDAO getInstance(){
+    public static CronDAO getInstance() {
         return instance;
     }
 

@@ -20,6 +20,10 @@ public class CronBean {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
+    @Column(name = "name")
+    @Expose
+    String cronName;
+
     @Column(name = "cron_expression")
     @Expose
     String cronExpression;
@@ -33,10 +37,15 @@ public class CronBean {
     String cloudwatchResource;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @Expose
     ThingBean parentThing;
 
+    public String getCronName() {
+        return cronName;
+    }
 
+    public void setCronName(String cronName) {
+        this.cronName = cronName;
+    }
 
     public ThingBean getParentThing() {
         return parentThing;
@@ -45,10 +54,6 @@ public class CronBean {
     public void setParentThing(ThingBean parentThing) {
         this.parentThing = parentThing;
     }
-
-
-
-
 
     public String getCloudwatchResource() {
         return cloudwatchResource;

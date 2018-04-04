@@ -68,11 +68,13 @@ public class CronResource extends BaseResource {
     @Session
     public String create(
             @FormParam("thingId") Integer thingId,
+            @FormParam("name") String cronName,
             @FormParam("cronExpression") String cronExpression,
             @FormParam("desiredState") String desiredState) {
 
         try {
             CronBean bean = new CronBean();
+            bean.setCronName(cronName);
             bean.setCronExpression(cronExpression);
             bean.setDesiredState(desiredState);
             bean.setParentThing(ThingDAO.getInstance().get(thingId));
@@ -84,7 +86,5 @@ public class CronResource extends BaseResource {
         }
         return "{\"success\":false}";
     }
-
-
 
 }

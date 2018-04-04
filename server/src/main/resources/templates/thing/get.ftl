@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <table class="table">
+                        <table class="table mb-0">
                             <tr>
                                 <th>Device Name</th>
                                 <th>Actions</th>
@@ -74,8 +74,19 @@
                         Crons
                     </div>
                     <div class="card-body p-0">
-                        <table class="table" v-if="crons.length != 0">
+                        <table class="table mb-0" v-if="crons.length != 0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Cron expression</th>
+                                    <th>Desired state</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
                             <tr v-for="cron in crons">
+                                <td>
+
+                                </td>
                                 <td>
                                     {{cron.cronExpression}}
                                 </td>
@@ -83,7 +94,8 @@
                                     {{cron.desiredState}}
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger btn-sm text-white" v-on:click="deleteCron(cron)">Delete</button>
+                                    <button class="btn btn-danger btn-sm text-white"
+                                            v-on:click="deleteCron(cron)">Delete</button>
                                 </td>
                             </tr>
                         </table>
@@ -104,7 +116,7 @@
                         Rules
                     </div>
                     <div class="card-body p-0">
-                        <table class="table" v-if="rules.length != 0">
+                        <table class="table mb-0" v-if="rules.length != 0">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -116,7 +128,7 @@
                             <tbody>
                                 <tr v-for="(rule,idx) in rules">
                                     <td>
-                                        {{rule.name}}
+                                        {{rule.cronName}}
                                     </td>
                                     <td>
                                         {{rule.description}}
@@ -214,6 +226,7 @@
             cronAttribute: {},
             cronExpression: "",
             cronAttributeValue: "",
+            cronName: "",
             crons: [],
             storageEnabled: ""
         },
@@ -235,7 +248,7 @@
                 });
             },
 
-            //TODO: Fetch list of supported rule actoins from server
+            //TODO: Fetch list of supported rule actions from server
             "newRule": function () {
                 this.createRule = {
                     name: "",
@@ -463,6 +476,7 @@
                 $("#create_device").modal('show');
             },
 
+            // TODO: Clear all the inputs here
             "addCron": function () {
 
                 $("#create_cron").modal('show');
@@ -511,6 +525,7 @@
                     url: "/cron/create",
                     "method": "POST",
                     "data": {
+                        "name": that.cronName,
                         "thingId": thingId,
                         "cronExpression": that.cronExpression,
                         "desiredState": JSON.stringify(desired)
