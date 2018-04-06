@@ -98,8 +98,8 @@ public class RuleHelper {
                     .withSql("SELECT " + ruleBean.getData() + " FROM '$aws/things/" +
                             ruleBean.getParentThing().getName() + "/shadow/update'" + ruleCondition)
                     .withRuleDisabled(false)
-                    .withAwsIotSqlVersion("2016-03-23");
-//                    .withActions(actionList);
+                    .withAwsIotSqlVersion("2016-03-23")
+                    .withActions(actionList);
 
             topicRuleRequest.withRuleName(thingName + "_sns_" + ruleName)
                     .withTopicRulePayload(rulePayload);
