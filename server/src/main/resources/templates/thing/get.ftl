@@ -85,7 +85,7 @@
                             </thead>
                             <tr v-for="cron in crons">
                                 <td>
-
+                                    {{cron.cronName == '' ? '-----' : cron.cronName}}
                                 </td>
                                 <td>
                                     {{cron.cronExpression}}
@@ -102,13 +102,13 @@
                         <div v-else class="h3 pt-2 pb-2 text-center text-muted" v-else>No crons</div>
                     </div>
                     <div class="card-footer">
-                        <button v-on:click="addCron" class="float-right btn btn-sm btn-primary">ADD CRON</button>
+                        <button v-on:click="addCron" class="btn btn-sm btn-primary">ADD CRON</button>
                         <#--<button v-on:click="deleteCron(cron)" class="btn btn-sm btn-default">EDIT</button>-->
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row pb-5">
             <div class="col-md-12">
                 <p>&nbsp;</p>
                 <div class="card">
@@ -128,10 +128,10 @@
                             <tbody>
                                 <tr v-for="(rule,idx) in rules">
                                     <td>
-                                        {{rule.cronName}}
+                                        {{rule.name}}
                                     </td>
                                     <td>
-                                        {{rule.description}}
+                                        {{rule.description == '' ? '-----' : rule.description}}
                                     </td>
                                     <td>
                                         <button class="btn btn-danger btn-sm text-white"
@@ -141,7 +141,7 @@
                                     </td>
                                     <td>
                                         <a v-bind:href="'/rules/' + rule.type + '/' + rule.snsAction.id"
-                                           class="btn btn-secondary btn-sm" role="button"
+                                           class="btn btn-success btn-sm" role="button"
                                            aria-pressed="true">CHANGE</a>
                                         <#--<button v-on:click="" class="btn btn-sm btn-success">CHANGE</button>-->
                                     </td>
@@ -150,7 +150,7 @@
                         <div v-else class="h3 pt-2 pb-2 text-center text-muted" v-else>No rules</div>
                     </div>
                     <div class="card-footer">
-                        <button v-on:click="newRule" class="float-right btn btn-sm btn-primary">CREATE RULE</button>
+                        <button v-on:click="newRule" class="btn btn-sm btn-primary">CREATE RULE</button>
                     </div>
                 </div>
             </div>
@@ -217,6 +217,7 @@
                 "deviceAttributes": []
             },
             createRule: {},
+            ruleActionList: ["sns"],
             createSubscription: {},
             cttr: {},
             generateCode: "",
@@ -257,7 +258,6 @@
                     condition: "",
                     topic: "",
                     action: "",
-                    actionList: ["sns"],
                     sns_topic: ""
                 };
                 $('#create_rule').modal('show');
@@ -308,9 +308,11 @@
                 })
             },
 
-            "editRule": function () {
+            "editRule": function (rule, idx) {
                 var that = this;
-
+                console.log(rule);
+                that.createRule = rule;
+                $('#create_rule').modal('show');
             },
 
             "dashboard": function () {
@@ -645,7 +647,7 @@
         mounted: function () {
             this.load()
         }
-    })
+    });
 </script>
 </body>
 </html>
