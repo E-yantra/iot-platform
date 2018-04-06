@@ -31,7 +31,7 @@ public class SnsRuleResource extends BaseResource {
     @Path("/create/{id}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    @Secure(roles = {RoleEnum.ALL, RoleEnum.WRITE}, subjectType = "rule", subjectField = "parentId")
+    @Secure(roles = {RoleEnum.ALL}, subjectType = "rule", subjectField = "parentId")
     public String create(@PathParam("id") Integer parentThingId,
                              @FormParam("name") String name,
                              @FormParam("description") String description,
@@ -48,9 +48,12 @@ public class SnsRuleResource extends BaseResource {
         * 5. add rule to DB
         * 6. link rule and SNS in DB
         * */
+        String ruleCondition = " WHERE ";
         System.out.println(condition);
         if(!condition.equals(""))
-            condition = " WHERE " + condition;
+            ruleCondition = ruleCondition + condition;
+        else
+            ruleCondition = condition;
         // create SnsBean
         SnsBean snsBean = new SnsBean();
         snsBean.setTopic(snsTopic);
@@ -61,7 +64,7 @@ public class SnsRuleResource extends BaseResource {
 
         //constructed names of entities
         String thingName = "thing" + parentThingId;
-        String ruleName = thingName + "_sns_" + name;
+        String ruleName = name;
 
         // create rule in AWS
         SnsAction snsAction = new SnsAction();
@@ -75,13 +78,13 @@ public class SnsRuleResource extends BaseResource {
 
         TopicRulePayload rulePayload = new TopicRulePayload();
         rulePayload.withDescription(description)
-                .withSql("SELECT " + data + " FROM '$aws/things/" + thingName + "/shadow/update'" + condition)
+                .withSql("SELECT " + data + " FROM '$aws/things/" + thingName + "/shadow/update'" + ruleCondition)
                 .withRuleDisabled(false)
                 .withAwsIotSqlVersion("2016-03-23")
                 .withActions(actionList);
 
         CreateTopicRuleRequest topicRuleRequest = new CreateTopicRuleRequest();
-        topicRuleRequest.withRuleName(ruleName)
+        topicRuleRequest.withRuleName(thingName + "_sns_" + ruleName)
                 .withTopicRulePayload(rulePayload);
 
         AwsIotHelper.getIotClient().createTopicRule(topicRuleRequest);
@@ -110,6 +113,8 @@ public class SnsRuleResource extends BaseResource {
     @GET
     @Path("/get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Session()
+    @Secure(roles = {RoleEnum.ALL})
     public String get(@PathParam("id") Integer ruleId) {
         RuleBean ruleBean = RuleDAO.getInstance().get(ruleId);
         return gson.toJson(ruleBean);
@@ -127,6 +132,8 @@ public class SnsRuleResource extends BaseResource {
     @GET
     @Path("/delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Session()
+    @Secure(roles = {RoleEnum.ALL})
     public String delete(@PathParam("id") Integer ruleId) {
         /*
         * Steps:
@@ -154,6 +161,8 @@ public class SnsRuleResource extends BaseResource {
     @Path("/delete/")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
+    @Session
+    @Secure(roles = {RoleEnum.ALL})
     public String deleteByName(@FormParam("name") String ruleName) {
         /*
          * Steps:
@@ -175,6 +184,8 @@ public class SnsRuleResource extends BaseResource {
 
 
     @POST
+    @Session
+    @Secure(roles = {RoleEnum.ALL})
     @Path("/subscribe/{id}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
@@ -194,9 +205,10 @@ public class SnsRuleResource extends BaseResource {
     }
 
     @GET
-    @Session
     @Path("/thing/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Session
+    @Secure(roles = {RoleEnum.ALL})
     public String getByThing(@PathParam("id") Integer parentThingId) {
         Set<RuleBean> ruleBean = RuleDAO.getInstance().getByThing(parentThingId);
         return gson.toJson(ruleBean);
