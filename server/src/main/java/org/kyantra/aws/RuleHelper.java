@@ -14,6 +14,7 @@ import java.util.List;
 
 public class RuleHelper {
     public static RuleHelper instance = new RuleHelper();
+
     public static RuleHelper getInstance() {
         return instance;
     }
@@ -22,8 +23,8 @@ public class RuleHelper {
 
         CreateTopicRuleRequest topicRuleRequest = new CreateTopicRuleRequest();
 
-        if(actionType.equals("sns")) {
-            SnsBean snsBean = (SnsBean)actionBean;
+        if (actionType.equals("sns")) {
+            SnsBean snsBean = (SnsBean) actionBean;
 
             String ruleCondition = " WHERE ";
 
@@ -32,7 +33,7 @@ public class RuleHelper {
             String ruleName = ruleBean.getName();
 
             System.out.println(ruleBean.getCondition());
-            if(!ruleBean.getCondition().equals(""))
+            if (!ruleBean.getCondition().equals(""))
                 ruleCondition = ruleCondition + ruleBean.getCondition();
             else
                 ruleCondition = ruleBean.getCondition();
@@ -63,11 +64,11 @@ public class RuleHelper {
         return AwsIotHelper.getIotClient().createTopicRule(topicRuleRequest);
     }
 
-    public ReplaceTopicRuleResult replaceTopicRule(RuleBean ruleBean) {
+    public ReplaceTopicRuleResult replaceTopicRule(RuleBean ruleBean, String actionType, Object actionBean) {
         ReplaceTopicRuleRequest topicRuleRequest = new ReplaceTopicRuleRequest();
 
-//        if(actionType.equals("sns"))
-//            SnsBean snsBean = (SnsBean)actionBean;
+        if (actionType.equals("sns")) {
+            SnsBean snsBean = (SnsBean) actionBean;
 
             String ruleCondition = " WHERE ";
 
@@ -76,20 +77,20 @@ public class RuleHelper {
             String ruleName = ruleBean.getName();
 
             System.out.println(ruleBean.getCondition());
-            if(!ruleBean.getCondition().equals(""))
+            if (!ruleBean.getCondition().equals(""))
                 ruleCondition = ruleCondition + ruleBean.getCondition();
             else
                 ruleCondition = ruleBean.getCondition();
 
             // create rule in AWS
-//            SnsAction snsAction = new SnsAction();
-//            snsAction.withTargetArn(snsBean.getTopicARN())
-//                    .withMessageFormat(MessageFormat.RAW)
-//                    .withRoleArn(ConfigDAO.getInstance().get("IoTRoleARN").getValue());
-//
-//            Action action = new Action().withSns(snsAction);
-//            List<Action> actionList = new ArrayList<>();
-//            actionList.add(action);
+            SnsAction snsAction = new SnsAction();
+            snsAction.withTargetArn(snsBean.getTopicARN())
+                    .withMessageFormat(MessageFormat.RAW)
+                    .withRoleArn(ConfigDAO.getInstance().get("IoTRoleARN").getValue());
+
+            Action action = new Action().withSns(snsAction);
+            List<Action> actionList = new ArrayList<>();
+            actionList.add(action);
 
             TopicRulePayload rulePayload = new TopicRulePayload();
 
@@ -102,7 +103,7 @@ public class RuleHelper {
 
             topicRuleRequest.withRuleName(thingName + "_sns_" + ruleName)
                     .withTopicRulePayload(rulePayload);
-
+        }
         return AwsIotHelper.getIotClient().replaceTopicRule(topicRuleRequest);
     }
 

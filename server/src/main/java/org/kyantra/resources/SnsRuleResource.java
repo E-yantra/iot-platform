@@ -142,7 +142,7 @@ public class SnsRuleResource extends BaseResource {
                          @FormParam("parentThing") Integer parentThingId) {
 
         // create RuleBean
-        RuleBean ruleBean = new RuleBean();
+        RuleBean ruleBean = RuleDAO.getInstance().get(ruleId);
         ruleBean.setName(name);
         ruleBean.setDescription(description);
 //        ruleBean.setTopic(topic);
@@ -151,7 +151,7 @@ public class SnsRuleResource extends BaseResource {
 //        ruleBean.setType("sns");
         ruleBean.setParentThing(ThingDAO.getInstance().get(parentThingId));
 
-        RuleHelper.getInstance().replaceTopicRule(ruleBean);
+        RuleHelper.getInstance().replaceTopicRule(ruleBean,"sns",ruleBean.getSnsAction());
         return gson.toJson(ruleBean);
     }
 

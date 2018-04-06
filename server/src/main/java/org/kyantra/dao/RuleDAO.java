@@ -34,6 +34,16 @@ public class RuleDAO extends BaseDAO {
         return ruleBean;
     }
 
+    public RuleBean update(RuleBean ruleBean) {
+        Session session = getService().getSessionFactory().openSession();
+        session.beginTransaction();
+
+        session.saveOrUpdate(ruleBean);
+
+        session.close();
+        return ruleBean;
+    }
+
     public RuleBean get(Integer id) {
         Session session = getService().getSessionFactory().openSession();
 

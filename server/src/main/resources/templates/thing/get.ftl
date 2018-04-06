@@ -137,7 +137,7 @@
                                         <button class="btn btn-danger btn-sm text-white"
                                                 v-on:click="deleteRule(rule, idx)">DELETE</button>
                                         <button class="btn btn-sm btn-default"
-                                                v-on:click="editRule(rule, idx)">EDIT</button>
+                                                v-on:click="editRuleModal(rule, idx)">EDIT</button>
                                     </td>
                                     <td>
                                         <a v-bind:href="'/rules/' + rule.type + '/' + rule.snsAction.id"
@@ -150,7 +150,7 @@
                         <div v-else class="h3 pt-2 pb-2 text-center text-muted" v-else>No rules</div>
                     </div>
                     <div class="card-footer">
-                        <button v-on:click="newRule" class="btn btn-sm btn-primary">CREATE RULE</button>
+                        <button v-on:click="newRuleModal" class="btn btn-sm btn-primary">CREATE RULE</button>
                     </div>
                 </div>
             </div>
@@ -217,6 +217,7 @@
                 "deviceAttributes": []
             },
             createRule: {},
+            ruleUpdate: false,
             ruleActionList: ["sns"],
             createSubscription: {},
             cttr: {},
@@ -250,7 +251,7 @@
             },
 
             //TODO: Fetch list of supported rule actions from server
-            "newRule": function () {
+            "newRuleModal": function () {
                 this.createRule = {
                     name: "",
                     description: "",
@@ -260,6 +261,7 @@
                     action: "",
                     sns_topic: ""
                 };
+                this.ruleUpdate = false;
                 $('#create_rule').modal('show');
             },
 
@@ -308,11 +310,41 @@
                 })
             },
 
-            "editRule": function (rule, idx) {
+            "editRuleModal": function (rule, idx) {
                 var that = this;
                 console.log(rule);
                 that.createRule = rule;
+                that.ruleUpdate = true;
                 $('#create_rule').modal('show');
+            },
+
+            "updateRule": function () {
+                var that = this;
+                that.saveLoader = true;
+
+                var data = {
+                    "name": that.createRule.name,
+                    "description": that.createRule.description,
+                    "data": that.createRule.data,
+                    "topic": that.createRule.topic,
+                    "condition": that.createRule.condition,
+                    "parentThing": thingId
+                };
+                //
+                // if (that.createRule.action == 'sns') {
+                //     data.sns_topic = that.createRule.sns_topic;
+                // }
+
+                $.ajax({
+                    "url": "/rule/" + that.createRule.type + "/update/" + that.createRule.id,
+                    "method": "POST",
+                    "data": data,
+                    success: function (data) {
+                        that.saveLoader = false;
+                        that.rules.push(data);
+                        $('#create_rule').modal('hide');
+                    }
+                });
             },
 
             "dashboard": function () {
