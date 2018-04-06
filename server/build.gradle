@@ -42,7 +42,6 @@ jar {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compileOnly group: 'javax.servlet', name: 'servlet-api', version: '2.5'
     compile group: 'org.glassfish.jersey', name: 'jersey-bom', version: '2.26' //, ext: 'pom'
     // https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-grizzly2-servlet
     compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-grizzly2-servlet', version: '2.0-m07-1'
