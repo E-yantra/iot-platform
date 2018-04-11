@@ -34,17 +34,19 @@
                     </div>
                     <div class="card-body p-0">
                         <table class="table mb-0">
-                            <tr>
-                                <th>Device Name</th>
-                                <th>Actions</th>
-                            </tr>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Device Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
                             <tr v-for="d in devices">
                                 <td>{{d.name}}</td>
                                 <td>
-                                    <Button v-on:click="deleteDevice(d)" class="btn btn-sm btn-danger text-white">
+                                    <button v-on:click="deleteDevice(d)" class="btn btn-sm btn-danger text-white">
                                         DELETE
-                                    </Button>
-                                    <Button v-on:click="editDevice(d)" class="btn btn-sm btn-default">EDIT</Button>
+                                    </button>
+                                    <button v-on:click="editDevice(d)" class="btn btn-sm btn-default">EDIT</button>
                                 </td>
                             </tr>
                         </table>
@@ -75,7 +77,7 @@
                     </div>
                     <div class="card-body p-0">
                         <table class="table mb-0" v-if="crons.length != 0">
-                            <thead>
+                            <thead class="thead-light">
                                 <tr>
                                     <th>Name</th>
                                     <th>Cron expression</th>
@@ -117,7 +119,7 @@
                     </div>
                     <div class="card-body p-0">
                         <table class="table mb-0" v-if="rules.length != 0">
-                            <thead>
+                            <thead class="thead-light">
                                 <tr>
                                     <th>Name</th>
                                     <th>Description</th>
@@ -233,6 +235,28 @@
             storageEnabled: ""
         },
         methods: {
+
+            // mostly all methods related to thing actions
+            "importThing": function () {
+                //TODO
+            },
+
+
+            "deleteThing": function () {
+                alert(thingId);
+                if (confirm("Are you sure you want to delete thing?") && confirm("Are you really sure?")) {
+                    $.ajax({
+                        url: "/thing/delete/" + thingId,
+                        "method": "DELETE",
+                        success: function (data) {
+                            alert('Thing deleted');
+                            this.load();
+                        }
+                    });
+                }
+            },
+
+            // mostly all methods related to rules
             "enableStorage": function () {
                 var that = this;
                 that.saveLoaderStorage = true;
@@ -313,7 +337,11 @@
             "editRuleModal": function (rule, idx) {
                 var that = this;
                 console.log(rule);
+                // Load rule in createRule (to be attached to form modal)
                 that.createRule = rule;
+                // This is to update the rule in place and not push updated rule as new rule
+                that.createRule.idx = idx;
+                // Load form modal in update mode
                 that.ruleUpdate = true;
                 $('#create_rule').modal('show');
             },
@@ -330,10 +358,6 @@
                     "condition": that.createRule.condition,
                     "parentThing": thingId
                 };
-                //
-                // if (that.createRule.action == 'sns') {
-                //     data.sns_topic = that.createRule.sns_topic;
-                // }
 
                 $.ajax({
                     "url": "/rule/" + that.createRule.type + "/update/" + that.createRule.id,
@@ -341,10 +365,32 @@
                     "data": data,
                     success: function (data) {
                         that.saveLoader = false;
-                        that.rules.push(data);
+                        // replace the Rule with updated rule
+                        that.rules[that.createRule.idx] = data;
                         $('#create_rule').modal('hide');
                     }
                 });
+            },
+
+            // mostly all methods related to actions on things and devices
+            "generate": function () {
+                $("#generate_code").modal('show');
+                saveLoader = true;
+                var that = this;
+                $.ajax({
+                    url: "/device/generate/" + thingId,
+                    "method": "GET",
+                    success: function (data) {
+                        that.saveLoader = false;
+                        that.generateCode = data.substr(0, data.search("{") - 1);
+                        that.generateMessage = data.substr(data.search("{"));
+                    }
+                });
+            },
+
+            "copyToClipboard": function () {
+                $("#shadow-message").select();
+                document.execCommand("Copy");
             },
 
             "dashboard": function () {
@@ -360,6 +406,7 @@
                 window.open("/thing/certificate/get/" + "rootCA" + "/" + thingId, "_blank");
             },
 
+            // pubsub
             "publish": function () {
                 var that = this;
                 $.ajax({
@@ -412,6 +459,7 @@
                 }, 8000);
             },
 
+            // load required data
             "load": function () {
 
                 var that = this;
@@ -443,71 +491,6 @@
                 });
                 that.getCrons();
 
-            },
-
-            "removeAttr": function (key) {
-                if (key !== -1) {
-                    array.splice(key, 1);
-                }
-            },
-
-            "addAttr": function () {
-                if (this.cttr.name && this.cttr.type) {
-                    this.createDevice.deviceAttributes.push(Object.assign({}, this.cttr));
-                }
-            },
-
-            "deleteDevice": function (device) {
-                alert(device.id);
-                this.saveLoader = true;
-                var that = this;
-
-                if (confirm("Are you sure you want to delete device?") && confirm("Are you really sure?")) {
-                    $.ajax({
-                        url: "/device/delete/" + device.id,
-                        "method": "DELETE",
-                        success: function (data) {
-                            that.saveLoader = false;
-                            alert(data);
-                            //that.deleteDeviceAttributes(device.id);
-                            that.load();
-                        }
-                    });
-                }
-            },
-
-            "deleteDeviceAttributes": function (deviceId) {
-                if (confirm("Are you sure you want to delete device?") && confirm("Are you really sure?")) {
-                    $.ajax({
-                        url: "/attribute/delete/" + deviceId,
-                        "method": "DELETE",
-                        success: function (data) {
-                            alert('Device attributes deleted');
-                            this.load();
-                        }
-                    });
-                }
-            },
-
-            "deleteThing": function () {
-                alert(thingId);
-                if (confirm("Are you sure you want to delete thing?") && confirm("Are you really sure?")) {
-                    $.ajax({
-                        url: "/thing/delete/" + thingId,
-                        "method": "DELETE",
-                        success: function (data) {
-                            alert('Thing deleted');
-                            this.load();
-                        }
-                    });
-                }
-            },
-
-            "newDevice": function () {
-                this.createDevice = {
-                    deviceAttributes: []
-                };
-                $("#create_device").modal('show');
             },
 
             // TODO: Clear all the inputs here
@@ -572,28 +555,55 @@
                 });
             },
 
-            "generate": function () {
-                $("#generate_code").modal('show');
-                saveLoader = true;
+            "removeAttr": function (key) {
+                if (key !== -1) {
+                    array.splice(key, 1);
+                }
+            },
+
+            "addAttr": function () {
+                if (this.cttr.name && this.cttr.type) {
+                    this.createDevice.deviceAttributes.push(Object.assign({}, this.cttr));
+                }
+            },
+
+            "newDevice": function () {
+                this.createDevice = {
+                    deviceAttributes: []
+                };
+                $("#create_device").modal('show');
+            },
+
+            "deleteDevice": function (device) {
+                alert(device.id);
+                this.saveLoader = true;
                 var that = this;
-                $.ajax({
-                    url: "/device/generate/" + thingId,
-                    "method": "GET",
-                    success: function (data) {
-                        that.saveLoader = false;
-                        that.generateCode = data.substr(0, data.search("{") - 1);
-                        that.generateMessage = data.substr(data.search("{"));
-                    }
-                });
+
+                if (confirm("Are you sure you want to delete device?") && confirm("Are you really sure?")) {
+                    $.ajax({
+                        url: "/device/delete/" + device.id,
+                        "method": "DELETE",
+                        success: function (data) {
+                            that.saveLoader = false;
+                            alert(data);
+                            //that.deleteDeviceAttributes(device.id);
+                            that.load();
+                        }
+                    });
+                }
             },
 
-            "copyToClipboard": function () {
-                $("#shadow-message").select();
-                document.execCommand("Copy");
-            },
-
-            "importThing": function () {
-                //TODO
+            "deleteDeviceAttributes": function (deviceId) {
+                if (confirm("Are you sure you want to delete device?") && confirm("Are you really sure?")) {
+                    $.ajax({
+                        url: "/attribute/delete/" + deviceId,
+                        "method": "DELETE",
+                        success: function (data) {
+                            alert('Device attributes deleted');
+                            this.load();
+                        }
+                    });
+                }
             },
 
             "saveDevice": function () {
@@ -622,6 +632,7 @@
                             that.saveLoader = false;
                             that.saveAttributes(data.id, that.createDevice.deviceAttributes);
                             that.load();
+                            $("#create_device").modal("hide");
                         }
                     });
                 }

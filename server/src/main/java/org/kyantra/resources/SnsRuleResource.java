@@ -15,6 +15,7 @@ import org.kyantra.interfaces.Session;
 import org.kyantra.utils.AwsIotHelper;
 import org.springframework.context.annotation.Role;
 
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.Set;
 public class SnsRuleResource extends BaseResource {
 
     /* TODO: Atomicity with AWS and DB
-    * For transactions, like if DB transactions don't commit properly rollback the AWS operations too*/
+     * For transactions, like if DB transactions don't commit properly rollback the AWS operations too*/
 
     @POST
     @Session
@@ -33,21 +34,21 @@ public class SnsRuleResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Secure(roles = {RoleEnum.ALL}, subjectType = "rule", subjectField = "parentId")
     public String create(@PathParam("id") Integer parentThingId,
-                             @FormParam("name") String name,
-                             @FormParam("description") String description,
-                             @FormParam("topic") String topic,
-                             @FormParam("data") String data,
-                             @FormParam("condition") String condition,
-                             @FormParam("sns_topic") String snsTopic) {
+                         @FormParam("name") String name,
+                         @FormParam("description") String description,
+                         @FormParam("topic") String topic,
+                         @FormParam("data") String data,
+                         @FormParam("condition") String condition,
+                         @FormParam("sns_topic") String snsTopic) {
         /*
-        * Steps:
-        * 1. create SnsBean
-        * 2. create SNSAction in AWS
-        * 3. create rule in AWS
-        * 4. create RuleBean
-        * 5. add rule to DB
-        * 6. link rule and SNS in DB
-        * */
+         * Steps:
+         * 1. create SnsBean
+         * 2. create SNSAction in AWS
+         * 3. create rule in AWS
+         * 4. create RuleBean
+         * 5. add rule to DB
+         * 6. link rule and SNS in DB
+         * */
 
 //        String ruleCondition = " WHERE ";
 //
@@ -103,25 +104,29 @@ public class SnsRuleResource extends BaseResource {
 //        AwsIotHelper.getIotClient().createTopicRule(topicRuleRequest);
 
         // create rule in AWS
-        RuleHelper.getInstance().createTopicRule(ruleBean, "sns", snsBean);
+        try {
+            RuleHelper.getInstance().createTopicRule(ruleBean, "sns", snsBean);
 
-        // add rule to DB
-        RuleDAO.getInstance().add(ruleBean);
+            // add rule to DB
+            RuleDAO.getInstance().add(ruleBean);
 
-        // link rule and SNS in DB
-        snsBean.setParentRule(ruleBean);
-        SnsDAO.getInstance().add(snsBean);
+            // link rule and SNS in DB
+            snsBean.setParentRule(ruleBean);
+            SnsDAO.getInstance().add(snsBean);
 
-        // Get updated ruleBean
-        ruleBean = RuleDAO.getInstance().get(ruleBean.getId());
+            // Get updated ruleBean
+            ruleBean = RuleDAO.getInstance().get(ruleBean.getId());
+        } catch (Exception e) {
+            return "{\"success\": false}";
+        }
         return gson.toJson(ruleBean);
     }
 
     @GET
+    @Session
     @Path("/get/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Session()
     @Secure(roles = {RoleEnum.ALL})
+    @Produces(MediaType.APPLICATION_JSON)
     public String get(@PathParam("id") Integer ruleId) {
         RuleBean ruleBean = RuleDAO.getInstance().get(ruleId);
         return gson.toJson(ruleBean);
@@ -149,35 +154,31 @@ public class SnsRuleResource extends BaseResource {
         ruleBean.setData(data);
         ruleBean.setCondition(condition);
 //        ruleBean.setType("sns");
-        ruleBean.setParentThing(ThingDAO.getInstance().get(parentThingId));
+//        ruleBean.setParentThing(ThingDAO.getInstance().get(parentThingId));
 
-        RuleHelper.getInstance().replaceTopicRule(ruleBean,"sns",ruleBean.getSnsAction());
+        RuleHelper.getInstance().replaceTopicRule(ruleBean, "sns", ruleBean.getSnsAction());
         return gson.toJson(ruleBean);
     }
 
     /*TODO: Delete SNS topics when there is no rule in AWS pointing to it*/
-    @GET
+    @DELETE
     @Path("/delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Session()
     @Secure(roles = {RoleEnum.ALL})
     public String delete(@PathParam("id") Integer ruleId) {
         /*
-        * Steps:
-        * 1. Get ruleBean
-        * 2. delete rule in AWS
-        * 3. delete rule in DB which should also delete entries from SNS and SNSSubscriptions
-        * */
+         * Steps:
+         * 1. Get ruleBean
+         * 2. delete rule in AWS
+         * 3. delete rule in DB which should also delete entries from SNS and SNSSubscriptions
+         * */
 
         // get ruleBean
         RuleBean ruleBean = RuleDAO.getInstance().get(ruleId);
 
         // delete rule in AWS
-        DeleteTopicRuleRequest deleteTopicRuleRequest = new DeleteTopicRuleRequest();
-        deleteTopicRuleRequest.withRuleName(ruleBean.getName());
-
-        DeleteTopicRuleResult deleteTopicRuleResult =
-                AwsIotHelper.getIotClient().deleteTopicRule(deleteTopicRuleRequest);
+        DeleteTopicRuleResult deleteTopicRuleResult = RuleHelper.getInstance().deleteRule(ruleBean);
 
         // delete rule bean which should also delete entries from SNS and SNSSubscriptions
         RuleDAO.getInstance().delete(ruleId);
@@ -185,12 +186,13 @@ public class SnsRuleResource extends BaseResource {
     }
 
     @POST
+    @Session
     @Path("/delete/")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    @Session
     @Secure(roles = {RoleEnum.ALL})
-    public String deleteByName(@FormParam("name") String ruleName) {
+    public String deleteByName(@NotNull @FormParam("name") String ruleName,
+                               @NotNull @FormParam("parentThing") Integer Id) {
         /*
          * Steps:
          * 1. Get ruleBean

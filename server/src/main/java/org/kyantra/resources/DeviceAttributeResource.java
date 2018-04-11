@@ -113,6 +113,6 @@ public class DeviceAttributeResource extends BaseResource {
             }catch (Throwable t) {t.printStackTrace();} //later change to something
         }
 
-        return "";
+        return "{\"success\": true}";
     }
 }
