@@ -32,10 +32,12 @@ public class RightsBean {
     @JoinColumn(name = "unit_id")
     @Expose
     UnitBean unit;
+
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     @Expose
     UserBean user;
+
     @Enumerated(EnumType.STRING)
     @Expose
     RoleEnum role;

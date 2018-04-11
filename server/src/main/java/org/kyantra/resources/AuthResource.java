@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.kyantra.beans.CredentialBean;
 import org.kyantra.beans.SessionBean;
 import org.kyantra.beans.UserBean;
+import org.kyantra.dao.SessionDAO;
 import org.kyantra.dao.UserDAO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +38,7 @@ public class AuthResource extends BaseResource {
                                @Context ContainerRequest containerRequest){
 
         try {
+
             CredentialBean credentialBean = new CredentialBean();
             credentialBean.setEmail(email);
             credentialBean.setPassword(password);
@@ -54,14 +56,13 @@ public class AuthResource extends BaseResource {
 
                     sessionBean.setUser(userBean);
                     sessionBean.setToken(UUID.randomUUID().toString());
-                    Session session = getSession();
-                    session.save(sessionBean);
-                    session.close();
-
-                    return gson.toJson(sessionBean);
+                    SessionBean resultBean = SessionDAO.getInstance().add(sessionBean);
+                    return gson.toJson(resultBean);
                 }
+
             }
-        }catch (Throwable t){
+
+        } catch (Throwable t) {
             t.printStackTrace();
         }
 

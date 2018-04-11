@@ -112,33 +112,60 @@ public class DeviceResource extends BaseResource {
     @Session
     @Produces(MediaType.TEXT_PLAIN)
     public String generate(@PathParam("id")Integer thingId){
+//        ThingBean thing = ThingDAO.getInstance().get(thingId);
+//        Set<DeviceBean> devices = thing.getDevices();
+//
+//        ShadowBean shadowBean = new ShadowBean();
+//        shadowBean.setThingBean(thing);
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("clientId:");
+//        sb.append("thing"+ thing.getId());
+//        sb.append("\n");
+//        sb.append("Subscribe to Delta Topic : "+shadowBean.getDeltaTopic());
+//        sb.append("\n");
+//        sb.append("Publish to reporting Topic : "+shadowBean.getUpdateTopic());
+//        sb.append("\n");
+//
+//        for(DeviceBean deviceBean:devices){
+//            List<DeviceAttributeBean> atts = deviceBean.getDeviceAttributes();
+//            sb.append("For Device "+deviceBean.getName());
+//            sb.append("\n");
+//            sb.append("Use the following property names");
+//            sb.append("\n\n");
+//
+//            for(DeviceAttributeBean att:atts){
+//                sb.append("device"+deviceBean.getId()+"."+att.getId()+"\t"+att.getType()+" //"+deviceBean.getName()+" "+att.getName());
+//                sb.append("\n");
+//            }
+//        }
+//
+//        return sb.toString();
         ThingBean thing = ThingDAO.getInstance().get(thingId);
         Set<DeviceBean> devices = thing.getDevices();
 
         ShadowBean shadowBean = new ShadowBean();
         shadowBean.setThingBean(thing);
         StringBuilder sb = new StringBuilder();
-        sb.append("clientId:");
+        sb.append("ThingID:");
         sb.append("thing"+ thing.getId());
         sb.append("\n");
         sb.append("Subscribe to Delta Topic : "+shadowBean.getDeltaTopic());
         sb.append("\n");
         sb.append("Publish to reporting Topic : "+shadowBean.getUpdateTopic());
         sb.append("\n");
-
+        sb.append("{\n"+
+                "   \"state\": {\n"+
+                "       \"reported\": {\n");
         for(DeviceBean deviceBean:devices){
             List<DeviceAttributeBean> atts = deviceBean.getDeviceAttributes();
-            sb.append("For Device "+deviceBean.getName());
-            sb.append("\n");
-            sb.append("Use the following property names");
-            sb.append("\n\n");
 
             for(DeviceAttributeBean att:atts){
-                sb.append("device"+deviceBean.getId()+"."+att.getId()+"\t"+att.getType()+" //"+deviceBean.getName()+" "+att.getName());
-                sb.append("\n");
+                sb.append("         "+"\"device"+deviceBean.getId()+"."+att.getId()+"\": <"+att.getType()+"-"+att.getName()+">,\n");
             }
         }
-
+        sb.append("     }\n");
+        sb.append(" }\n");
+        sb.append("}");
         return sb.toString();
     }
 }

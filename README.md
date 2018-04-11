@@ -18,10 +18,17 @@ Team
 Setup
 ======
 
-1. Install mysql locally and set username password to root/root 
+1. Install Java JDK 8, MySQL and Gradle locally and set MySQL username and password to root/root
 2. Create db named "iot"
-3. In the table configset add three keys and their respective values
+3. Clone this github repository
+4. Inside the repository, type "gradle server:fatJar". This generates a .jar inside "./server/build/libs/" file which will create the server on your machine when executed
+5. Run the server with command "sudo java -jar ./server/build/libs/&lt;name-of-jar-file&gt;" 
+6. In your browser, visit the url "127.0.0.1:8002/install". This will add required tables, and seed data to your iot database 
+7. Visit url "127.0.0.1:8002/login" and login with "admin@e-yantra.org" and "1234567" as password
+8. In the table configset in the database, add five keys and their respective values
     - awsKey
     - awsSecret 
     - endpoint (iot endpoint unique to your AWS account)    
-4. Change the CERT_ROOT under StringConstants class to point to the directory where you want to store thing certificates. 
+    - IoTRoleARN (role that grants iot access to dynamoDB and other services, requires additional settings) (optional for dynamoDB storage)
+    - lambdaFunctionArn (ARN of the lambda function that manages cron, requires additional settings) (optional for cron service)
+9. Change the CERT_ROOT under StringConstants class to point to the directory where you want to store thing certificates

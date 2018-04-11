@@ -49,20 +49,25 @@ public class SessionFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-
         Method resourceMethod = resourceInfo.getResourceMethod();
 
-
-        if(!isSessionNeeded(resourceMethod)){
+        if(!isSessionNeeded(resourceMethod)) {
             return;
         }
-
-
-
 
             String authorizationCookie = requestContext.getCookies().getOrDefault("authorization", new Cookie("authorization", "")).getValue();
             if (!authorizationCookie.isEmpty()) {
                 UserBean userBean = UserDAO.getInstance().getByToken(authorizationCookie);
+
+                // If user provides a wrong auth token redirect him to login
+                if (userBean == null) {
+                    try {
+                        throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization", "")).build());
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
                 requestContext.setSecurityContext(new SecurityContext() {
 
@@ -86,15 +91,9 @@ public class SessionFilter implements ContainerRequestFilter {
                         return "cookie";
                     }
                 });
-                if (userBean == null) {
-                    try {
-                        throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization", "")).build());
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
 
+
+            } else {
 
                 try {
                     throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization", "")).build());

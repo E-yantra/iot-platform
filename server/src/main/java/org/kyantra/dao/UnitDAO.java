@@ -52,7 +52,9 @@ public class UnitDAO extends BaseDAO{
     //returns child unit
     public UnitBean add(UnitBean currentUnit){
         Session session = getService().getSessionFactory().openSession();
+        session.beginTransaction();
         session.save(currentUnit);
+        session.getTransaction().commit();
         session.close();
         return currentUnit;
     }
@@ -106,7 +108,7 @@ public class UnitDAO extends BaseDAO{
         session.close();
     }
 
-    public Set<UnitBean> getAllparents(UnitBean unitBean){
+    public Set<UnitBean> getAllParents(UnitBean unitBean){
         Set<UnitBean> unitBeans = new HashSet<>();
         unitBeans.add(unitBean);
         while(unitBean.getParent()!=null){

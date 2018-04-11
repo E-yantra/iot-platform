@@ -2,16 +2,10 @@ package org.kyantra.beans;
 
 
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -20,7 +14,7 @@ public class ThingBean {
 
     @Id
     @Expose
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
     @Column(name = "name")
@@ -37,16 +31,27 @@ public class ThingBean {
     @Column(name = "certificate_dir")
     String certificateDir;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "parentThing")
     @Expose
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentThing", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
     private Set<DeviceBean> devices;
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "parentThing")
-    private Set<CronBean> crons;
-    @OneToOne(fetch = FetchType.EAGER)
+
     @Expose
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentThing")
+    private Set<CronBean> crons;
+
+    @Expose
+    @ManyToOne(fetch = FetchType.EAGER)
     private UnitBean parentUnit;
 
+    // required by storage rule
+    @Expose
+    public Boolean storageEnabled;
 
+    @Expose
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentThing", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private Set<RuleBean> rules;
 
     public Set<CronBean> getCrons() {
         return crons;
@@ -70,6 +75,14 @@ public class ThingBean {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Set<RuleBean> getRules() {
+        return rules;
+    }
+
+    public void setRules(Set<RuleBean> rules) {
+        this.rules = rules;
     }
 
     public String getName() {
@@ -104,12 +117,43 @@ public class ThingBean {
         this.parentUnit = parentUnit;
     }
 
+    // required by storage rule
+    public Boolean getStorageEnabled() {
+        return storageEnabled;
+    }
+
+    public void setStorageEnabled(Boolean enable) {
+        this.storageEnabled = enable;
+    }
+
     public void setCertificateDir(String directory) {
         this.certificateDir = directory;
     }
 
     public String getCertificateDir() {
         return certificateDir;
+    }
+
+    public DeviceBean addDevice(DeviceBean deviceBean) {
+        this.devices.add(deviceBean);
+        deviceBean.setParentThing(this);
+        return deviceBean;
+    }
+
+    public void removeDevice(DeviceBean deviceBean) {
+        this.devices.remove(deviceBean);
+        deviceBean.setParentThing(null);
+    }
+
+    public RuleBean addRule(RuleBean ruleBean) {
+        this.rules.add(ruleBean);
+        ruleBean.setParentThing(this);
+        return ruleBean;
+    }
+
+    public void removeRule(RuleBean ruleBean) {
+        this.rules.remove(ruleBean);
+        ruleBean.setParentThing(null);
     }
 
 }

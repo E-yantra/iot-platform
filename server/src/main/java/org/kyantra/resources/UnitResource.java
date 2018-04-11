@@ -153,7 +153,7 @@ public class UnitResource extends BaseResource {
         Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUser(userBean);
         Set<UnitBean> allBeans = new HashSet<>();
         rights.forEach(r->{
-            allBeans.addAll(UnitDAO.getInstance().getAllparents(r.getUnit()));
+            allBeans.addAll(UnitDAO.getInstance().getAllParents(r.getUnit()));
         });
         return gson.toJson(rights.stream().filter(r->allBeans.contains(r.getUnit())).collect(Collectors.toSet()));
     }

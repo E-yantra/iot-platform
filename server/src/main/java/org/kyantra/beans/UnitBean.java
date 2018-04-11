@@ -1,17 +1,12 @@
 package org.kyantra.beans;
 
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.kyantra.dao.UnitDAO;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -20,6 +15,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "units")
+@Transactional
 public class UnitBean {
 
     @Id
@@ -30,9 +26,11 @@ public class UnitBean {
     @Column(name = "unit_name")
     @Expose
     String unitName;
+
     @Column(name = "description")
     @Expose
     String description;
+
     @Column(name = "photo")
     @Expose
     String photo;
@@ -40,10 +38,13 @@ public class UnitBean {
     @ManyToOne
     private UnitBean parent;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parent")
+    // Remove the entire subtree
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parent", cascade = CascadeType.REMOVE)
     private List<UnitBean> subunits;
 
-    @OneToMany
+    // Remove also the things while removing the sub-tree
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentUnit", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<ThingBean> things;
 
     public List<UnitBean> getSubunits() {
@@ -104,5 +105,17 @@ public class UnitBean {
 
     public static UnitBean valueOf(String value){
         return UnitDAO.getInstance().get(Integer.parseInt(value));
+    }
+
+    /* Utilities for deleting and persisting child Thing */
+    public ThingBean addThing(ThingBean thingBean) {
+        this.things.add(thingBean);
+        thingBean.setParentUnit(this);
+        return thingBean;
+    }
+
+    public void removeThing(ThingBean thingBean) {
+        this.things.remove(thingBean);
+        thingBean.setParentUnit(null);
     }
 }

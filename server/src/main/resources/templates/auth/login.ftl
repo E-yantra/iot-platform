@@ -15,13 +15,11 @@
                     <div style="text-align: left" class="checkbox">
                             <input type="checkbox" value="remember-me"> Remember me
                     </div>
-                    <button v-on:click="login" id="submit" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
+                    <button v-on:click.prevent="login" id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
                     <div>
                         <p>Don't have userid?&nbsp;<a href="signup">Signup</a></p>
-
                     </div>
                 </form>
-
             </section>
         </section>
 
@@ -30,8 +28,6 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script>
-
-
         var example1 = new Vue({
             el: '#container-main',
             data: {
@@ -39,7 +35,7 @@
                 message: ""
             },
             methods: {
-                login:function(){
+                login:function() {
                     var that = this;
                     $.ajax({
                         type: 'POST',

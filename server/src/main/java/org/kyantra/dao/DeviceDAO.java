@@ -20,10 +20,15 @@ public class DeviceDAO extends BaseDAO {
     public DeviceBean add(DeviceBean bean){
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
-        session.save(bean);
+
+        // required by bidirectional one to many
+        ThingBean thingBean = ThingDAO.getInstance().get(bean.getParentThing().getId());
+        DeviceBean deviceBean = thingBean.addDevice(bean);
+        session.saveOrUpdate(thingBean);
+
         session.getTransaction().commit();
         session.close();
-        return bean;
+        return deviceBean;
     }
 
     /**
@@ -56,7 +61,9 @@ public class DeviceDAO extends BaseDAO {
         Session session = getService().getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         DeviceBean device = session.get(DeviceBean.class, id);
-        session.delete(device);
+        // required by bidirectional one to many
+        device.getParentThing().removeDevice(device);
+//        session.delete(device);
         tx.commit();
         session.close();
     }

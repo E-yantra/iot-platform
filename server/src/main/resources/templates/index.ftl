@@ -5,7 +5,7 @@
 <#if user??>
     <#include "./common/sidenavbar.ftl"/>
 </#if>
-    <main role="main" class="main col-sm-9 ml-sm-auto col-md-10 pt-3">
+    <main role="main" class="main col-sm-9 ml-sm-auto col-md-10 pt-3 pb-5">
     <#if user??>
         <div class="row">
             <#if !units?has_content>
@@ -18,7 +18,8 @@
                     <div class="card">
                         <div class="card-header">${unit.unitName}</div>
                         <div class="card-body">
-                            <img height=150 src="${unit.photo}" class="float-left p-1"> <p>${unit.description}</p>
+                            <img height=150 src="<#if (unit.photo)??>${unit.photo}<#else>http://via.placeholder.com/300</#if>" class="float-left p-1">
+                            <#if (unit.description)??><p>${unit.description}</p></#if>
                             <div class="clear"></div>
                         </div>
                         <div class="card-footer">
@@ -35,6 +36,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-<script src="/static/js/app.js">`</script>
+<script src="/static/js/app.js"></script>
 </body>
 </html>

@@ -4,7 +4,8 @@
     <title>IoT Platform</title>
     <meta charset="utf-8">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="https://unpkg.com/vue"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.0.1/vue-router.js"></script>
     <script
             src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -116,6 +117,9 @@
             color: #fff;
         }
 
+        .footer {
+
+        }
     </style>
 
 </head>

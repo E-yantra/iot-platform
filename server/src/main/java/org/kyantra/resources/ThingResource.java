@@ -17,6 +17,7 @@ import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 import org.kyantra.utils.AwsIotHelper;
 import org.kyantra.utils.StringConstants;
+import org.kyantra.utils.ThingHelper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -113,6 +114,7 @@ public class ThingResource extends BaseResource {
                 thing.setDescription(description);
                 thing.setIp(ip);
                 thing.setParentUnit(UnitDAO.getInstance().get(parentUnitId));
+                thing.setStorageEnabled(false);
 
                 //Generate certificates as strings
                 CreateKeysAndCertificateRequest certificateRequest = new CreateKeysAndCertificateRequest();
@@ -174,13 +176,17 @@ public class ThingResource extends BaseResource {
                         .withThingName(thingResult.getThingName());
                 AwsIotHelper.getIotClient().attachThingPrincipal(thingPrincipalRequest);
 
+                // call createStorageRule to create a rule by default
+                ThingHelper.getThingHelper().createStorageRule(thingBean.getId());
                 return gson.toJson(thingBean);
 
             } catch (Throwable t) {
                 t.printStackTrace();
             }
+
             return "{\"success\":false}";
-        }else{
+
+        } else {
             throw new AccessDeniedException();
         }
     }
@@ -188,7 +194,7 @@ public class ThingResource extends BaseResource {
     @GET
     @Path("unit/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByUnit(@PathParam("id") Integer id){
+    public String getByUnit(@PathParam("id") Integer id) {
         Set<ThingBean> things = ThingDAO.getInstance().getByUnitId(id);
         return gson.toJson(things);
     }
@@ -216,4 +222,5 @@ public class ThingResource extends BaseResource {
     public CertificateResource getCertificateResource() {
         return new CertificateResource();
     }
+
 }
