@@ -7,6 +7,7 @@ import com.amazonaws.services.sns.model.CreateTopicResult;
 import org.kyantra.beans.RuleBean;
 import org.kyantra.beans.SnsBean;
 import org.kyantra.dao.ConfigDAO;
+import org.kyantra.dao.RuleDAO;
 import org.kyantra.utils.AwsIotHelper;
 
 import java.util.ArrayList;
@@ -50,8 +51,7 @@ public class RuleHelper {
 
             TopicRulePayload rulePayload = new TopicRulePayload();
             rulePayload.withDescription(ruleBean.getDescription())
-                    .withSql("SELECT " + ruleBean.getData() + " FROM '$aws/things/" +
-                            ruleBean.getParentThing().getName() + "/shadow/update'" + ruleCondition)
+                    .withSql("SELECT " + ruleBean.getData() + " FROM '$aws/things/" + "thing" + ruleBean.getParentThing().getId() + "/shadow/update'" + ruleCondition)
                     .withRuleDisabled(false)
                     .withAwsIotSqlVersion("2016-03-23")
                     .withActions(actionList);
@@ -96,20 +96,23 @@ public class RuleHelper {
 
             rulePayload.withDescription(ruleBean.getDescription())
                     .withSql("SELECT " + ruleBean.getData() + " FROM '$aws/things/" +
-                            ruleBean.getParentThing().getName() + "/shadow/update'" + ruleCondition)
+                            "thing" + ruleBean.getParentThing().getId() + "/shadow/update'" + ruleCondition)
                     .withRuleDisabled(false)
                     .withAwsIotSqlVersion("2016-03-23")
                     .withActions(actionList);
 
             topicRuleRequest.withRuleName(thingName + "_sns_" + ruleName)
                     .withTopicRulePayload(rulePayload);
+
+            // Update the rule in DB
+            RuleDAO.getInstance().update(ruleBean);
         }
         return AwsIotHelper.getIotClient().replaceTopicRule(topicRuleRequest);
     }
 
     public DeleteTopicRuleResult deleteRule(RuleBean ruleBean) {
         DeleteTopicRuleRequest deleteTopicRuleRequest = new DeleteTopicRuleRequest();
-        deleteTopicRuleRequest.withRuleName(ruleBean.getName());
+        deleteTopicRuleRequest.withRuleName("thing" + ruleBean.getParentThing().getId() + "_sns_" + ruleBean.getName());
 
         DeleteTopicRuleResult deleteTopicRuleResult =
                 AwsIotHelper.getIotClient().deleteTopicRule(deleteTopicRuleRequest);
