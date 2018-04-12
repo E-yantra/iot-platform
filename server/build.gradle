@@ -70,8 +70,10 @@ dependencies {
     compile group: 'com.amazonaws', name: 'aws-java-sdk-lambda', version: '1.11.240'
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-sns
     compile group: 'com.amazonaws', name: 'aws-java-sdk-sns', version: '1.11.292'
-    //hibernate-c3p0 connection pooling
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.11.292'
+    // hibernate-c3p0 connection pooling
     compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '5.2.12.Final'
-    //c3p0
+    // c3p0
     compile group: 'c3p0', name: 'c3p0', version: '0.9.1.2'
 }

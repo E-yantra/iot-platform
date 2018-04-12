@@ -45,7 +45,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         String authorizationHeader =
                 requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-        String authorizationCookie = requestContext.getCookies().getOrDefault("authorization",new Cookie("token","")).getValue().toString();
+        String authorizationCookie = requestContext.getCookies().getOrDefault("authorization", new Cookie("token","")).getValue().toString();
 
         // Validate the Authorization header
         if (!isTokenBasedAuthentication(authorizationHeader) && !isTokenBasedAuthentication(authorizationCookie)) {
