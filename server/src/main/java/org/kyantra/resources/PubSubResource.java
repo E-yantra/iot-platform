@@ -51,7 +51,8 @@ public class PubSubResource extends BaseResource {
     @Session
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String publish(@FormParam("topic") String topic, @FormParam("payload") String payload) throws AWSIotException {
+    public String publish(@FormParam("topic") String topic,
+                          @FormParam("payload") String payload) throws AWSIotException {
         client.publish(topic,payload);
         return gson.toJson("{}");
     }
