@@ -12,14 +12,13 @@ public class AuthorizationDAO extends BaseDAO{
 
     public static AuthorizationDAO getInstance(){ return instance; }
 
-    private AuthorizationDAO(){
+    private AuthorizationDAO() {
 
     }
 
     public boolean ownsUnit(UserBean user, UnitBean unit){
 
         try {
-
 
             Session session = getService().getSessionFactory().openSession();
             Query query = session.createQuery("from RightsBean where UserId = :userId and unit_id = :unitId");

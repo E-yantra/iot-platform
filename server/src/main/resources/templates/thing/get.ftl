@@ -323,7 +323,7 @@
                 var that = this;
                 $.ajax({
                     "url": "/rule/" + rule.type + "/delete/" + rule.id,
-                    "method": "GET",
+                    "method": "DELETE",
                     "success": function (data) {
                         if(data.success === true) {
                             alert("Rule deleted!");
@@ -562,6 +562,7 @@
             },
 
             "addAttr": function () {
+                console.log('Inside addAttr');
                 if (this.cttr.name && this.cttr.type) {
                     this.createDevice.deviceAttributes.push(Object.assign({}, this.cttr));
                 }
