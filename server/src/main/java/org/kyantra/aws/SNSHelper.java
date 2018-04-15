@@ -11,7 +11,8 @@ import org.kyantra.utils.AwsIotHelper;
 
 public class SNSHelper {
 
-    public static SNSHelper instance = new SNSHelper();
+    private static SNSHelper instance = new SNSHelper();
+
     public static SNSHelper getInstance() {
         return instance;
     }

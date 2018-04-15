@@ -220,7 +220,7 @@
             },
             createRule: {},
             ruleUpdate: false,
-            ruleActionList: ["sns"],
+            ruleActionList: [],
             createSubscription: {},
             cttr: {},
             generateCode: "",
@@ -303,12 +303,13 @@
                     "action": that.createRule.action
                 };
 
-                if (that.createRule.action == 'sns') {
+                // send extra parameters according to the type of rule
+                if (that.createRule.action == 'SNS') {
                     data.sns_topic = that.createRule.sns_topic;
                 }
 
                 $.ajax({
-                    "url": "/rule/" + this.createRule.action + "/create/" + thingId,
+                    "url": "/rule/" + this.createRule.action.toLowerCase() + "/create/" + thingId,
                     "method": "POST",
                     "data": data,
                     success: function (data) {
@@ -489,6 +490,12 @@
                         that.rules = data;
                     }
                 });
+                $.ajax({
+                    url: "/rule/actions",
+                    success: function(data) {
+                        that.ruleActionList = JSON.parse(data);
+                    }
+                })
                 that.getCrons();
 
             },

@@ -49,8 +49,7 @@
                 </button>
                 <button v-else type="button" class="btn btn-primary save" v-on:click="saveRule"><i class="fa fa-floppy-o" aria-hidden="true"></i>Save
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"
-                                                                                        aria-hidden="true"></i>Close
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i>Close
                 </button>
             </div>
         </div>

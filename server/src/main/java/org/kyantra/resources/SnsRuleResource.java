@@ -50,17 +50,6 @@ public class SnsRuleResource extends BaseResource {
          * 6. link rule and SNS in DB
          * */
 
-//        String ruleCondition = " WHERE ";
-//
-//        //constructed names of entities
-//        String thingName = "thing" + parentThingId;
-//        String ruleName = name;
-//
-//        System.out.println(condition);
-//        if(!condition.equals(""))
-//            ruleCondition = ruleCondition + condition;
-//        else
-//            ruleCondition = condition;
         // create SnsBean
         SnsBean snsBean = new SnsBean();
         snsBean.setTopic(snsTopic);
@@ -79,33 +68,9 @@ public class SnsRuleResource extends BaseResource {
         CreateTopicResult createTopicResult = SNSHelper.getInstance().createTopic(snsBean);
         snsBean.setTopicARN(createTopicResult.getTopicArn());
 
-
-        // create rule in AWS
-//        SnsAction snsAction = new SnsAction();
-//        snsAction.withTargetArn(snsBean.getTopicARN())
-//                .withMessageFormat(MessageFormat.RAW)
-//                .withRoleArn(ConfigDAO.getInstance().get("IoTRoleARN").getValue());
-//
-//        Action action = new Action().withSns(snsAction);
-//        List<Action> actionList = new ArrayList<>();
-//        actionList.add(action);
-//
-//        TopicRulePayload rulePayload = new TopicRulePayload();
-//        rulePayload.withDescription(description)
-//                .withSql("SELECT " + data + " FROM '$aws/things/" + thingName + "/shadow/update'" + ruleCondition)
-//                .withRuleDisabled(false)
-//                .withAwsIotSqlVersion("2016-03-23")
-//                .withActions(actionList);
-//
-//        CreateTopicRuleRequest topicRuleRequest = new CreateTopicRuleRequest();
-//        topicRuleRequest.withRuleName(thingName + "_sns_" + ruleName)
-//                .withTopicRulePayload(rulePayload);
-//
-//        AwsIotHelper.getIotClient().createTopicRule(topicRuleRequest);
-
-        // create rule in AWS
         try {
-            RuleHelper.getInstance().createTopicRule(ruleBean, "sns", snsBean);
+            // create rule in AWS
+            RuleHelper.getInstance().createTopicRule(ruleBean, snsBean);
 
             // add rule to DB
             RuleDAO.getInstance().add(ruleBean);

@@ -1,6 +1,7 @@
 package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
+import org.kyantra.aws.ActionHelper;
 
 import javax.ws.rs.*;
 
@@ -16,5 +17,11 @@ public class RuleResource extends BaseResource {
     @Path("/sns")
     public SnsRuleResource getSNSRule() {
         return new SnsRuleResource();
+    }
+
+    @GET
+    @Path("/actions")
+    public String getActionTypes() {
+        return gson.toJson(ActionHelper.getInstance().getActionTypes());
     }
 }

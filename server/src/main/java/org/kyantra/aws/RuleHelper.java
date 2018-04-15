@@ -20,11 +20,11 @@ public class RuleHelper {
         return instance;
     }
 
-    public CreateTopicRuleResult createTopicRule(RuleBean ruleBean, String actionType, Object actionBean) {
+    public CreateTopicRuleResult createTopicRule(RuleBean ruleBean, Object actionBean) {
 
         CreateTopicRuleRequest topicRuleRequest = new CreateTopicRuleRequest();
 
-        if (actionType.equals("sns")) {
+        if (ruleBean.getType().equals("SNS")) {
             SnsBean snsBean = (SnsBean) actionBean;
 
             String ruleCondition = " WHERE ";
@@ -51,7 +51,7 @@ public class RuleHelper {
 
             TopicRulePayload rulePayload = new TopicRulePayload();
             rulePayload.withDescription(ruleBean.getDescription())
-                    .withSql("SELECT " + ruleBean.getData() + " FROM '$aws/things/" + "thing" + ruleBean.getParentThing().getId() + "/shadow/update'" + ruleCondition)
+                    .withSql("SELECT " + ruleBean.getData() + " FROM '$aws/things/thing" + ruleBean.getParentThing().getId() + "/shadow/update'" + ruleCondition)
                     .withRuleDisabled(false)
                     .withAwsIotSqlVersion("2016-03-23")
                     .withActions(actionList);
