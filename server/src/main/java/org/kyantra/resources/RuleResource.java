@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import org.kyantra.aws.ActionHelper;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
 @Path("/rule")
 @Api(value = "rule")
@@ -21,6 +22,7 @@ public class RuleResource extends BaseResource {
 
     @GET
     @Path("/actions")
+    @Produces(MediaType.APPLICATION_JSON)
     public String getActionTypes() {
         return gson.toJson(ActionHelper.getInstance().getActionTypes());
     }

@@ -29,7 +29,7 @@ public class DDBRuleResource extends BaseResource {
                 .withRangeKeyField("timestamp")
                 .withRangeKeyType("NUMBER")
                 .withRangeKeyValue("${timestamp()}")
-                .withRoleArn(ConfigDAO.getInstance().get("IoTRoleARN").getValue());
+                .withRoleArn(ConfigDAO.getInstance().get("iotRoleArn").getValue());
 
         // add actions as required
         Action action = new Action().withDynamoDB(dynamoDBAction);

@@ -121,7 +121,7 @@ public class SnsRuleResource extends BaseResource {
 //        ruleBean.setType("sns");
 //        ruleBean.setParentThing(ThingDAO.getInstance().get(parentThingId));
 
-        RuleHelper.getInstance().replaceTopicRule(ruleBean, "sns", ruleBean.getSnsAction());
+        RuleHelper.getInstance().replaceTopicRule(ruleBean, ruleBean.getSnsAction());
         return gson.toJson(ruleBean);
     }
 

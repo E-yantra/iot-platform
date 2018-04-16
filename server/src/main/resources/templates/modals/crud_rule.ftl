@@ -37,7 +37,7 @@
                                 <option v-for="action in ruleActionList" v-bind:value="action">{{action}}</option>
                             </select>
                         </div>
-                        <div class="form-group" v-if="createRule.action == 'sns'">
+                        <div class="form-group" v-if="createRule.action == 'SNS'">
                             <label>SNS Topic: </label>
                             <input name="topic" type="text" class="form-control" v-model='createRule.sns_topic' placeholder="my_subscription_topic">
                         </div>
