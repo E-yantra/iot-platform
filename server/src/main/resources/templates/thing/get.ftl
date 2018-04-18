@@ -142,9 +142,7 @@
                                                 v-on:click="editRuleModal(rule, idx)">EDIT</button>
                                     </td>
                                     <td>
-                                        <a v-bind:href="'/rules/' + rule.type + '/' + rule.snsAction.id"
-                                           class="btn btn-success btn-sm" role="button"
-                                           aria-pressed="true">CHANGE</a>
+                                        <a v-bind:href="'/rules/' + rule.type.toLowerCase() + '/' + rule.snsAction.id" class="btn btn-success btn-sm" role="button" aria-pressed="true">CHANGE</a>
                                         <#--<button v-on:click="" class="btn btn-sm btn-success">CHANGE</button>-->
                                     </td>
                                 </tr>
