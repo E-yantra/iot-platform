@@ -61,7 +61,7 @@ public class SnsRuleResource extends BaseResource {
         ruleBean.setTopic(topic);
         ruleBean.setData(data);
         ruleBean.setCondition(condition);
-        ruleBean.setType("sns");
+        ruleBean.setType("SNS");
         ruleBean.setParentThing(ThingDAO.getInstance().get(parentThingId));
 
         // create SNSAction in AWS
@@ -82,6 +82,7 @@ public class SnsRuleResource extends BaseResource {
             // Get updated ruleBean
             ruleBean = RuleDAO.getInstance().get(ruleBean.getId());
         } catch (Exception e) {
+            e.printStackTrace();
             return "{\"success\": false}";
         }
         return gson.toJson(ruleBean);

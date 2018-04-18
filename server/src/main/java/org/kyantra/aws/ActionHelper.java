@@ -6,7 +6,6 @@ import com.amazonaws.services.iot.model.MessageFormat;
 import com.amazonaws.services.iot.model.SnsAction;
 import org.kyantra.beans.SnsBean;
 import org.kyantra.dao.ConfigDAO;
-import sun.security.krb5.Config;
 
 // singleton
 public class ActionHelper {

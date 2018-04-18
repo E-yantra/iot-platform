@@ -74,7 +74,6 @@ public class PubSubResource extends BaseResource {
         client1.shutdown();
 
         return resultString;
-
     }
 
 

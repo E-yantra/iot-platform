@@ -39,7 +39,6 @@ public class RuleHelper {
             // create rule at AWS
             topicRuleRequest.withRuleName(thingName + "_sns_" + ruleName)
                     .withTopicRulePayload(rulePayload);
-
         }
 
         return AwsIotHelper.getIotClient().createTopicRule(topicRuleRequest);

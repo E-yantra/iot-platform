@@ -294,7 +294,7 @@
                 var that = this;
                 that.saveLoader = true;
 
-                var data = {
+                var formData = {
                     "name": that.createRule.name,
                     "description": that.createRule.description,
                     "data": that.createRule.data,
@@ -305,13 +305,14 @@
 
                 // send extra parameters according to the type of rule
                 if (that.createRule.action == 'SNS') {
-                    data.sns_topic = that.createRule.sns_topic;
+                    formData.sns_topic = that.createRule.sns_topic;
                 }
 
+                console.log(that.createRule.action);
                 $.ajax({
-                    "url": "/rule/" + this.createRule.action.toLowerCase() + "/create/" + thingId,
+                    "url": "/rule/" + that.createRule.action.toLowerCase() + "/create/" + thingId,
                     "method": "POST",
-                    "data": data,
+                    "data": formData,
                     success: function (data) {
                         that.saveLoader = false;
                         that.rules.push(data);
@@ -322,6 +323,7 @@
 
             "deleteRule": function (rule, idx) {
                 var that = this;
+
                 $.ajax({
                     "url": "/rule/" + rule.type + "/delete/" + rule.id,
                     "method": "DELETE",
@@ -332,7 +334,7 @@
                         }
                     }
 
-                })
+                });
             },
 
             "editRuleModal": function (rule, idx) {
@@ -478,6 +480,7 @@
                         });
                     }
                 });
+
                 $.ajax({
                     url: "/device/thing/" + thingId,
                     success: function (data) {
@@ -493,7 +496,8 @@
                 $.ajax({
                     url: "/rule/actions",
                     success: function(data) {
-                        that.ruleActionList = JSON.parse(data);
+                        console.log(data);
+                        that.ruleActionList = data;
                     }
                 })
                 that.getCrons();
