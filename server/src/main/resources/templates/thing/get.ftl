@@ -323,7 +323,7 @@
                 var that = this;
 
                 $.ajax({
-                    "url": "/rule/" + rule.type + "/delete/" + rule.id,
+                    "url": "/rule/" + rule.type.toLowerCase() + "/delete/" + rule.id,
                     "method": "DELETE",
                     "success": function (data) {
                         if(data.success === true) {
@@ -361,7 +361,7 @@
                 };
 
                 $.ajax({
-                    "url": "/rule/" + that.createRule.type + "/update/" + that.createRule.id,
+                    "url": "/rule/" + that.createRule.type.toLowerCase() + "/update/" + that.createRule.id,
                     "method": "POST",
                     "data": data,
                     success: function (data) {
