@@ -1,5 +1,10 @@
 package org.kyantra.aws;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
+import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.iot.AWSIot;
 import com.amazonaws.services.iot.model.*;
 import com.amazonaws.services.sns.AmazonSNS;
@@ -32,12 +37,31 @@ public class RuleHelper {
             // constructed names of entities
             String thingName = "thing" + ruleBean.getParentThing().getId();
             String ruleName = ruleBean.getName();
+            String ruleNameAws = thingName + "_sns_" + ruleName;
+
+            // add ruleName in rule query
+            String data = ruleBean.getData();
+            if(!data.equals("")) {
+                ruleBean.setData(data + ", '" + thingName + "_sns_" + ruleName + "' as ruleName");
+            }
+
+            // put details about the item in DynamoDB NotificationDetail table
+            AmazonDynamoDB amazonDynamoDB = AwsIotHelper.getAmazonDynamoDBClient();
+            DynamoDB dynamoDB = new DynamoDB(amazonDynamoDB);
+            Table table = dynamoDB.getTable("NotificationDetail");
+            Item item = new Item()
+                    .withPrimaryKey("ruleName", ruleNameAws)
+                    .withString("topic", snsBean.getTopic())
+                    .withString("topicArn", snsBean.getTopicARN())
+                    .withLong("timestamp", System.currentTimeMillis())
+                    .withString("message", snsBean.getMessage());
+            PutItemOutcome outcome = table.putItem(item);
 
             // create rule payload: {using data provided in ruleBean and snsBean}
             TopicRulePayload rulePayload = this.createSnsRulePayload(ruleBean, snsBean);
 
             // create rule at AWS
-            topicRuleRequest.withRuleName(thingName + "_sns_" + ruleName)
+            topicRuleRequest.withRuleName(ruleNameAws)
                     .withTopicRulePayload(rulePayload);
         }
 
