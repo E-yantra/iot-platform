@@ -24,6 +24,16 @@ public class SnsBean {
     @Column(name = "topicARN")
     String topicARN;
 
+    // message to send along with data to sns subscribers
+    @Expose
+    @Column(name = "message")
+    String message = "This is an ALERT. One of your set thresholds have crossed the limits.\nLogin to IoT Platform for more details.";
+
+    // interval in minutes which will be checked to re-report with the message
+    @Expose
+    @Column(name = "`interval`")
+    Integer interval = 15;
+
     @Expose
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentSNSBean", orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
@@ -63,6 +73,22 @@ public class SnsBean {
 
     public void setTopicARN(String topicARN) {
         this.topicARN = topicARN;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Integer getInterval() {
+        return interval;
+    }
+
+    public void setInterval(Integer interval) {
+        this.interval = interval;
     }
 
     public Set<SnsSubscriptionBean> getSubscriptions() {

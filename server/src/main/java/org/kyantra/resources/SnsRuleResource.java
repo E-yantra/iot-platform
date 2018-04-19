@@ -1,10 +1,9 @@
 package org.kyantra.resources;
 
-import com.amazonaws.services.iot.AWSIot;
 import com.amazonaws.services.iot.model.*;
 import com.amazonaws.services.sns.model.CreateTopicResult;
 import org.kyantra.aws.RuleHelper;
-import org.kyantra.aws.SNSHelper;
+import org.kyantra.aws.SnsHelper;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.RuleBean;
 import org.kyantra.beans.SnsBean;
@@ -12,14 +11,10 @@ import org.kyantra.beans.SnsSubscriptionBean;
 import org.kyantra.dao.*;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
-import org.kyantra.utils.AwsIotHelper;
-import org.springframework.context.annotation.Role;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public class SnsRuleResource extends BaseResource {
@@ -39,11 +34,13 @@ public class SnsRuleResource extends BaseResource {
                          @FormParam("topic") String topic,
                          @FormParam("data") String data,
                          @FormParam("condition") String condition,
+                         @FormParam("message") String message,
+                         @FormParam("interval") Integer interval,
                          @FormParam("sns_topic") String snsTopic) {
         /*
          * Steps:
          * 1. create SnsBean
-         * 2. create SNSAction in AWS
+         * 2. create SNSAction in AWS (but actually lambda)
          * 3. create rule in AWS
          * 4. create RuleBean
          * 5. add rule to DB
@@ -64,8 +61,9 @@ public class SnsRuleResource extends BaseResource {
         ruleBean.setType("SNS");
         ruleBean.setParentThing(ThingDAO.getInstance().get(parentThingId));
 
+
         // create SNSAction in AWS
-        CreateTopicResult createTopicResult = SNSHelper.getInstance().createTopic(snsBean);
+        CreateTopicResult createTopicResult = SnsHelper.getInstance().createTopic(snsBean);
         snsBean.setTopicARN(createTopicResult.getTopicArn());
 
         try {
@@ -81,6 +79,7 @@ public class SnsRuleResource extends BaseResource {
 
             // Get updated ruleBean
             ruleBean = RuleDAO.getInstance().get(ruleBean.getId());
+
         } catch (Exception e) {
             e.printStackTrace();
             return "{\"success\": false}";
@@ -192,7 +191,7 @@ public class SnsRuleResource extends BaseResource {
         snsSubscriptionBean.setValue(value);
         snsSubscriptionBean.setParentSNSBean(SnsDAO.getInstance().get(snsId));
 
-        SNSHelper.getInstance().subscibeTopic(snsSubscriptionBean);
+        SnsHelper.getInstance().subscibeTopic(snsSubscriptionBean);
 
         SnsSubscriptionDAO.getInstance().add(snsSubscriptionBean);
 

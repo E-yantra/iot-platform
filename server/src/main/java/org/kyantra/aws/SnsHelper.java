@@ -9,11 +9,11 @@ import org.kyantra.beans.SnsBean;
 import org.kyantra.beans.SnsSubscriptionBean;
 import org.kyantra.utils.AwsIotHelper;
 
-public class SNSHelper {
+public class SnsHelper {
 
-    private static SNSHelper instance = new SNSHelper();
+    private static SnsHelper instance = new SnsHelper();
 
-    public static SNSHelper getInstance() {
+    public static SnsHelper getInstance() {
         return instance;
     }
 
