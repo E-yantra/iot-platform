@@ -5,10 +5,9 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
-import com.amazonaws.services.iot.AWSIot;
 import com.amazonaws.services.iot.model.*;
-import com.amazonaws.services.sns.AmazonSNS;
-import com.amazonaws.services.sns.model.CreateTopicResult;
+import com.amazonaws.services.lambda.AWSLambda;
+import com.amazonaws.services.lambda.model.AddPermissionRequest;
 import org.kyantra.beans.RuleBean;
 import org.kyantra.beans.SnsBean;
 import org.kyantra.dao.ConfigDAO;
@@ -17,6 +16,7 @@ import org.kyantra.utils.AwsIotHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class RuleHelper {
 
@@ -42,7 +42,7 @@ public class RuleHelper {
             // add ruleName in rule query
             String data = ruleBean.getData();
             if(!data.equals("")) {
-                ruleBean.setData(data + ", '" + thingName + "_sns_" + ruleName + "' as ruleName");
+                ruleBean.setData(data + ", \"" + thingName + "_sns_" + ruleName + "\" as ruleName");
             }
 
             // put details about the item in DynamoDB NotificationDetail table
@@ -104,11 +104,13 @@ public class RuleHelper {
         else
             ruleCondition = ruleBean.getCondition();
 
+
         // create rule payload: {lambda function that uses SNS}
         Action action = ActionHelper.getInstance()
                 .createLambdaAction(ConfigDAO.getInstance().get("lambdaNotificationArn").getValue());
         List<Action> actionList = new ArrayList<>();
         actionList.add(action);
+
 
         // 3. create rulePayload
         TopicRulePayload rulePayload = new TopicRulePayload();
@@ -122,6 +124,12 @@ public class RuleHelper {
                 .withActions(actionList);
 
         return rulePayload;
+    }
+
+
+    public GetTopicRuleResult getTopicRule(String ruleName) {
+        return AwsIotHelper.getIotClient().getTopicRule(new GetTopicRuleRequest()
+                    .withRuleName(ruleName));
     }
 
 
