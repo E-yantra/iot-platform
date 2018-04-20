@@ -24,6 +24,11 @@ public class SnsBean {
     @Column(name = "topicARN")
     String topicARN;
 
+    // subject of the notification
+    @Expose
+    @Column(name = "subject")
+    String subject = "ALERT";
+
     // message to send along with data to sns subscribers
     @Expose
     @Column(name = "message")
@@ -73,6 +78,14 @@ public class SnsBean {
 
     public void setTopicARN(String topicARN) {
         this.topicARN = topicARN;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public String getMessage() {
