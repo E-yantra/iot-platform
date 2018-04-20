@@ -20,8 +20,7 @@ import org.kyantra.dao.ConfigDAO;
 
 public class AwsIotHelper {
 
-    public static AWSIot getIotClient(){
-
+    public static AWSIot getIotClient() {
         String awsKey = ConfigDAO.getInstance().get("awsKey").getValue();
         String awsSecret = ConfigDAO.getInstance().get("awsSecret").getValue();
 
@@ -32,7 +31,7 @@ public class AwsIotHelper {
         return client;
     }
 
-    public static AmazonCloudWatchEvents getAmazonCloudWatchEvents(){
+    public static AmazonCloudWatchEvents getAmazonCloudWatchEvents() {
         String awsKey = ConfigDAO.getInstance().get("awsKey").getValue();
         String awsSecret = ConfigDAO.getInstance().get("awsSecret").getValue();
         AmazonCloudWatchEventsClientBuilder clientBuilder = AmazonCloudWatchEventsClientBuilder.standard();
@@ -41,7 +40,7 @@ public class AwsIotHelper {
         return clientBuilder.build();
     }
 
-    public static AWSLambda getAWSLambdaClient(){
+    public static AWSLambda getAWSLambdaClient() {
         String awsKey = ConfigDAO.getInstance().get("awsKey").getValue();
         String awsSecret = ConfigDAO.getInstance().get("awsSecret").getValue();
         AWSLambdaClientBuilder clientBuilder = AWSLambdaClientBuilder.standard().standard();
@@ -50,7 +49,7 @@ public class AwsIotHelper {
         return clientBuilder.build();
     }
 
-    public static AWSIotData getIotDataClient(){
+    public static AWSIotData getIotDataClient() {
 
         String awsKey = ConfigDAO.getInstance().get("awsKey").getValue();
         String awsSecret = ConfigDAO.getInstance().get("awsSecret").getValue();
@@ -62,7 +61,7 @@ public class AwsIotHelper {
         return client;
     }
 
-    public static AWSIotMqttClient getMQTT(){
+    public static AWSIotMqttClient getMQTT() {
         String awsKey = ConfigDAO.getInstance().get("awsKey").getValue();
         String awsSecret = ConfigDAO.getInstance().get("awsSecret").getValue();
         String endPoint = ConfigDAO.getInstance().get("endpoint").getValue();
@@ -87,4 +86,5 @@ public class AwsIotHelper {
         clientBuilder.setRegion(Regions.AP_SOUTHEAST_1.getName());
         return clientBuilder.build();
     }
+
 }

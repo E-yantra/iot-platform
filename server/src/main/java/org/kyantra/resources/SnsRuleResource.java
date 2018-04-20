@@ -1,6 +1,8 @@
 package org.kyantra.resources;
 
 import com.amazonaws.services.iot.model.*;
+import com.amazonaws.services.lambda.AWSLambda;
+import com.amazonaws.services.lambda.model.AddPermissionRequest;
 import com.amazonaws.services.sns.model.CreateTopicResult;
 import org.kyantra.aws.RuleHelper;
 import org.kyantra.aws.SnsHelper;
@@ -11,11 +13,13 @@ import org.kyantra.beans.SnsSubscriptionBean;
 import org.kyantra.dao.*;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
+import org.kyantra.utils.AwsIotHelper;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Set;
+import java.util.UUID;
 
 public class SnsRuleResource extends BaseResource {
 
@@ -68,7 +72,20 @@ public class SnsRuleResource extends BaseResource {
 
         try {
             // create rule in AWS
-            RuleHelper.getInstance().createTopicRule(ruleBean, snsBean);
+            CreateTopicRuleResult ruleResult = RuleHelper.getInstance().createTopicRule(ruleBean, snsBean);
+
+            // get the rule from AWS with for its ARN
+            String ruleArn = RuleHelper.getInstance().getTopicRule("thing" + parentThingId + "_sns_" + ruleBean.getName()).getRuleArn();
+
+            // add trigger permission in lambda function (notificationService) for this rule
+            AWSLambda lambda = AwsIotHelper.getAWSLambdaClient();
+            String functionArn = ConfigDAO.getInstance().get("lambdaNotificationArn").getValue();
+            lambda.addPermission(new AddPermissionRequest()
+                    .withFunctionName(functionArn)
+                    .withStatementId(UUID.randomUUID().toString())
+                    .withPrincipal("iot.amazonaws.com")
+                    .withSourceArn(ruleArn)
+                    .withAction("lambda:InvokeFunction"));
 
             // add rule to DB
             RuleDAO.getInstance().add(ruleBean);
