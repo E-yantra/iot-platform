@@ -312,8 +312,10 @@
                     "method": "POST",
                     "data": formData,
                     success: function (data) {
+                        if(data.success !== false) {
+                            that.rules.push(data);
+                        }
                         that.saveLoader = false;
-                        that.rules.push(data);
                         $('#create_rule').modal('hide');
                     }
                 });
