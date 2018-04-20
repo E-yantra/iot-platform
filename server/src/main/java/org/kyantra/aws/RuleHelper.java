@@ -6,8 +6,6 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.iot.model.*;
-import com.amazonaws.services.lambda.AWSLambda;
-import com.amazonaws.services.lambda.model.AddPermissionRequest;
 import org.kyantra.beans.RuleBean;
 import org.kyantra.beans.SnsBean;
 import org.kyantra.dao.ConfigDAO;
@@ -16,7 +14,6 @@ import org.kyantra.utils.AwsIotHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class RuleHelper {
 

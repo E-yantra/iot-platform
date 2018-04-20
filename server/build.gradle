@@ -76,4 +76,8 @@ dependencies {
     compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '5.2.12.Final'
     // c3p0
     compile group: 'c3p0', name: 'c3p0', version: '0.9.1.2'
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.9.Final'
+    // https://mvnrepository.com/artifact/javax.el/javax.el-api
+    compile group: 'javax.el', name: 'javax.el-api', version: '3.0.0'
 }

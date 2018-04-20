@@ -13,8 +13,11 @@ import org.kyantra.beans.SnsSubscriptionBean;
 import org.kyantra.dao.*;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
+import org.kyantra.services.ValidatorService;
 import org.kyantra.utils.AwsIotHelper;
 
+import javax.validation.Constraint;
+import javax.validation.ConstraintViolation;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -65,6 +68,10 @@ public class SnsRuleResource extends BaseResource {
         ruleBean.setType("SNS");
         ruleBean.setParentThing(ThingDAO.getInstance().get(parentThingId));
 
+
+        Set<ConstraintViolation<RuleBean>> constraintViolations = ValidatorService.getValidator().validate(ruleBean);
+
+        System.out.println(constraintViolations);
 
         // create SNSAction in AWS
         CreateTopicResult createTopicResult = SnsHelper.getInstance().createTopic(snsBean);

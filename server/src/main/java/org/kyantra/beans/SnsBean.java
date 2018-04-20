@@ -5,6 +5,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -17,6 +18,7 @@ public class SnsBean {
     Integer id;
 
     @Expose
+    @NotNull
     @Column(name = "topic")
     String topic;
 
