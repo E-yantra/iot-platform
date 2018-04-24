@@ -1,13 +1,8 @@
 package org.kyantra.resources;
 
-import com.amazonaws.services.iot.model.CreateKeysAndCertificateRequest;
-import com.amazonaws.services.iot.model.CreateKeysAndCertificateResult;
-import io.swagger.annotations.Api;
-import org.glassfish.grizzly.compression.lzma.impl.Base;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.dao.ThingDAO;
-import org.kyantra.utils.AwsIotHelper;
-import org.kyantra.utils.StringConstants;
+import org.kyantra.utils.Constant;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -27,9 +22,9 @@ public class CertificateResource extends BaseResource {
                         @PathParam("name") String name) {
 
         ThingBean bean = ThingDAO.getInstance().get(id);
-        String certificateDirectory = Paths.get(StringConstants.CERT_ROOT,bean.getCertificateDir(),name+".pem").toString();
+        String certificateDirectory = Paths.get(Constant.CERT_ROOT,bean.getCertificateDir(),name+".pem").toString();
 
-        File rootCA = new File(StringConstants.CERT_ROOT + "rootCA.pem");
+        File rootCA = new File(Constant.CERT_ROOT + "rootCA.pem");
         File certificateFile = new File(certificateDirectory);
         System.out.println(certificateFile.getAbsolutePath()+"\nExists: " + certificateFile.exists());
 

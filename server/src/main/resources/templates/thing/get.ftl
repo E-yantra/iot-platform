@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <table class="table mb-0">
+                        <table class="table mb-0" v-if="devices.length">
                             <thead class="thead-light">
                                 <tr>
                                     <th>Device Name</th>
@@ -50,6 +50,7 @@
                                 </td>
                             </tr>
                         </table>
+                        <div v-else class="h3 pt-2 pb-2 text-center text-muted" v-else>No devices</div>
                     </div>
                     <div class="card-footer">
                         <div class="float-right">
@@ -76,7 +77,7 @@
                         Crons
                     </div>
                     <div class="card-body p-0">
-                        <table class="table mb-0" v-if="crons.length != 0">
+                        <table class="table mb-0" v-if="crons.length">
                             <thead class="thead-light">
                                 <tr>
                                     <th>Name</th>
@@ -118,7 +119,7 @@
                         Rules
                     </div>
                     <div class="card-body p-0">
-                        <table class="table mb-0" v-if="rules.length != 0">
+                        <table class="table mb-0" v-if="rules.length">
                             <thead class="thead-light">
                                 <tr>
                                     <th>Name</th>
@@ -142,7 +143,7 @@
                                                 v-on:click="editRuleModal(rule, idx)">EDIT</button>
                                     </td>
                                     <td>
-                                        <a v-bind:href="'/rules/' + rule.type.toLowerCase() + '/' + rule.snsAction.id" class="btn btn-success btn-sm" role="button" aria-pressed="true">CHANGE</a>
+                                        <a v-bind:href="'/rules/' + rule.type.toLowerCase() + '/' + rule.snsAction.id" class="btn btn-success btn-sm" role="button" aria-pressed="true">DETAILS</a>
                                         <#--<button v-on:click="" class="btn btn-sm btn-success">CHANGE</button>-->
                                     </td>
                                 </tr>
@@ -272,16 +273,17 @@
                 });
             },
 
-            //TODO: Fetch list of supported rule actions from server
             "newRuleModal": function () {
                 this.createRule = {
                     name: "",
                     description: "",
                     data: "",
                     condition: "",
-                    topic: "",
                     action: "",
-                    sns_topic: ""
+                    sns_topic: "",
+                    subject: "",
+                    message: "",
+                    interval: 15
                 };
                 this.ruleUpdate = false;
                 $('#create_rule').modal('show');
@@ -298,12 +300,15 @@
                     "data": that.createRule.data,
                     "topic": that.createRule.topic,
                     "condition": that.createRule.condition,
-                    "action": that.createRule.action
+                    "action": that.createRule.action,
                 };
 
                 // send extra parameters according to the type of rule
                 if (that.createRule.action == 'SNS') {
                     formData.sns_topic = that.createRule.sns_topic;
+                    formData.subject = that.createRule.subject;
+                    formData.message = that.createRule.message;
+                    formData.interval = that.createRule.interval;
                 }
 
                 console.log(that.createRule.action);

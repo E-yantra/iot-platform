@@ -17,12 +17,10 @@ public class RuleBean {
     Integer id;
 
     @Expose
-    @NotBlank
     @Column(name = "`name`", unique = true)//, unique = true)
     String name;
 
     @Expose
-    @NotBlank
     @Column(name = "`description`", length = 50)
     String description;
 
@@ -36,11 +34,6 @@ public class RuleBean {
     String data;
 
     @Expose
-    @Column(name = "`topic`")
-    String topic;
-
-    @Expose
-    @NotBlank
     @Column(name = "`condition`")
     String condition;
 
@@ -63,7 +56,6 @@ public class RuleBean {
         this.id = id;
     }
 
-    @NotBlank
     public String getName() {
         return name;
     }
@@ -72,7 +64,6 @@ public class RuleBean {
         this.name = name;
     }
 
-    @NotBlank
     public String getDescription() {
         return description;
     }
@@ -81,21 +72,12 @@ public class RuleBean {
         this.description = description;
     }
 
-    @NotBlank
     public String getData() {
         return data;
     }
 
     public void setData(String data) {
         this.data = data;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
     }
 
     public String getCondition() {
@@ -149,18 +131,4 @@ public class RuleBean {
         this.type = type;
     }
 
-    @Override
-    public String toString() {
-        return "RuleBean{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", data='" + data + '\'' +
-                ", topic='" + topic + '\'' +
-                ", condition='" + condition + '\'' +
-                ", type='" + type + '\'' +
-                ", snsAction=" + snsAction +
-                ", parentThing=" + parentThing +
-                '}';
-    }
 }

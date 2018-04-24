@@ -3,6 +3,7 @@ package org.kyantra.beans;
 import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.kyantra.utils.Constant;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -29,17 +30,17 @@ public class SnsBean {
     // subject of the notification
     @Expose
     @Column(name = "subject")
-    String subject = "ALERT";
+    String subject = Constant.SNS_SUBJECT;
 
     // message to send along with data to sns subscribers
     @Expose
     @Column(name = "message")
-    String message = "This is an ALERT. One of your set thresholds have crossed the limits.\nLogin to IoT Platform for more details.";
+    String message = Constant.SNS_MESSAGE;
 
     // interval in minutes which will be checked to re-report with the message
     @Expose
     @Column(name = "`interval`")
-    Integer interval = 15;
+    Integer interval = Constant.SNS_INTERVAL;
 
     @Expose
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentSNSBean", orphanRemoval = true, cascade = CascadeType.ALL)
@@ -83,11 +84,13 @@ public class SnsBean {
     }
 
     public String getSubject() {
+
         return subject;
     }
 
     public void setSubject(String subject) {
-        this.subject = subject;
+        if(!subject.equals(""))
+            this.subject = subject;
     }
 
     public String getMessage() {
@@ -95,7 +98,8 @@ public class SnsBean {
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        if(!message.equals(""))
+            this.message = message;
     }
 
     public Integer getInterval() {
@@ -103,7 +107,8 @@ public class SnsBean {
     }
 
     public void setInterval(Integer interval) {
-        this.interval = interval;
+        if(interval.intValue() >= Constant.SNS_INTERVAL)
+            this.interval = interval;
     }
 
     public Set<SnsSubscriptionBean> getSubscriptions() {

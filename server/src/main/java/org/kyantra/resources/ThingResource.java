@@ -16,7 +16,7 @@ import org.kyantra.dao.UnitDAO;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 import org.kyantra.utils.AwsIotHelper;
-import org.kyantra.utils.StringConstants;
+import org.kyantra.utils.Constant;
 import org.kyantra.utils.ThingHelper;
 
 import javax.ws.rs.*;
@@ -126,8 +126,8 @@ public class ThingResource extends BaseResource {
 
                 //Create a directory for storing certificate files on server's filesystem
                 String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-                //System.out.println(StringConstants.CERT_ROOT + timeStamp);
-                File certificateDir = new File(StringConstants.CERT_ROOT + timeStamp);
+                //System.out.println(Constant.CERT_ROOT + timeStamp);
+                File certificateDir = new File(Constant.CERT_ROOT + timeStamp);
                 if (!certificateDir.exists()) {
                     //System.out.println("creating directory: " + certificateDir.getName());
 
@@ -165,7 +165,7 @@ public class ThingResource extends BaseResource {
 
                 //Get policy and attach it to certificate
                 AttachPrincipalPolicyRequest policyRequest = new AttachPrincipalPolicyRequest();
-                policyRequest.withPolicyName(StringConstants.DEFAULT_POLICY)
+                policyRequest.withPolicyName(Constant.DEFAULT_POLICY)
                         .withPrincipal(certificateResult.getCertificateArn());
                 AwsIotHelper.getIotClient().attachPrincipalPolicy(policyRequest);
                 //TODO: Create and attach more secure policies

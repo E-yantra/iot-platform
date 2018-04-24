@@ -38,9 +38,9 @@ public class SnsRuleResource extends BaseResource {
     public String create(@PathParam("id") Integer parentThingId,
                          @FormParam("name") String name,
                          @FormParam("description") String description,
-                         @FormParam("topic") String topic,
                          @FormParam("data") String data,
                          @FormParam("condition") String condition,
+                         @FormParam("subject") String subject,
                          @FormParam("message") String message,
                          @FormParam("interval") Integer interval,
                          @FormParam("sns_topic") String snsTopic) {
@@ -57,12 +57,15 @@ public class SnsRuleResource extends BaseResource {
         // create SnsBean
         SnsBean snsBean = new SnsBean();
         snsBean.setTopic(snsTopic);
+        // set parameters or revert to default
+        snsBean.setSubject(subject);
+        snsBean.setMessage(message);
+        snsBean.setInterval(interval);
 
         // create RuleBean
         RuleBean ruleBean = new RuleBean();
         ruleBean.setName(name);
         ruleBean.setDescription(description);
-        ruleBean.setTopic(topic);
         ruleBean.setData(data);
         ruleBean.setCondition(condition);
         ruleBean.setType("SNS");
@@ -73,7 +76,7 @@ public class SnsRuleResource extends BaseResource {
 
         System.out.println(constraintViolations);
 
-        // create SNSAction in AWS
+        // create SnsAction in AWS
         CreateTopicResult createTopicResult = SnsHelper.getInstance().createTopic(snsBean);
         snsBean.setTopicARN(createTopicResult.getTopicArn());
 
@@ -128,24 +131,32 @@ public class SnsRuleResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Secure(roles = {RoleEnum.ALL}, subjectType = "rule", subjectField = "parentId")
     public String update(@PathParam("id") Integer ruleId,
-                         @FormParam("name") String name,
                          @FormParam("description") String description,
-                         @FormParam("topic") String topic,
                          @FormParam("data") String data,
                          @FormParam("condition") String condition,
                          @FormParam("parentThing") Integer parentThingId) {
 
         // create RuleBean
         RuleBean ruleBean = RuleDAO.getInstance().get(ruleId);
-        ruleBean.setName(name);
         ruleBean.setDescription(description);
-//        ruleBean.setTopic(topic);
         ruleBean.setData(data);
         ruleBean.setCondition(condition);
-//        ruleBean.setType("sns");
-//        ruleBean.setParentThing(ThingDAO.getInstance().get(parentThingId));
 
-        RuleHelper.getInstance().replaceTopicRule(ruleBean, ruleBean.getSnsAction());
+        SnsBean snsBean = ruleBean.getSnsAction();
+
+        // update rule in AWS
+        RuleHelper.getInstance().replaceTopicRule(ruleBean, snsBean);
+
+        // add rule to DB
+        RuleDAO.getInstance().update(ruleBean);
+
+        // link rule and SNS in DB
+        snsBean.setParentRule(ruleBean);
+        SnsDAO.getInstance().add(snsBean);
+
+        // Get updated ruleBean
+        ruleBean = RuleDAO.getInstance().get(ruleBean.getId());
+
         return gson.toJson(ruleBean);
     }
 
