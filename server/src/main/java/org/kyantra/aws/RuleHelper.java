@@ -49,14 +49,14 @@ public class RuleHelper {
                     .withPrimaryKey("ruleName", ruleNameAws)
                     .withString("topic", snsBean.getTopic())
                     .withString("topicArn", snsBean.getTopicARN())
-                    .withLong("timestamp", System.currentTimeMillis())
+                    .withLong("timestamp", 0l)
                     .withString("message", snsBean.getMessage())
                     .withString("subject", snsBean.getSubject())
                     .withInt("interval", snsBean.getInterval());
             PutItemOutcome outcome = table.putItem(item);
 
             // create rule payload: {using data provided in ruleBean and snsBean}
-            TopicRulePayload rulePayload = this.createSnsRulePayload(ruleBean, snsBean, suffix);
+            TopicRulePayload rulePayload = SnsHelper.getInstance().createSnsRulePayload(ruleBean, snsBean, suffix);
 
             // create rule at AWS
             topicRuleRequest.withRuleName(ruleNameAws)
@@ -88,20 +88,8 @@ public class RuleHelper {
                 suffix = ", \"" + thingName + "_sns_" + ruleName + "\" as ruleName";
             }
 
-            // put details about the item in DynamoDB NotificationDetail table
-//            AmazonDynamoDB amazonDynamoDB = AwsIotHelper.getAmazonDynamoDBClient();
-//            DynamoDB dynamoDB = new DynamoDB(amazonDynamoDB);
-//            Table table = dynamoDB.getTable("NotificationDetail");
-//            Item item = new Item()
-//                    .withPrimaryKey("ruleName", ruleNameAws)
-//                    .withString("topic", snsBean.getTopic())
-//                    .withString("topicArn", snsBean.getTopicARN())
-//                    .withLong("timestamp", System.currentTimeMillis())
-//                    .withString("message", snsBean.getMessage());
-//            PutItemOutcome outcome = table.putItem(item);
-
             // create rule payload: {using data provided in ruleBean and snsBean}
-            TopicRulePayload rulePayload = this.createSnsRulePayload(ruleBean, snsBean, suffix);
+            TopicRulePayload rulePayload = SnsHelper.getInstance().createSnsRulePayload(ruleBean, snsBean, suffix);
 
             // replace rule at AWS
             topicRuleRequest.withRuleName(thingName + "_sns_" + ruleName)
@@ -112,38 +100,6 @@ public class RuleHelper {
         }
 
         return AwsIotHelper.getIotClient().replaceTopicRule(topicRuleRequest);
-    }
-
-
-    public TopicRulePayload createSnsRulePayload(RuleBean ruleBean, SnsBean snsBean, String suffix) {
-
-        // set up for rules
-        String ruleCondition = " WHERE ";
-        System.out.println(ruleBean.getCondition());
-        if (!ruleBean.getCondition().equals(""))
-            ruleCondition = ruleCondition + ruleBean.getCondition();
-        else
-            ruleCondition = ruleBean.getCondition();
-
-        // create rule payload: {lambda function that uses SNS}
-        Action action = ActionHelper.getInstance()
-                .createLambdaAction(ConfigDAO.getInstance().get("lambdaNotificationArn").getValue());
-        List<Action> actionList = new ArrayList<>();
-        actionList.add(action);
-
-
-        // 3. create rulePayload
-        TopicRulePayload rulePayload = new TopicRulePayload();
-        rulePayload.withDescription(ruleBean.getDescription())
-                .withSql("SELECT " + ruleBean.getData() + suffix
-                        + " FROM '$aws/things/thing"
-                        + ruleBean.getParentThing().getId()
-                        + "/shadow/update'" + ruleCondition)
-                .withRuleDisabled(false)
-                .withAwsIotSqlVersion("2016-03-23")
-                .withActions(actionList);
-
-        return rulePayload;
     }
 
 
