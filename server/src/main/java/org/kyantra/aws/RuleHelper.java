@@ -1,10 +1,7 @@
 package org.kyantra.aws;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
-import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.iot.model.*;
 import org.kyantra.beans.RuleBean;
 import org.kyantra.beans.SnsBean;
@@ -158,7 +155,14 @@ public class RuleHelper {
 
     public DeleteTopicRuleResult deleteRule(RuleBean ruleBean) {
         DeleteTopicRuleRequest deleteTopicRuleRequest = new DeleteTopicRuleRequest();
-        deleteTopicRuleRequest.withRuleName("thing" + ruleBean.getParentThing().getId() + "_sns_" + ruleBean.getName());
+        String ruleName = "thing" + ruleBean.getParentThing().getId() + "_sns_" + ruleBean.getName();
+        deleteTopicRuleRequest.withRuleName(ruleName);
+
+        // delete item from NotificationDetail table
+        AmazonDynamoDB amazonDynamoDB = AwsIotHelper.getAmazonDynamoDBClient();
+        DynamoDB dynamoDB = new DynamoDB(amazonDynamoDB);
+        Table table = dynamoDB.getTable("NotificationDetail");
+        table.deleteItem(new PrimaryKey("ruleName", ruleName));
 
         DeleteTopicRuleResult deleteTopicRuleResult =
                 AwsIotHelper.getIotClient().deleteTopicRule(deleteTopicRuleRequest);
