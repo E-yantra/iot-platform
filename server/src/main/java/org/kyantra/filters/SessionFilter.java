@@ -26,7 +26,7 @@ import java.security.Principal;
 
 @Session
 @Provider
-@Priority(Priorities.AUTHORIZATION)
+@Priority(Priorities.AUTHENTICATION)
 public class SessionFilter implements ContainerRequestFilter {
 
     @Context

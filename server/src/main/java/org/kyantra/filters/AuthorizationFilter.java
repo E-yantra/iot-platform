@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @Secure
 @Provider
-@Priority(Priorities.AUTHENTICATION)
+@Priority(Priorities.AUTHORIZATION)
 public class AuthorizationFilter implements ContainerRequestFilter {
 
     private static final String REALM = "unit";
