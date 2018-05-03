@@ -7,7 +7,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("/rule")
-@Api(value = "rule")
+@Api(value = "/rule")
 public class RuleResource extends BaseResource {
 
     @Path("/ddb")
@@ -26,4 +26,5 @@ public class RuleResource extends BaseResource {
     public String getActionTypes() {
         return gson.toJson(ActionHelper.getInstance().getActionTypes());
     }
+
 }

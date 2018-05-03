@@ -1,6 +1,7 @@
 package org.kyantra.resources;
 
 import com.amazonaws.services.iot.model.*;
+import io.swagger.annotations.Api;
 import org.kyantra.beans.ConfigBean;
 import org.kyantra.dao.ConfigDAO;
 import org.kyantra.dao.ThingDAO;
@@ -11,11 +12,12 @@ import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
+@Api(value = "")
 public class DDBRuleResource extends BaseResource {
 
     @GET
     @Path("/create/{id}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String create(@PathParam("id") Integer id) {
 
         String thingName = "thing" + id;

@@ -22,10 +22,10 @@ import java.util.Set;
 /**
  * Created by Lenovo on 12-11-2017.
  */
+
 @Path("/cron")
 @Api(value="cron")
 public class CronResource extends BaseResource {
-
 
     @GET
     @Path("get/{id}")

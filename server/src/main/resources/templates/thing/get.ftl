@@ -11,8 +11,6 @@
                 <div class="float-right p-1" v-if="role=='ALL' || role=='WRITE'">
                     <button v-on:click="newDevice" class="btn btn-outline-primary">Add Device</button>
                     <button v-on:click="importThing" class="btn btn-outline-primary">Import Device</button>
-                    <#--<button v-on:click="addCron" class="btn btn-outline-primary">Add Cron</button>-->
-                    <#--<button v-on:click="newRule" class="btn btn-outline-primary">Create Rule</button>-->
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -369,7 +367,7 @@
 
                 $.ajax({
                     "url": "/rule/" + that.createRule.type.toLowerCase() + "/update/" + that.createRule.id,
-                    "method": "POST",
+                    "method": "PUT",
                     "data": data,
                     success: function (data) {
                         that.saveLoader = false;

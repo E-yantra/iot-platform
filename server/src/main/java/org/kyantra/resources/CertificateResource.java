@@ -1,5 +1,6 @@
 package org.kyantra.resources;
 
+import io.swagger.annotations.Api;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.dao.ThingDAO;
 import org.kyantra.utils.Constant;
@@ -13,6 +14,7 @@ import javax.ws.rs.core.Response;
 import java.io.*;
 import java.nio.file.Paths;
 
+@Api(value = "")
 public class CertificateResource extends BaseResource {
 
     @GET

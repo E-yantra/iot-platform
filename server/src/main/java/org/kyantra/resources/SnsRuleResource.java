@@ -4,6 +4,7 @@ import com.amazonaws.services.iot.model.*;
 import com.amazonaws.services.lambda.AWSLambda;
 import com.amazonaws.services.lambda.model.AddPermissionRequest;
 import com.amazonaws.services.sns.model.CreateTopicResult;
+import io.swagger.annotations.Api;
 import org.kyantra.aws.RuleHelper;
 import org.kyantra.aws.SnsHelper;
 import org.kyantra.beans.RoleEnum;
@@ -24,6 +25,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.Set;
 import java.util.UUID;
 
+@Api(value = "")
 public class SnsRuleResource extends BaseResource {
 
     /* TODO: Atomicity with AWS and DB
@@ -124,7 +126,7 @@ public class SnsRuleResource extends BaseResource {
         return gson.toJson(ruleBean);
     }
 
-    @POST
+    @PUT
     @Session
     @Path("/update/{id}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -185,7 +187,7 @@ public class SnsRuleResource extends BaseResource {
         return "{\"success\": true}";
     }
 
-    @POST
+    @DELETE
     @Session
     @Path("/delete/")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
