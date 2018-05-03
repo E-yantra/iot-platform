@@ -1,6 +1,7 @@
 package org.kyantra;
 
 import io.swagger.jaxrs.config.BeanConfig;
+import io.swagger.models.Info;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -27,7 +28,9 @@ public class Main {
 
         String resources = "org.kyantra.resources";
         BeanConfig beanConfig = new BeanConfig();
-        beanConfig.setVersion("1.0.2");
+        beanConfig.setTitle("E-Yantra IoT Platform API");
+        beanConfig.setDescription("Below are endpoints defined for E-Yantra IoT Platform. Note that you need to have an account so that you can get the token which is mandatory to make requests.");
+        beanConfig.setVersion("1.2.3");
         beanConfig.setSchemes(new String[]{"http"});
         beanConfig.setBasePath("/");
         beanConfig.setResourcePackage(resources);
