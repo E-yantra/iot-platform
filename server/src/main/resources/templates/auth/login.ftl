@@ -39,7 +39,7 @@
                     var that = this;
                     $.ajax({
                         type: 'POST',
-                        url: "/auth/basic",
+                        url: "/auth/token",
                         data: $('.form-signin').serialize(),
                         headers: {
                             "Authorization":"Basic grtrthj45h45h4j5h4kj5k45hjk4kh5j",

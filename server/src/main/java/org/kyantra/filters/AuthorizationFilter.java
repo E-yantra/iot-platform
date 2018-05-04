@@ -42,8 +42,9 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         // Get the Authorization header from the request
-        String authorizationHeader =
-                requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+        System.out.println("AUTHORIZATION FILTER");
+        System.out.println(requestContext);
+        String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
         String authorizationCookie = requestContext.getCookies().getOrDefault("authorization", new Cookie("token","")).getValue().toString();
 
@@ -98,23 +99,25 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         }
     }
 
-    private void checkPermissions(UserBean userBean, List<RoleEnum> expectedRoles, ContainerRequestContext requestContent) throws Exception{
+    private void checkPermissions(UserBean userBean, List<RoleEnum> expectedRoles, ContainerRequestContext requestContent) throws Exception {
 
         if(!expectedRoles.isEmpty()) {
             Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUser(userBean);
-            Set<RoleEnum> roles = rights.stream().map(RightsBean::getRole).collect(Collectors.toSet());
-            for(RoleEnum r:roles){
-                if(expectedRoles.contains(r)){
-                    return;
-                }
-            }
-        }else{
+//            Set<RoleEnum> roles = rights.stream().map(RightsBean::getRole).collect(Collectors.toSet());
+//            for(RoleEnum r:roles){
+//                if(expectedRoles.contains(r)){
+//                    return;
+//                }
+//            }
+
+
+
+        } else {
             return;
         }
 
         //TODO Remove this later
         //throw new Exception("Not possible");
-
     }
 
     private boolean isTokenBasedAuthentication(String authorizationHeader) {

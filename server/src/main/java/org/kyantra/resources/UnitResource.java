@@ -55,7 +55,9 @@ public class UnitResource extends BaseResource {
         return gson.toJson(users);
     }
 
+    //
     @POST
+    @Session
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -129,7 +131,9 @@ public class UnitResource extends BaseResource {
         }
     }
 
+    //
     @POST
+    @Session
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE})
     @Path("addusers/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -145,6 +149,7 @@ public class UnitResource extends BaseResource {
     }
 
     @GET
+    @Session
     @Secure(roles= {RoleEnum.READ})
     @Path("rights/{id}/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -159,6 +164,7 @@ public class UnitResource extends BaseResource {
     }
 
     @GET
+    @Session
     @Secure(roles = {RoleEnum.READ})
     @Path("users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -174,6 +180,7 @@ public class UnitResource extends BaseResource {
     }
 
     @GET
+    @Session
     @Secure(roles = {RoleEnum.READ})
     @Path("subunits/{id}")
     @Produces(MediaType.APPLICATION_JSON)

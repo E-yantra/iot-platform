@@ -49,6 +49,8 @@ public class SessionFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+        System.out.println("SESSION FILTER");
+        System.out.println(requestContext);
         Method resourceMethod = resourceInfo.getResourceMethod();
 
         if(!isSessionNeeded(resourceMethod)) {
@@ -68,6 +70,7 @@ public class SessionFilter implements ContainerRequestFilter {
                     }
                 }
 
+                // TODO: 5/4/18 Understand how and why below code works
                 final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
                 requestContext.setSecurityContext(new SecurityContext() {
 
@@ -90,6 +93,7 @@ public class SessionFilter implements ContainerRequestFilter {
                     public String getAuthenticationScheme() {
                         return "cookie";
                     }
+
                 });
 
 
