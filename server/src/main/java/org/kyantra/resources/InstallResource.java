@@ -27,7 +27,6 @@ import java.util.Map;
 public class InstallResource extends BaseResource {
 
     @GET
-    @Path("/")
     @Template(name = "/index.ftl") // TODO: 21-11-2017
     public String install() throws URISyntaxException {
         final Map<String, Object> map = new HashMap<>();

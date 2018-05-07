@@ -32,7 +32,6 @@ public class HomeResource extends BaseResource {
 
 
     @GET
-    @Path("/")
     @Template(name = "/index.ftl")
     @Session
     public Map<String, Object> index() throws URISyntaxException {
