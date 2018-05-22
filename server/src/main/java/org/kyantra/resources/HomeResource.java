@@ -243,4 +243,5 @@ public class HomeResource extends BaseResource {
         setCommonData(map);
         return map;
     }
+
 }

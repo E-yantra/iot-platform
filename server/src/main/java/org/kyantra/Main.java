@@ -71,3 +71,8 @@ public class Main {
         final HttpServer server = startServer(port);
     }
 }
+
+
+/*
+with recursive ancestors as ( select id, unit_name, parent_id from units where id = 100 union all select u.id, u.unit_name, u.parent_id  from units u, ancestors ag where u.id = ag.parent_id ) select * from ancestors;
+ */
