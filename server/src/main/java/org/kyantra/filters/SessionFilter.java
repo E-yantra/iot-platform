@@ -49,8 +49,6 @@ public class SessionFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        System.out.println("SESSION FILTER");
-        System.out.println(requestContext);
         Method resourceMethod = resourceInfo.getResourceMethod();
 
         if(!isSessionNeeded(resourceMethod)) {

@@ -7,6 +7,7 @@ import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
+import org.springframework.jmx.export.notification.UnableToSendNotificationException;
 
 import javax.persistence.Query;
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class UnitDAO extends BaseDAO{
         return unitBean;
     }
 
-    public void delete(Integer id){
+    public void delete(Integer id) {
         Session session = getService().getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         UnitBean unit = session.get(UnitBean.class, id);
@@ -75,7 +76,7 @@ public class UnitDAO extends BaseDAO{
         session.close();
     }
 
-    public void update(int id, String unitName, String description, String photo){
+    public void update(int id, String unitName, String description, String photo) {
         if(id <=0)
             return;
         Session session = getService().getSessionFactory().openSession();
@@ -88,7 +89,7 @@ public class UnitDAO extends BaseDAO{
         session.close();
     }
 
-    public void addUsers(int id, Set<UserBean> users){
+    public void addUsers(int id, Set<UserBean> users) {
         if(id <=0)
             return;
 
@@ -108,14 +109,4 @@ public class UnitDAO extends BaseDAO{
         session.close();
     }
 
-    public Set<UnitBean> getAllParents(UnitBean unitBean){
-        Set<UnitBean> unitBeans = new HashSet<>();
-        unitBeans.add(unitBean);
-        while(unitBean.getParent()!=null){
-            unitBean = unitBean.getParent();
-            unitBeans.add(unitBean.getParent());
-        }
-
-        return unitBeans;
-    }
 }
