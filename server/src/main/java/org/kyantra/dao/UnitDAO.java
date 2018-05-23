@@ -50,7 +50,7 @@ public class UnitDAO extends BaseDAO{
         return list;
     }
 
-    //returns child unit
+    // returns child unit
     public UnitBean add(UnitBean currentUnit){
         Session session = getService().getSessionFactory().openSession();
         session.beginTransaction();
@@ -108,5 +108,4 @@ public class UnitDAO extends BaseDAO{
         tx.commit();
         session.close();
     }
-
 }

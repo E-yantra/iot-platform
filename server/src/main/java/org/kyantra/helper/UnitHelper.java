@@ -1,6 +1,8 @@
 package org.kyantra.helper;
 
 import org.kyantra.beans.UnitBean;
+import org.kyantra.beans.UserBean;
+import org.kyantra.dao.RightsDAO;
 import org.kyantra.dao.UnitDAO;
 
 import java.util.HashSet;
@@ -16,10 +18,19 @@ public class UnitHelper {
         return instance;
     }
 
-    public Boolean checkAccess(UnitBean userUnit, UnitBean targetUnit) {
+    public Boolean checkAccess(UserBean user, UnitBean targetUnit) {
+
+        Set<UnitBean> userUnits = RightsDAO.getInstance().getUnitsByUser(user);
         Set<UnitBean> targetAncestors = getAllParents(targetUnit);
-        if (targetAncestors.contains(userUnit))
-            return true;
+
+        for(UnitBean userUnit: userUnits) {
+            // contains will check for equality using equals
+            // if no equals is overridden it'll default to equal from Object class
+            // which is same as '=='
+            if (targetAncestors.contains(userUnit))
+                return true;
+        }
+
         return false;
     }
 

@@ -45,11 +45,16 @@ public class UnitResource extends BaseResource {
 
     @GET
     @Path("get/{id}")
+    @Session
+    @Secure
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@PathParam("id") Integer id) {
-        UserBean userBean = (UserBean)securityContext.getUserPrincipal();
-        UnitHelper.getInstance().checkAccess();
+    public String get(@PathParam("id") Integer id) throws AccessDeniedException {
         UnitBean unitBean = UnitDAO.getInstance().get(id);
+
+        UserBean userBean = (UserBean)securityContext.getUserPrincipal();
+        if (!UnitHelper.getInstance().checkAccess(userBean, unitBean))
+            throw new AccessDeniedException();
+
         return gson.toJson(unitBean);
     }
 
