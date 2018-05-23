@@ -3,7 +3,6 @@ package org.kyantra.helper;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.RightsDAO;
-import org.kyantra.dao.UnitDAO;
 
 import java.util.HashSet;
 import java.util.Set;

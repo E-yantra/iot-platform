@@ -13,18 +13,8 @@ import org.kyantra.helper.UnitHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
@@ -40,18 +30,15 @@ public class UnitResource extends BaseResource {
 
     int limit = 10;
 
-    @Context
-    SecurityContext securityContext;
-
     @GET
     @Path("get/{id}")
     @Session
-    @Secure
+    @Secure(roles = {RoleEnum.ALL, RoleEnum.WRITE, RoleEnum.READ})
     @Produces(MediaType.APPLICATION_JSON)
     public String get(@PathParam("id") Integer id) throws AccessDeniedException {
         UnitBean unitBean = UnitDAO.getInstance().get(id);
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
-        UserBean userBean = (UserBean)securityContext.getUserPrincipal();
         if (!UnitHelper.getInstance().checkAccess(userBean, unitBean))
             throw new AccessDeniedException();
 
@@ -61,15 +48,15 @@ public class UnitResource extends BaseResource {
     @GET
     @Path("list/page/{page}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String list(@PathParam("page") Integer page){
+    public String list(@PathParam("page") Integer page) {
         Principal principal = getSecurityContext().getUserPrincipal();
         UserBean currentUser = (UserBean) principal;
         List<UnitBean> users = UnitDAO.getInstance().list(page,limit);
         return gson.toJson(users);
     }
 
-    //
-    @POST
+
+    @PUT
     @Session
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Path("update/{id}")
@@ -80,22 +67,28 @@ public class UnitResource extends BaseResource {
                          @FormParam("description") String description,
                          @FormParam("photo") String photo) throws AccessDeniedException {
         //TODO: can parent unit be changed?
-        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        UnitBean unitBean = UnitDAO.getInstance().get(id);
+
+        if (UnitHelper.getInstance().checkAccess(userBean, unitBean)) {
             UnitDAO.getInstance().update(id, name, description, photo);
-            UnitBean unitBean = UnitDAO.getInstance().get(id);
             return gson.toJson(unitBean);
         }
-        else{
+        else {
             throw new AccessDeniedException();
         }
     }
 
     @DELETE
+    @Session
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String delete(@PathParam("id") Integer id) throws AccessDeniedException{
-        if (AuthorizationDAO.getInstance().ownsUnit((UserBean) getSecurityContext().getUserPrincipal(), UnitDAO.getInstance().get(id))) {
+    public String delete(@PathParam("id") Integer id) throws AccessDeniedException {
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        UnitBean unitBean = UnitDAO.getInstance().get(id);
+
+        if (UnitHelper.getInstance().checkAccess(userBean, unitBean)) {
             try {
                 UnitDAO.getInstance().delete(id);
                 return "{}";
@@ -118,7 +111,11 @@ public class UnitResource extends BaseResource {
                          @FormParam("description") String description,
                          @FormParam("photo") String photo,
                          @DefaultValue("0") @FormParam("parentUnitId") Integer parentUnitId) throws AccessDeniedException{
-        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(parentUnitId))) {
+
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        UnitBean unitBean = UnitDAO.getInstance().get(parentUnitId);
+
+        if (UnitHelper.getInstance().checkAccess(userBean, unitBean)) {
             try {
                 String s = "Found something";
                 //System.out.println(gson.toJson(childUnit));
@@ -139,12 +136,12 @@ public class UnitResource extends BaseResource {
                 t.printStackTrace();
             }
             return "{\"success\":false}";
-        }else{
+        } else {
             throw new AccessDeniedException();
         }
     }
 
-    //
+
     @POST
     @Session
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE})
@@ -152,11 +149,13 @@ public class UnitResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public String addUsers(@PathParam("id") Integer id, Set<UserBean> users) throws AccessDeniedException{
-        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        UnitBean unitBean = UnitDAO.getInstance().get(id);
+
+        if (UnitHelper.getInstance().checkAccess(userBean, unitBean)) {
             UnitDAO.getInstance().addUsers(id, users);
-            UnitBean unitBean = UnitDAO.getInstance().get(id);
             return gson.toJson(unitBean);
-        }else{
+        } else {
             throw new AccessDeniedException();
         }
     }
@@ -167,14 +166,21 @@ public class UnitResource extends BaseResource {
     @Path("rights/{id}/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getUserRights(@PathParam("id") Integer unitId,
-                                @PathParam("userId") Integer userId) {
-        UserBean userBean = UserDAO.getInstance().get(userId);
-        Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUser(userBean);
-        Set<UnitBean> allBeans = new HashSet<>();
-        rights.forEach(r->{
-            allBeans.addAll(UnitHelper.getInstance().getAllParents(r.getUnit()));
-        });
-        return gson.toJson(rights.stream().filter(r->allBeans.contains(r.getUnit())).collect(Collectors.toSet()));
+                                @PathParam("userId") Integer userId) throws AccessDeniedException {
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        UnitBean unitBean = UnitDAO.getInstance().get(unitId);
+
+        if (UnitHelper.getInstance().checkAccess(userBean, unitBean)) {
+            Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUser(userBean);
+            Set<UnitBean> allBeans = new HashSet<>();
+            rights.forEach(r -> {
+                allBeans.addAll(UnitHelper.getInstance().getAllParents(r.getUnit()));
+            });
+            return gson.toJson(rights.stream().filter(r -> allBeans.contains(r.getUnit())).collect(Collectors.toSet()));
+        }
+        else {
+            throw new AccessDeniedException();
+        }
     }
 
     @GET
@@ -182,14 +188,21 @@ public class UnitResource extends BaseResource {
     @Secure(roles = {RoleEnum.READ})
     @Path("users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getAuthorizedUsers(@PathParam("id") Integer unitId) {
+    public String getAuthorizedUsers(@PathParam("id") Integer unitId) throws AccessDeniedException {
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
         UnitBean unitBean = UnitDAO.getInstance().get(unitId);
-        Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUnit(unitBean);
-        while(unitBean.getParent()!=null){
-            unitBean = unitBean.getParent();
-            rights.addAll(RightsDAO.getInstance().getRightsByUnit(unitBean));
+
+        if (UnitHelper.getInstance().checkAccess(userBean, unitBean)) {
+            Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUnit(unitBean);
+            while (unitBean.getParent() != null) {
+                unitBean = unitBean.getParent();
+                rights.addAll(RightsDAO.getInstance().getRightsByUnit(unitBean));
+            }
+            return gson.toJson(rights);
         }
-        return gson.toJson(rights);
+        else {
+            throw new AccessDeniedException();
+        }
     }
 
     @GET
@@ -197,18 +210,32 @@ public class UnitResource extends BaseResource {
     @Secure(roles = {RoleEnum.READ})
     @Path("subunits/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSubunits(@PathParam("id") Integer unitId) {
+    public String getSubunits(@PathParam("id") Integer unitId) throws AccessDeniedException {
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
         UnitBean unitBean = UnitDAO.getInstance().get(unitId);
-        return gson.toJson(unitBean.getSubunits());
+
+        if (UnitHelper.getInstance().checkAccess(userBean, unitBean)) {
+            return gson.toJson(unitBean.getSubunits());
+        }
+        else {
+            throw new AccessDeniedException();
+        }
     }
 
     @GET
     @Session
     @Path("parents/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getAllParents(@PathParam("id") Integer unitId) {
+    public String getAllParents(@PathParam("id") Integer unitId) throws AccessDeniedException {
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
         UnitBean unitBean = UnitDAO.getInstance().get(unitId);
-        Set<UnitBean> allParents = UnitHelper.getInstance().getAllParents(unitBean);
-        return gson.toJson(allParents);
+
+        if (UnitHelper.getInstance().checkAccess(userBean, unitBean)) {
+            Set<UnitBean> allParents = UnitHelper.getInstance().getAllParents(unitBean);
+            return gson.toJson(allParents);
+        }
+        else {
+            throw new AccessDeniedException();
+        }
     }
 }
