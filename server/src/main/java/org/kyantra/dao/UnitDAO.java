@@ -76,9 +76,9 @@ public class UnitDAO extends BaseDAO{
         session.close();
     }
 
-    public void update(int id, String unitName, String description, String photo) {
+    public UnitBean update(int id, String unitName, String description, String photo) {
         if(id <=0)
-            return;
+            return null;
         Session session = getService().getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         UnitBean unit = session.get(UnitBean.class, id);
@@ -87,6 +87,7 @@ public class UnitDAO extends BaseDAO{
         unit.setPhoto(photo);
         tx.commit();
         session.close();
+        return unit;
     }
 
     public void addUsers(int id, Set<UserBean> users) {

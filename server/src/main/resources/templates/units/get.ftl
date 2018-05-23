@@ -128,7 +128,7 @@
             },
             saveLoader:false,
             subunits:[],
-            things:[],
+            things:[]
             // deleteUnit:{}
         },
         methods: {
@@ -287,6 +287,7 @@
                         "success": function (data) {
                             that.saveLoader = false;
                             $("#create_unit").modal('hide');
+                            that.unit = data;
                             that.load();
                         }
                     });

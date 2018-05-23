@@ -71,7 +71,7 @@ public class UnitResource extends BaseResource {
         UnitBean unitBean = UnitDAO.getInstance().get(id);
 
         if (UnitHelper.getInstance().checkAccess(userBean, unitBean)) {
-            UnitDAO.getInstance().update(id, name, description, photo);
+            unitBean = UnitDAO.getInstance().update(id, name, description, photo);
             return gson.toJson(unitBean);
         }
         else {
@@ -143,9 +143,9 @@ public class UnitResource extends BaseResource {
 
 
     @POST
+    @Path("addusers/{id}")
     @Session
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE})
-    @Path("addusers/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public String addUsers(@PathParam("id") Integer id, Set<UserBean> users) throws AccessDeniedException{
@@ -224,6 +224,7 @@ public class UnitResource extends BaseResource {
 
     @GET
     @Session
+    @Secure(roles = {RoleEnum.READ})
     @Path("parents/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAllParents(@PathParam("id") Integer unitId) throws AccessDeniedException {
