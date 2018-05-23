@@ -8,6 +8,7 @@ import org.kyantra.dao.UnitDAO;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A unit is a business unit. A unit has more units as its children or things.
@@ -20,7 +21,7 @@ public class UnitBean {
 
     @Id
     @Expose
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
     @Column(name = "unit_name")
@@ -103,7 +104,7 @@ public class UnitBean {
         this.things = things;
     }
 
-    public static UnitBean valueOf(String value){
+    public static UnitBean valueOf(String value) {
         return UnitDAO.getInstance().get(Integer.parseInt(value));
     }
 
@@ -117,5 +118,23 @@ public class UnitBean {
     public void removeThing(ThingBean thingBean) {
         this.things.remove(thingBean);
         thingBean.setParentUnit(null);
+    }
+
+    // required for checking if two units are same in checkAccess method
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UnitBean unitBean = (UnitBean) o;
+        return Objects.equals(id, unitBean.id) &&
+                Objects.equals(unitName, unitBean.unitName) &&
+                Objects.equals(description, unitBean.description) &&
+                Objects.equals(photo, unitBean.photo) &&
+                Objects.equals(parent, unitBean.parent);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, unitName, description, photo, parent);
     }
 }
