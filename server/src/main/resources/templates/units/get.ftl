@@ -28,7 +28,7 @@
                             {{ unit.unitName }} <span class="badge badge-success">{{role}}</span>
                         </div>
                         <div class="card-body">
-                            <img height=150 src="${unit.photo!""}" class="float-left p-1"> <p>${unit.description!""}</p>
+                            <img height=150 v-bind:src="unit.photo || ''" class="float-left p-1"><p>{{unit.description || ''}}</p>
                             <div class="clear"></div>
                         </div>
                         <div class="card-footer">
@@ -288,6 +288,10 @@
                             that.saveLoader = false;
                             $("#create_unit").modal('hide');
                             that.unit = data;
+                            Vue.set(that.unit, 'id', data.id);
+                            Vue.set(that.unit, 'description', data.description);
+                            Vue.set(that.unit, 'unitName', data.unitName);
+                            Vue.set(that.unit, 'photo', data.photo);
                             that.load();
                         }
                     });
