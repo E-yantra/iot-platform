@@ -9,10 +9,12 @@ import com.amazonaws.services.iotdata.model.GetThingShadowResult;
 import io.swagger.annotations.Api;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.ThingBean;
+import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.AuthorizationDAO;
 import org.kyantra.dao.ThingDAO;
 import org.kyantra.dao.UnitDAO;
+import org.kyantra.helper.UnitHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 import org.kyantra.utils.AwsIotHelper;
@@ -40,16 +42,24 @@ public class ThingResource extends BaseResource {
 
     @GET
     @Path("get/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.ALL, RoleEnum.WRITE, RoleEnum.READ})
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@PathParam("id") Integer id){
+    public String get(@PathParam("id") Integer id) throws AccessDeniedException {
         ThingBean bean = ThingDAO.getInstance().get(id);
-        return gson.toJson(bean);
+        UnitBean targetUnit = bean.getParentUnit();
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if(UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
+            return gson.toJson(bean);
+        }
+        else throw new AccessDeniedException();
     }
 
     @GET
     @Path("list/page/{page}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String list(@PathParam("page") Integer page){
+    public String list(@PathParam("page") Integer page) {
         Principal principal = getSecurityContext().getUserPrincipal();
         UserBean currentUser = (UserBean) principal;
         List<ThingBean> users = ThingDAO.getInstance().list(page,limit);
@@ -60,6 +70,7 @@ public class ThingResource extends BaseResource {
     @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Session
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
