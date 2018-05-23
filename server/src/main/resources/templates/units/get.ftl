@@ -293,7 +293,7 @@
                 } else {
                     $.ajax({
                         "url": "/unit/update/" + unitId,
-                        "method": "POST",
+                        "method": "PUT",
                         "data": that.createUnit,
                         "success": function (data) {
                             that.saveLoader = false;
