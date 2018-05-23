@@ -51,59 +51,59 @@ public class SessionFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) throws IOException {
         Method resourceMethod = resourceInfo.getResourceMethod();
 
-        if(!isSessionNeeded(resourceMethod)) {
+        if (!isSessionNeeded(resourceMethod)) {
             return;
         }
 
-            String authorizationCookie = requestContext.getCookies().getOrDefault("authorization", new Cookie("authorization", "")).getValue();
-            if (!authorizationCookie.isEmpty()) {
-                UserBean userBean = UserDAO.getInstance().getByToken(authorizationCookie);
+        String authorizationCookie = requestContext.getCookies().getOrDefault("authorization", new Cookie("authorization", "")).getValue();
+        if (!authorizationCookie.isEmpty()) {
+            UserBean userBean = UserDAO.getInstance().getByToken(authorizationCookie);
 
-                // If user provides a wrong auth token redirect him to login
-                if (userBean == null) {
-                    try {
-                        throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization", "")).build());
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                // TODO: 5/4/18 Understand how and why below code works
-                final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
-                requestContext.setSecurityContext(new SecurityContext() {
-
-                    @Override
-                    public Principal getUserPrincipal() {
-                        return userBean;
-                    }
-
-                    @Override
-                    public boolean isUserInRole(String role) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean isSecure() {
-                        return currentSecurityContext.isSecure();
-                    }
-
-                    @Override
-                    public String getAuthenticationScheme() {
-                        return "cookie";
-                    }
-
-                });
-
-
-            } else {
-
+            // If user provides a wrong auth token redirect him to login
+            if (userBean == null) {
                 try {
                     throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization", "")).build());
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
-
             }
+
+            // TODO: 5/4/18 Understand how and why below code works
+            final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
+            requestContext.setSecurityContext(new SecurityContext() {
+
+                @Override
+                public Principal getUserPrincipal() {
+                    return userBean;
+                }
+
+                @Override
+                public boolean isUserInRole(String role) {
+                    return false;
+                }
+
+                @Override
+                public boolean isSecure() {
+                    return currentSecurityContext.isSecure();
+                }
+
+                @Override
+                public String getAuthenticationScheme() {
+                    return "cookie";
+                }
+
+            });
+
+
+        } else {
+
+            try {
+                throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization", "")).build());
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+        }
 
     }
 }

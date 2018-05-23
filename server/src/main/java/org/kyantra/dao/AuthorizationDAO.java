@@ -17,9 +17,7 @@ public class AuthorizationDAO extends BaseDAO{
     }
 
     public boolean ownsUnit(UserBean user, UnitBean unit){
-
         try {
-
             Session session = getService().getSessionFactory().openSession();
             Query query = session.createQuery("from RightsBean where UserId = :userId and unit_id = :unitId");
             query.setParameter("userId", user.getId());
@@ -31,7 +29,7 @@ public class AuthorizationDAO extends BaseDAO{
                 return true;
 
             return false;
-        }catch (Throwable t){
+        } catch (Throwable t) {
             return true;
         }
     }
@@ -87,7 +85,7 @@ public class AuthorizationDAO extends BaseDAO{
                 return true;
 
             return false;
-        }catch (Throwable t){
+        }catch (Throwable t) {
             return true;
         }
     }
