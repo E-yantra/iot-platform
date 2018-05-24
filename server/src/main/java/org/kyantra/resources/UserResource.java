@@ -14,27 +14,28 @@ import java.util.List;
 
 @Path("/user")
 @Api(value="user")
-public class UserResource extends BaseResource{
+public class UserResource extends BaseResource {
 
     int limit = 10;
 
     @GET
     @Path("get/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
-    @Secure(roles = {RoleEnum.READ})
-    public String get(@PathParam("id") Integer id){
-        UserBean userBean = UserDAO.getInstance().get(id);
-
-        Principal principal = getSecurityContext().getUserPrincipal();
-        UserBean currentUser = (UserBean) principal;
-        //TODO code to check if currentUser has permission to read this user.
-
-
-        return gson.toJson(userBean);
+    public String get(@PathParam("id") Integer id) throws AccessDeniedException {
+        UserBean targetUser = UserDAO.getInstance().get(id);
+        UserBean currentUser = (UserBean)getSecurityContext().getUserPrincipal();
+        
+        if (currentUser.equals(targetUser)) {
+            return gson.toJson(targetUser);
+        }
+        else throw new AccessDeniedException();
     }
 
     @GET
     @Path("list/page/{page}")
+    @Session
     @Produces(MediaType.APPLICATION_JSON)
     public String list(@PathParam("page") Integer page){
         Principal principal = getSecurityContext().getUserPrincipal();
@@ -43,16 +44,16 @@ public class UserResource extends BaseResource{
         return gson.toJson(users);
     }
 
-    @POST
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
-    @Session
+    @PUT
     @Path("update/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
                          @FormParam("email") String email,
-                         @FormParam("password") String password){
+                         @FormParam("password") String password) throws AccessDeniedException {
         name = name.trim();
         email = email.trim();
         password = password.trim();
@@ -61,17 +62,25 @@ public class UserResource extends BaseResource{
         // if update was made
         if(name.equals("") || email.equals("") || password.equals(""))
             return "{}";
-        UserDAO.getInstance().update(id,name,email,password);
-        UserBean userBean = UserDAO.getInstance().get(id);
-        return gson.toJson(userBean);
+        UserBean targetUser = UserDAO.getInstance().get(id);
+        UserBean currentUser = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (currentUser.equals(targetUser)) {
+            UserDAO.getInstance().update(id, name, email, password);
+            UserBean userBean = UserDAO.getInstance().get(id);
+            return gson.toJson(userBean);
+        }
+        else throw new AccessDeniedException();
     }
 
+
     @DELETE
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
-    @Session
     @Path("delete/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
     @Produces(MediaType.APPLICATION_JSON)
-    public String delete(@PathParam("id") Integer id){
+    public String delete(@PathParam("id") Integer id) {
+        // TODO: 5/24/18 Don't delete user only remove rights
         try {
             UserDAO.getInstance().delete(id);
             return "{}";
@@ -81,6 +90,8 @@ public class UserResource extends BaseResource{
         return "{}";
     }
 
+
+    // TODO: 5/24/18 This method lets a person signup and create a user but no unit is assigned to him/her
     @POST
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
     @Session
@@ -91,7 +102,6 @@ public class UserResource extends BaseResource{
                          @FormParam("email") String email,
                          @FormParam("password") String password){
         try {
-
             UserBean u = UserDAO.getInstance().getByEmail(email);
             if(u!=null){
                 return gson.toJson(u);
@@ -105,9 +115,9 @@ public class UserResource extends BaseResource{
             UserBean userBean = UserDAO.getInstance().add(user);
 
             return gson.toJson(userBean);
-        }catch (Throwable t){
+        } catch (Throwable t) {
             t.printStackTrace();
         }
-        return "{\"success\":false}";
+        return "{\"success\": false}";
     }
 }

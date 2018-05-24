@@ -3,11 +3,16 @@ package org.kyantra.resources;
 import io.swagger.annotations.Api;
 import org.kyantra.beans.CronBean;
 import org.kyantra.beans.RoleEnum;
+import org.kyantra.beans.ThingBean;
+import org.kyantra.beans.UserBean;
 import org.kyantra.dao.CronDAO;
 import org.kyantra.dao.ThingDAO;
+import org.kyantra.helper.AuthorizationHelper;
+import org.kyantra.helper.UnitHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
+import javax.management.relation.Role;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -29,62 +34,87 @@ public class CronResource extends BaseResource {
 
     @GET
     @Path("get/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@PathParam("id") Integer id) {
+    public String get(@PathParam("id") Integer id) throws AccessDeniedException {
         CronBean bean = CronDAO.getInstance().get(id);
-        return gson.toJson(bean);
+        ThingBean targetThing = bean.getParentThing();
+        UserBean user = (UserBean)getSecurityContext().getUserPrincipal();
+        if (AuthorizationHelper.getInstance().checkAccess(user, targetThing)) {
+            return gson.toJson(bean);
+        }
+        else throw new AccessDeniedException();
     }
 
 
     @GET
     @Path("thing/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByThing(@PathParam("id") Integer id) {
-        Set<CronBean> bean = CronDAO.getInstance().getByThingId(id);
-        return gson.toJson(bean);
+    public String getByThing(@PathParam("id") Integer id) throws AccessDeniedException {
+        ThingBean targetThing = ThingDAO.getInstance().get(id);
+        UserBean user = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (AuthorizationHelper.getInstance().checkAccess(user, targetThing)) {
+            Set<CronBean> bean = CronDAO.getInstance().getByThingId(id);
+            return gson.toJson(bean);
+        }
+        else throw new AccessDeniedException();
     }
 
 
     @DELETE
     @Path("delete/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
     @Session
-    public String delete(@PathParam("id") Integer id) {
-        try {
-            CronDAO.getInstance().delete(id);
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String delete(@PathParam("id") Integer id) throws AccessDeniedException {
+        CronBean bean = CronDAO.getInstance().get(id);
+        ThingBean targetThing = bean.getParentThing();
+        UserBean user = (UserBean)getSecurityContext().getUserPrincipal();
+        if (AuthorizationHelper.getInstance().checkAccess(user, targetThing)) {
+            try {
+                CronDAO.getInstance().delete(id);
+                return "{}";
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
             return "{}";
-        }catch (Throwable t) {
-            t.printStackTrace();
         }
-        return "{}";
+        else throw new AccessDeniedException();
     }
+
 
     @POST
     @Path("create")
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
-    @Session
     public String create(
             @FormParam("thingId") Integer thingId,
             @FormParam("name") String cronName,
             @FormParam("cronExpression") String cronExpression,
-            @FormParam("desiredState") String desiredState) {
+            @FormParam("desiredState") String desiredState) throws AccessDeniedException {
+        ThingBean targetThing = ThingDAO.getInstance().get(thingId);
+        UserBean user = (UserBean) getSecurityContext().getUserPrincipal();
+        if (AuthorizationHelper.getInstance().checkAccess(user, targetThing)) {
+            try {
+                CronBean bean = new CronBean();
+                bean.setCronName(cronName);
+                bean.setCronExpression(cronExpression);
+                bean.setDesiredState(desiredState);
+                bean.setParentThing(ThingDAO.getInstance().get(thingId));
+                bean = CronDAO.getInstance().add(bean);
+                return gson.toJson(bean);
 
-        try {
-            CronBean bean = new CronBean();
-            bean.setCronName(cronName);
-            bean.setCronExpression(cronExpression);
-            bean.setDesiredState(desiredState);
-            bean.setParentThing(ThingDAO.getInstance().get(thingId));
-            bean = CronDAO.getInstance().add(bean);
-            return gson.toJson(bean);
-
-        }catch (Throwable t) {
-            t.printStackTrace();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+            return "{\"success\":false}";
         }
-        return "{\"success\":false}";
+        else throw new AccessDeniedException();
     }
-
 }
