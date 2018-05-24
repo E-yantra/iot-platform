@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.security.Principal;
+import java.util.Objects;
 
 /**
  * All users in the system are represented as this bean.
@@ -69,5 +70,22 @@ public class UserBean implements Principal {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserBean userBean = (UserBean) o;
+        return Objects.equals(id, userBean.id) &&
+                Objects.equals(name, userBean.name) &&
+                Objects.equals(email, userBean.email) &&
+                Objects.equals(password, userBean.password);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, name, email, password);
     }
 }
