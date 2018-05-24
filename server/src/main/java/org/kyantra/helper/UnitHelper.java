@@ -18,7 +18,6 @@ public class UnitHelper {
     }
 
     public Boolean checkAccess(UserBean user, UnitBean targetUnit) {
-
         Set<UnitBean> userUnits = RightsDAO.getInstance().getUnitsByUser(user);
         Set<UnitBean> targetAncestors = getAllParents(targetUnit);
 

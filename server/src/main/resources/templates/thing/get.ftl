@@ -629,7 +629,7 @@
                 if (this.createDevice.id) {
                     $.ajax({
                         url: "/device/update/" + that.createDevice.id,
-                        "method": "POST",
+                        "method": "PUT",
                         data: that.createDevice,
                         success: function (data) {
                             that.saveLoader = false;

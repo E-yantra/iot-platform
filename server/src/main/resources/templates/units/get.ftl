@@ -328,7 +328,7 @@
                 } else {
                     $.ajax({
                         "url": "/user/update/" + userId,
-                        "method": "POST",
+                        "method": "PUT",
                         "data": that.createUser,
                         "success": function (data) {
                             that.saveLoader = false;
