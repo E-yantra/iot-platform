@@ -264,7 +264,7 @@
                 } else {
                     $.ajax({
                         "url": "/thing/update/" + that.createThing.id,
-                        "method": "POST",
+                        "method": "PUT",
                         "data": that.createThing,
                         "success": function (data) {
                             that.saveLoader = false;

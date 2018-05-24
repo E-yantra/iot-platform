@@ -19,16 +19,16 @@ public class AppExceptionMapper implements ExceptionMapper<Throwable> {
                     .build();
         }
 
-        if(ex instanceof WebApplicationException){
+        if(ex instanceof WebApplicationException) {
             WebApplicationException exception = (WebApplicationException) ex;
             return exception.getResponse();
         }
+
         ex.printStackTrace();
         return Response.status(500)
                 .entity(ex.toString())
                 .type(MediaType.APPLICATION_JSON)
                 .build();
     }
-
 
 }
