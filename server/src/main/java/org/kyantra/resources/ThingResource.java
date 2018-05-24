@@ -111,6 +111,7 @@ public class ThingResource extends BaseResource {
         else throw new AccessDeniedException();
     }
 
+    // TODO: 5/24/18 Zip the certificates
     @POST
     @Session
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
