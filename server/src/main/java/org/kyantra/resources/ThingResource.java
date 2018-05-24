@@ -41,82 +41,91 @@ public class ThingResource extends BaseResource {
     int limit = 10;
 
     @GET
-    @Path("get/{id}")
     @Session
     @Secure(roles = {RoleEnum.ALL, RoleEnum.WRITE, RoleEnum.READ})
+    @Path("get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String get(@PathParam("id") Integer id) throws AccessDeniedException {
-        ThingBean bean = ThingDAO.getInstance().get(id);
-        UnitBean targetUnit = bean.getParentUnit();
+        ThingBean thingBean = ThingDAO.getInstance().get(id);
+
+        UnitBean targetUnit = thingBean.getParentUnit();
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
         if(UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
-            return gson.toJson(bean);
+            return gson.toJson(thingBean);
         }
         else throw new AccessDeniedException();
     }
 
     @GET
+    @Session
     @Path("list/page/{page}")
     @Produces(MediaType.APPLICATION_JSON)
     public String list(@PathParam("page") Integer page) {
-        Principal principal = getSecurityContext().getUserPrincipal();
-        UserBean currentUser = (UserBean) principal;
-        List<ThingBean> users = ThingDAO.getInstance().list(page,limit);
-        return gson.toJson(users);
+        List<ThingBean> things= ThingDAO.getInstance().list(page,limit);
+        return gson.toJson(things);
     }
 
-    @POST
+    @PUT
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
     @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Session
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
                          @FormParam("description") String description,
                          @FormParam("ip") String ip) throws AccessDeniedException{
         //TODO: create/update will only add/edit current entity values and not its parent/children attributes
-        if (AuthorizationDAO.getInstance().ownsThing((UserBean)getSecurityContext().getUserPrincipal(),ThingDAO.getInstance().get(id))) {
+        ThingBean bean = ThingDAO.getInstance().get(id);
+        UnitBean targetUnit = bean.getParentUnit();
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if(UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
             ThingDAO.getInstance().update(id, name, description, ip);
-            ThingBean bean = ThingDAO.getInstance().get(id);
             return gson.toJson(bean);
         }
-        else {
-            throw new AccessDeniedException();
-        }
+        else throw new AccessDeniedException();
     }
 
     @DELETE
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
     public String delete(@PathParam("id") Integer id) throws AccessDeniedException{
-        if (AuthorizationDAO.getInstance().ownsThing((UserBean)getSecurityContext().getUserPrincipal(),ThingDAO.getInstance().get(id))) {
+        ThingBean bean = ThingDAO.getInstance().get(id);
+        UnitBean targetUnit = bean.getParentUnit();
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if(UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
             try {
                 ThingDAO.getInstance().delete(id);
+                // TODO: 5/24/18 return proper response 
                 return "{}";
             } catch (Throwable t) {
                 t.printStackTrace();
             }
             return "{}";
         }
-        else{
-            throw new AccessDeniedException();
-        }
+        else throw new AccessDeniedException();
     }
 
     @POST
     @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED) //unit_id
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String create(@FormParam("name") String name,
                          @FormParam("description") String description,
                          @FormParam("ip") String ip,
                          @FormParam("parentUnitId") Integer parentUnitId) throws AccessDeniedException{
-        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(parentUnitId))) {
+
+        UnitBean targetUnit = UnitDAO.getInstance().get(parentUnitId);
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if(UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
             try {
                 String s = "Create thing";
                 //System.out.println(gson.toJson(bean));
@@ -197,19 +206,28 @@ public class ThingResource extends BaseResource {
 
             return "{\"success\":false}";
 
-        } else {
-            throw new AccessDeniedException();
         }
+        else throw new AccessDeniedException();
     }
 
     @GET
+    @Session
+    @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Path("unit/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByUnit(@PathParam("id") Integer id) {
-        Set<ThingBean> things = ThingDAO.getInstance().getByUnitId(id);
-        return gson.toJson(things);
+    public String getByUnit(@PathParam("id") Integer id) throws AccessDeniedException {
+        // should have access to read parent units details
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        UnitBean targetUnit = UnitDAO.getInstance().get(id);
+
+        if (UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
+            Set<ThingBean> things = ThingDAO.getInstance().getByUnitId(id);
+            return gson.toJson(things);
+        }
+        else throw new AccessDeniedException();
     }
 
+    // TODO: 5/24/18 Debug this resource method: Gives NPE always
     @GET
     @Path("shadow/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -233,5 +251,4 @@ public class ThingResource extends BaseResource {
     public CertificateResource getCertificateResource() {
         return new CertificateResource();
     }
-
 }
