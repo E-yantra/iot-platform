@@ -64,8 +64,6 @@ public class ThingHelper {
                 .withTopicRulePayload(rulePayload);
 
         AwsIotHelper.getIotClient().createTopicRule(topicRuleRequest);
-
-//        return true;
     }
 
 }

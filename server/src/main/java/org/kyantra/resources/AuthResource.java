@@ -77,9 +77,9 @@ public class AuthResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String signup(@FormParam("name") String name,
                          @FormParam("email") String email,
-                               @FormParam("password") String password,
-                               @Context HttpServletRequest request,
-                               @Context ContainerRequest containerRequest) throws Exception {
+                         @FormParam("password") String password,
+                         @Context HttpServletRequest request,
+                         @Context ContainerRequest containerRequest) throws Exception {
 
         UserBean userBean = UserDAO.getInstance().getByEmail(email.toLowerCase());
         if(userBean!=null){
