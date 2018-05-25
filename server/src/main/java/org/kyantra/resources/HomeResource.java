@@ -134,6 +134,7 @@ public class HomeResource extends BaseResource {
         setCommonData(map);
         return map;
     }
+
     @GET
     @Path("/users/create")
     @Template(name = "/users/create.ftl")

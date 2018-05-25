@@ -47,6 +47,7 @@ public class UnitResource extends BaseResource {
 
     @GET
     @Path("list/page/{page}")
+    @Session
     @Produces(MediaType.APPLICATION_JSON)
     public String list(@PathParam("page") Integer page) {
         Principal principal = getSecurityContext().getUserPrincipal();
@@ -57,9 +58,9 @@ public class UnitResource extends BaseResource {
 
 
     @PUT
+    @Path("update/{id}")
     @Session
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
-    @Path("update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String update(@PathParam("id") Integer id,
@@ -80,9 +81,9 @@ public class UnitResource extends BaseResource {
     }
 
     @DELETE
+    @Path("delete/{id}")
     @Session
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
-    @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String delete(@PathParam("id") Integer id) throws AccessDeniedException {
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
@@ -103,10 +104,10 @@ public class UnitResource extends BaseResource {
 
     @POST
     @Path("create")
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
-    @Session
     public String create(@FormParam("unitName") String name,
                          @FormParam("description") String description,
                          @FormParam("photo") String photo,
@@ -161,9 +162,9 @@ public class UnitResource extends BaseResource {
     }
 
     @GET
+    @Path("rights/{id}/{userId}")
     @Session
     @Secure(roles= {RoleEnum.READ})
-    @Path("rights/{id}/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getUserRights(@PathParam("id") Integer unitId,
                                 @PathParam("userId") Integer userId) throws AccessDeniedException {
@@ -184,9 +185,9 @@ public class UnitResource extends BaseResource {
     }
 
     @GET
+    @Path("users/{id}")
     @Session
     @Secure(roles = {RoleEnum.READ})
-    @Path("users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAuthorizedUsers(@PathParam("id") Integer unitId) throws AccessDeniedException {
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
@@ -206,9 +207,9 @@ public class UnitResource extends BaseResource {
     }
 
     @GET
+    @Path("subunits/{id}")
     @Session
     @Secure(roles = {RoleEnum.READ})
-    @Path("subunits/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getSubunits(@PathParam("id") Integer unitId) throws AccessDeniedException {
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
@@ -223,9 +224,9 @@ public class UnitResource extends BaseResource {
     }
 
     @GET
+    @Path("parents/{id}")
     @Session
     @Secure(roles = {RoleEnum.READ})
-    @Path("parents/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAllParents(@PathParam("id") Integer unitId) throws AccessDeniedException {
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
