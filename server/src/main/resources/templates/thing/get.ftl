@@ -298,7 +298,7 @@
                     "data": that.createRule.data,
                     "topic": that.createRule.topic,
                     "condition": that.createRule.condition,
-                    "action": that.createRule.action,
+                    "action": that.createRule.action
                 };
 
                 // send extra parameters according to the type of rule
