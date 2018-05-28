@@ -3,16 +3,22 @@ package org.kyantra.services;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.kyantra.config.Environment;
 import org.kyantra.beans.*;
 
 public class HibernateService {
 
     private static HibernateService mService = new HibernateService();
-    private static SessionFactory sessionFactory ;
+    private static SessionFactory sessionFactory;
 
     private HibernateService() {
 
-        Configuration configuration = new Configuration().configure();
+        Configuration configuration = new Configuration();
+
+        if (System.getProperty("environment").equals(Environment.TEST))
+            configuration.configure("hibernate-test.cfg.xml");
+        else configuration.configure("hibernate.cfg.xml");
+
         configuration.addAnnotatedClass(UserBean.class)
                 .addAnnotatedClass(RightsBean.class)
                 .addAnnotatedClass(UnitBean.class)
