@@ -20,17 +20,19 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+// TODO: 5/25/18 Add proper authorization on it
 @Path("right")
 @Api(value="right")
-public class RightsResource extends BaseResource{
+public class RightsResource extends BaseResource {
 
     @GET
     @Path("get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@PathParam("id") Integer id){
+    public String get(@PathParam("id") Integer id) {
         RightsBean userBean = RightsDAO.getInstance().get(id);
         return gson.toJson(userBean);
     }
+
 
     @POST
     @Path("update/{id}")
@@ -38,7 +40,7 @@ public class RightsResource extends BaseResource{
     @Consumes(MediaType.APPLICATION_JSON)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "right", subjectField = "parentId")
     public String update(@PathParam("id") Integer id,
-                         @FormParam("role") RoleEnum role){
+                         @FormParam("role") RoleEnum role) {
         //TODO: "new UnitBean()" should be user id?
         //Can a user have different rights on separate units, if he is owner of multiple units?
         RightsDAO.getInstance().update(id,new UnitBean(),role);
@@ -46,11 +48,12 @@ public class RightsResource extends BaseResource{
         return gson.toJson(bean);
     }
 
+
     @DELETE
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "right", subjectField = "parentId")
-    public String delete(@PathParam("id") Integer id){
+    public String delete(@PathParam("id") Integer id) {
         try {
             RightsDAO.getInstance().delete(id);
             return "{}";
@@ -59,6 +62,7 @@ public class RightsResource extends BaseResource{
         }
         return "{}";
     }
+
 
     @POST
     @Path("create")

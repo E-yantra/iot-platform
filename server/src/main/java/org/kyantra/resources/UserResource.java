@@ -33,6 +33,8 @@ public class UserResource extends BaseResource {
         else throw new AccessDeniedException();
     }
 
+
+    // TODO: 5/25/18 Need authorization here?
     @GET
     @Path("list/page/{page}")
     @Session
@@ -43,6 +45,7 @@ public class UserResource extends BaseResource {
         List<UserBean> users = UserDAO.getInstance().list(page,limit);
         return gson.toJson(users);
     }
+
 
     @PUT
     @Path("update/{id}")

@@ -42,7 +42,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         // Get the Authorization header from the request
-
+        System.out.println("Authorization step");
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
         String authorizationCookie = requestContext.getCookies().getOrDefault("authorization", new Cookie("token","")).getValue().toString();
