@@ -17,6 +17,7 @@ public class BaseResource {
 
     @Context
     SecurityContext sc;
+
     @Context
     HttpServletRequest request;
 
@@ -24,6 +25,14 @@ public class BaseResource {
         if(service==null) {
             service = HibernateService.getInstance();
         }
+    }
+
+    public BaseResource(SecurityContext sc, HttpServletRequest request){
+        if(service==null) {
+            service = HibernateService.getInstance();
+        }
+        this.sc = sc;
+        this.request = request;
     }
 
     public Session getSession(){

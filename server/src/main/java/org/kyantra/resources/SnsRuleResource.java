@@ -15,11 +15,13 @@ import org.kyantra.interfaces.Session;
 import org.kyantra.services.ValidatorService;
 import org.kyantra.utils.AwsIotHelper;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Constraint;
 import javax.validation.ConstraintViolation;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,7 +31,12 @@ public class SnsRuleResource extends BaseResource {
     /* TODO: Atomicity with AWS and DB
      * For transactions, like if DB transactions don't commit properly rollback the AWS operations too*/
 
-    // TODO: 5/25/18 Change id pathparam to formparam
+    // TODO: 5/25/18 Change id path-param to form-param
+
+    public SnsRuleResource(SecurityContext sc, HttpServletRequest request) {
+        super(sc, request);
+    }
+
     @POST
     @Path("/create/{id}")
     @Session
@@ -249,6 +256,7 @@ public class SnsRuleResource extends BaseResource {
     }
 
 
+    // TODO: 5/25/18 Add authorization here
     @POST
     @Path("/subscribe/{id}")
     @Session

@@ -250,6 +250,6 @@ public class ThingResource extends BaseResource {
 
     @Path("/certificate")
     public CertificateResource getCertificateResource() {
-        return new CertificateResource();
+        return new CertificateResource(sc, request);
     }
 }

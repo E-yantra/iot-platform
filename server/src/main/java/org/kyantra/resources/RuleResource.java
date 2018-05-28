@@ -11,14 +11,16 @@ import javax.ws.rs.core.MediaType;
 @Api(value = "/rule")
 public class RuleResource extends BaseResource {
 
+    // Sub resource classes instances don't get the request object so you have to explicitly provide
+    // securityContext (sc) and requestContext (request) while bootstrapping
     @Path("/ddb")
     public DDBRuleResource getDDBRule() {
-        return new DDBRuleResource();
+        return new DDBRuleResource(sc, request);
     }
 
     @Path("/sns")
     public SnsRuleResource getSNSRule() {
-        return new SnsRuleResource();
+        return new SnsRuleResource(sc, request);
     }
 
     @GET
@@ -28,5 +30,4 @@ public class RuleResource extends BaseResource {
     public String getActionTypes() {
         return gson.toJson(ActionHelper.getInstance().getActionTypes());
     }
-
 }

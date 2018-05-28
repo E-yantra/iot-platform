@@ -13,13 +13,19 @@ import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 import org.kyantra.utils.AwsIotHelper;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "")
 public class DDBRuleResource extends BaseResource {
+
+    public DDBRuleResource(SecurityContext sc, HttpServletRequest request) {
+        super(sc, request);
+    }
 
     @POST
     @Path("/create/{id}")
