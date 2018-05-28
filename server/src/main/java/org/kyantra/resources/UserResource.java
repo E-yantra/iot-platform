@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.UserDAO;
+import org.kyantra.exception.AccessDeniedException;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 

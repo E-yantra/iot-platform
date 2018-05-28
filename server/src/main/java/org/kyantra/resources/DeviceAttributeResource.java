@@ -2,10 +2,10 @@ package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
 import org.kyantra.beans.*;
-import org.kyantra.dao.AuthorizationDAO;
 import org.kyantra.dao.DeviceAttributeDAO;
 import org.kyantra.dao.DeviceDAO;
 import org.kyantra.dao.UnitDAO;
+import org.kyantra.exception.AccessDeniedException;
 import org.kyantra.helper.AuthorizationHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;

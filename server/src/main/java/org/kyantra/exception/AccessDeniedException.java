@@ -1,4 +1,4 @@
-package org.kyantra.resources;
+package org.kyantra.exception;
 
 public class AccessDeniedException extends Throwable {
 }

@@ -33,6 +33,9 @@ public class UnitHelper {
     }
 
     public Set<UnitBean> getAllParents(UnitBean unitBean) {
+        /*
+with recursive ancestors as ( select id, unit_name, parent_id from units where id = 100 union all select u.id, u.unit_name, u.parent_id  from units u, ancestors ag where u.id = ag.parent_id ) select * from ancestors;
+ */
         Set<UnitBean> unitBeans = new HashSet<>();
         unitBeans.add(unitBean);
 

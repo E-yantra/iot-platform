@@ -7,12 +7,11 @@ import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.CronDAO;
 import org.kyantra.dao.ThingDAO;
+import org.kyantra.exception.AccessDeniedException;
 import org.kyantra.helper.AuthorizationHelper;
-import org.kyantra.helper.UnitHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
-import javax.management.relation.Role;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;

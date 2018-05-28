@@ -9,6 +9,7 @@ import org.kyantra.aws.RuleHelper;
 import org.kyantra.aws.SnsHelper;
 import org.kyantra.beans.*;
 import org.kyantra.dao.*;
+import org.kyantra.exception.AccessDeniedException;
 import org.kyantra.helper.AuthorizationHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
@@ -16,7 +17,6 @@ import org.kyantra.services.ValidatorService;
 import org.kyantra.utils.AwsIotHelper;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Constraint;
 import javax.validation.ConstraintViolation;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;

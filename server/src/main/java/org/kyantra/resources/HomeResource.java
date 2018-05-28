@@ -6,6 +6,7 @@ import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.*;
+import org.kyantra.exception.AccessDeniedException;
 import org.kyantra.interfaces.Session;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,7 +76,7 @@ public class HomeResource extends BaseResource {
     @Path("/units/create")
     @Template(name = "/units/create.ftl")
     @Session
-    public Map<String, Object> createUnit(@QueryParam("id") Integer id) throws AccessDeniedException{
+    public Map<String, Object> createUnit(@QueryParam("id") Integer id) throws AccessDeniedException {
         //TODO: required?
         if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
             final Map<String, Object> map = new HashMap<String, Object>();

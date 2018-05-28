@@ -1,4 +1,6 @@
-package org.kyantra.resources;
+package org.kyantra.exception;
+
+import org.kyantra.exception.AccessDeniedException;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;

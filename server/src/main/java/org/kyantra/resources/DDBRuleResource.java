@@ -2,12 +2,12 @@ package org.kyantra.resources;
 
 import com.amazonaws.services.iot.model.*;
 import io.swagger.annotations.Api;
-import org.kyantra.beans.ConfigBean;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.ConfigDAO;
 import org.kyantra.dao.ThingDAO;
+import org.kyantra.exception.AccessDeniedException;
 import org.kyantra.helper.AuthorizationHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
