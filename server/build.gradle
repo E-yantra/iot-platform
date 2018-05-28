@@ -12,9 +12,6 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
 
 task fatJar(type: Jar) {
     manifest {
@@ -41,7 +38,13 @@ jar {
 
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    // https://github.com/rest-assured/rest-assured/wiki/GettingStarted
+    testCompile 'io.rest-assured:rest-assured:3.1.0'
+    // https://mvnrepository.com/artifact/org.testng/testng
+    testCompile group: 'org.testng', name: 'testng', version: '6.14.3'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+
     compile group: 'org.glassfish.jersey', name: 'jersey-bom', version: '2.27' //, ext: 'pom'
     // https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-grizzly2-servlet
     compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-grizzly2-servlet', version: '2.27'
