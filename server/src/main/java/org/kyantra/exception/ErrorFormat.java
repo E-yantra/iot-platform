@@ -1,25 +1,37 @@
 package org.kyantra.exception;
 
-import com.sun.jndi.cosnaming.ExceptionMapper;
-import org.glassfish.jersey.jaxb.internal.XmlJaxbElementProvider;
+import com.google.gson.annotations.Expose;
 
-// http://www.codingpedia.org/ama/error-handling-in-rest-api-with-jersey/
-public class AppException extends Exception {
+public class ErrorFormat {
 
+    @Expose
     private Integer status;
-    private int code;
+
+//    @Expose
+//    private int code;
+
+    @Expose
     private String message;
+
+    @Expose
     private String link;
+
+    @Expose
     private String developerMessage;
 
     // TODO: 5/28/18 May be try to convert it to builder pattern
-    public AppException(Integer status, int code, String message, String link, String developerMessage) {
+    public ErrorFormat() {
+
+    }
+
+    public ErrorFormat(Integer status, String message, String link, String developerMessage) {
         this.status = status;
-        this.code = code;
+//        this.code = code;
         this.message = message;
         this.link = link;
         this.developerMessage = developerMessage;
     }
+
 
     public Integer getStatus() {
         return status;
@@ -29,13 +41,13 @@ public class AppException extends Exception {
         this.status = status;
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
+//    public int getCode() {
+//        return code;
+//    }
+//
+//    public void setCode(int code) {
+//        this.code = code;
+//    }
 
     public String getMessage() {
         return message;

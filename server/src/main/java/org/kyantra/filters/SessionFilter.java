@@ -2,11 +2,13 @@ package org.kyantra.filters;
 
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.UserDAO;
+import org.kyantra.exception.ExceptionMessage;
 import org.kyantra.interfaces.Session;
 
 import javax.annotation.Priority;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.RedirectionException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -47,8 +49,7 @@ public class SessionFilter implements ContainerRequestFilter {
     }
 
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
-        System.out.println("Authentication step");
+    public void filter(ContainerRequestContext requestContext) {
         Method resourceMethod = resourceInfo.getResourceMethod();
 
         if (!isSessionNeeded(resourceMethod)) {
@@ -62,7 +63,9 @@ public class SessionFilter implements ContainerRequestFilter {
             // If user provides a wrong auth token redirect him to login
             if (userBean == null) {
                 try {
-                    throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization", "")).build());
+                    throw new RedirectionException(ExceptionMessage.TEMP_REDIRECT,
+                            Response.Status.TEMPORARY_REDIRECT.getStatusCode(),
+                            new URI("/login"));
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
@@ -96,12 +99,14 @@ public class SessionFilter implements ContainerRequestFilter {
 
 
         } else {
-
             // TODO: 5/24/18 Send a JSON response along with temporary redirect error
             try {
-                throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization", "")).build());
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
+                throw new RedirectionException(ExceptionMessage.TEMP_REDIRECT,
+                        Response.Status.TEMPORARY_REDIRECT.getStatusCode(),
+                        new URI("/login"));
+            }
+            catch (URISyntaxException ex) {
+                ex.printStackTrace();
             }
         }
     }
