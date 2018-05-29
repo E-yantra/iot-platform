@@ -600,7 +600,7 @@
                         "method": "DELETE",
                         success: function (data) {
                             that.saveLoader = false;
-                            alert(data);
+                            alert("Device deleted!");
                             //that.deleteDeviceAttributes(device.id);
                             that.load();
                         }
@@ -614,7 +614,7 @@
                         url: "/attribute/delete/" + deviceId,
                         "method": "DELETE",
                         success: function (data) {
-                            alert('Device attributes deleted');
+                            alert('Device attributes deleted!');
                             this.load();
                         }
                     });
