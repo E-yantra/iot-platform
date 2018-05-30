@@ -7,6 +7,7 @@ import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.*;
 import org.kyantra.exceptionhandling.AccessDeniedException;
+import org.kyantra.exceptionhandling.ExceptionMessage;
 import org.kyantra.interfaces.Session;
 
 import javax.servlet.http.HttpServletRequest;
@@ -164,7 +165,9 @@ public class HomeResource extends BaseResource {
     @Template(name = "index.ftl")
     public Map<String, Object> logout(@Context HttpServletRequest request) throws URISyntaxException {
         final Map<String, Object> map = new HashMap<String, Object>();
-        throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization","")).build());
+        throw new RedirectionException(ExceptionMessage.TEMP_REDIRECT,
+                Response.Status.TEMPORARY_REDIRECT.getStatusCode(),
+                new URI("/login"));
     }
 
     @GET

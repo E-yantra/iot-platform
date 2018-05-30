@@ -21,6 +21,9 @@ public class AppExceptionMapper implements ExceptionMapper<Throwable> {
         Gson gson = new Gson();
         ErrorFormat message = new ErrorFormat();
 
+        // for logging
+        ex.printStackTrace();
+
         if (ex instanceof DataNotFoundException) {
             message.setStatus(Response.Status.NOT_FOUND.getStatusCode());
             message.setMessage(ex.getMessage());
