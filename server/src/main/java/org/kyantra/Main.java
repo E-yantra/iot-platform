@@ -41,9 +41,9 @@ public class Main {
         rc.register(io.swagger.jaxrs.listing.ApiListingResource.class);
         rc.register(io.swagger.jaxrs.listing.SwaggerSerializers.class);
         rc.register(JacksonFeature.class);
+        rc.register(AppExceptionMapper.class);
         rc.register(SessionFilter.class);
         rc.register(AuthorizationFilter.class);
-        rc.register(AppExceptionMapper.class);
         rc.register(AuthResource.class);
 
         ClassLoader loader = Main.class.getClassLoader();
@@ -56,6 +56,7 @@ public class Main {
         server = GrizzlyHttpServerFactory.createHttpServer(URI.create("http://0.0.0.0:"+port+"/"), rc);
         ServerConfiguration cfg = server.getServerConfiguration();
         cfg.addHttpHandler(docsHandler, "/docs/");
+        // TODO: 5/30/18 Enter to submit form in modals and other places
         cfg.addHttpHandler(staticHttpHandler,"/static/");
         return server;
     }

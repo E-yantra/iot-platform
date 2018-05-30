@@ -15,7 +15,9 @@ public class HibernateService {
 
         Configuration configuration = new Configuration();
 
-        if (System.getProperty("environment").equals(EnvironmentConfig.TEST))
+        if (System.getProperty("environment") == null)
+            configuration.configure("hibernate.cfg.xml");
+        else if (System.getProperty("environment").equals(EnvironmentConfig.TEST))
             configuration.configure("hibernate-test.cfg.xml");
         else configuration.configure("hibernate.cfg.xml");
 
