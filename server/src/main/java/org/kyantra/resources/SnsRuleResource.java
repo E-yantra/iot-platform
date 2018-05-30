@@ -9,7 +9,7 @@ import org.kyantra.aws.RuleHelper;
 import org.kyantra.aws.SnsHelper;
 import org.kyantra.beans.*;
 import org.kyantra.dao.*;
-import org.kyantra.exception.AccessDeniedException;
+import org.kyantra.exceptionhandling.AccessDeniedException;
 import org.kyantra.helper.AuthorizationHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;

@@ -2,24 +2,21 @@ package org.kyantra.filters;
 
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.UserDAO;
-import org.kyantra.exception.ExceptionMessage;
+import org.kyantra.exceptionhandling.ExceptionMessage;
 import org.kyantra.interfaces.Session;
 
 import javax.annotation.Priority;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.RedirectionException;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.net.URI;

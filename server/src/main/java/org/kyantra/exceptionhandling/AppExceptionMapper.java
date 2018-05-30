@@ -1,4 +1,4 @@
-package org.kyantra.exception;
+package org.kyantra.exceptionhandling;
 
 import com.google.gson.Gson;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -24,8 +24,8 @@ public class AppExceptionMapper implements ExceptionMapper<Throwable> {
         if (ex instanceof DataNotFoundException) {
             message.setStatus(Response.Status.NOT_FOUND.getStatusCode());
             message.setMessage(ex.getMessage());
-            message.setDeveloperMessage(ExceptionMessage.DeveloperMessage.NOT_FOUND);
-            message.setLink(ExceptionMessage.Link.NOT_FOUND);
+            message.setDeveloperMessage(ExceptionMessage.DeveloperMessage.DATA_NOT_FOUND);
+            message.setLink(ExceptionMessage.Link.DATA_NOT_FOUND);
         }
         else if (ex instanceof ForbiddenException) {
             message.setStatus(Response.Status.FORBIDDEN.getStatusCode());
@@ -50,11 +50,13 @@ public class AppExceptionMapper implements ExceptionMapper<Throwable> {
             }
         }
         else if (ex instanceof WebApplicationException) {
+            // no set link
             message.setStatus(((WebApplicationException) ex).getResponse().getStatus());
             message.setMessage(ex.getMessage());
             message.setDeveloperMessage(ExceptionUtils.getStackTrace(ex));
         }
         else {
+            // no set link
             message.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             message.setMessage(ex.getMessage());
             message.setDeveloperMessage(ExceptionUtils.getStackTrace(ex));

@@ -6,7 +6,7 @@ import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.*;
-import org.kyantra.exception.AccessDeniedException;
+import org.kyantra.exceptionhandling.AccessDeniedException;
 import org.kyantra.interfaces.Session;
 
 import javax.servlet.http.HttpServletRequest;

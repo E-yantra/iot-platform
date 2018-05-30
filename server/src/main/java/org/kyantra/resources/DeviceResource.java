@@ -5,7 +5,7 @@ import org.kyantra.beans.*;
 import org.kyantra.dao.DeviceDAO;
 import org.kyantra.dao.ThingDAO;
 import org.kyantra.dao.UnitDAO;
-import org.kyantra.exception.AccessDeniedException;
+import org.kyantra.exceptionhandling.AccessDeniedException;
 import org.kyantra.helper.AuthorizationHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;

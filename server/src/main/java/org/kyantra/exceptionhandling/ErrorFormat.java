@@ -1,4 +1,4 @@
-package org.kyantra.exception;
+package org.kyantra.exceptionhandling;
 
 import com.google.gson.annotations.Expose;
 

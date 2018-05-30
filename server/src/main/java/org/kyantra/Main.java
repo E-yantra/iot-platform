@@ -15,7 +15,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.mvc.freemarker.FreemarkerMvcFeature;
 import org.kyantra.filters.AuthorizationFilter;
 import org.kyantra.filters.SessionFilter;
-import org.kyantra.exception.AppExceptionMapper;
+import org.kyantra.exceptionhandling.AppExceptionMapper;
 import org.kyantra.resources.AuthResource;
 import org.kyantra.services.HibernateService;
 

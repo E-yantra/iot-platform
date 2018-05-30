@@ -13,7 +13,7 @@ import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.ThingDAO;
 import org.kyantra.dao.UnitDAO;
-import org.kyantra.exception.AccessDeniedException;
+import org.kyantra.exceptionhandling.AccessDeniedException;
 import org.kyantra.helper.UnitHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;

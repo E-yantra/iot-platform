@@ -7,7 +7,7 @@ import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.ConfigDAO;
 import org.kyantra.dao.ThingDAO;
-import org.kyantra.exception.AccessDeniedException;
+import org.kyantra.exceptionhandling.AccessDeniedException;
 import org.kyantra.helper.AuthorizationHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;

@@ -7,8 +7,8 @@ import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.RightsDAO;
 import org.kyantra.dao.UnitDAO;
-import org.kyantra.exception.DataNotFoundException;
-import org.kyantra.exception.ExceptionMessage;
+import org.kyantra.exceptionhandling.DataNotFoundException;
+import org.kyantra.exceptionhandling.ExceptionMessage;
 import org.kyantra.helper.AuthorizationHelper;
 import org.kyantra.helper.UnitHelper;
 import org.kyantra.interfaces.Secure;
@@ -42,7 +42,7 @@ public class UnitResource extends BaseResource {
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
         if(unitBean == null)
-            throw new DataNotFoundException(ExceptionMessage.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
         
         if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean))
             throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
@@ -80,7 +80,7 @@ public class UnitResource extends BaseResource {
         UnitBean unitBean = UnitDAO.getInstance().get(id);
 
         if (unitBean == null)
-            throw new DataNotFoundException(ExceptionMessage.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
         
         if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean))
             throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
@@ -100,7 +100,7 @@ public class UnitResource extends BaseResource {
         UnitBean unitBean = UnitDAO.getInstance().get(id);
 
         if (unitBean == null)
-            throw new DataNotFoundException(ExceptionMessage.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
         
         if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean)) 
             throw new ForbiddenException();
@@ -129,7 +129,7 @@ public class UnitResource extends BaseResource {
         UnitBean unitBean = UnitDAO.getInstance().get(parentUnitId);
         
         if (unitBean == null)
-            throw new DataNotFoundException(ExceptionMessage.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
         
         if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean)) 
             throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
@@ -169,7 +169,7 @@ public class UnitResource extends BaseResource {
         UnitBean unitBean = UnitDAO.getInstance().get(id);
 
         if (unitBean == null)
-            throw new DataNotFoundException(ExceptionMessage.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
         
         if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean)) 
             throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
@@ -190,7 +190,7 @@ public class UnitResource extends BaseResource {
         UnitBean unitBean = UnitDAO.getInstance().get(unitId);
 
         if (unitBean == null)
-            throw new DataNotFoundException(ExceptionMessage.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
         
         if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean))
             throw new ForbiddenException(ExceptionMessage.FORBIDDEN);    
@@ -214,7 +214,7 @@ public class UnitResource extends BaseResource {
         UnitBean unitBean = UnitDAO.getInstance().get(unitId);
 
         if (unitBean == null)
-            throw new DataNotFoundException(ExceptionMessage.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
         if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean))
             throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
@@ -237,7 +237,7 @@ public class UnitResource extends BaseResource {
         UnitBean unitBean = UnitDAO.getInstance().get(unitId);
 
         if (unitBean == null)
-            throw new DataNotFoundException(ExceptionMessage.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
         if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean))
             throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
@@ -255,7 +255,7 @@ public class UnitResource extends BaseResource {
         UnitBean unitBean = UnitDAO.getInstance().get(unitId);
 
         if (unitBean == null)
-            throw new DataNotFoundException(ExceptionMessage.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
         if (AuthorizationHelper.getInstance().checkAccess(userBean, unitBean))
             throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
