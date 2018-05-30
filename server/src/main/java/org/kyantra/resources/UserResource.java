@@ -4,7 +4,8 @@ import io.swagger.annotations.Api;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.UserDAO;
-import org.kyantra.exception.AccessDeniedException;
+import org.kyantra.exceptionhandling.DataNotFoundException;
+import org.kyantra.exceptionhandling.ExceptionMessage;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
@@ -24,14 +25,17 @@ public class UserResource extends BaseResource {
     @Session
     @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@PathParam("id") Integer id) throws AccessDeniedException {
+    public String get(@PathParam("id") Integer id)   {
         UserBean targetUser = UserDAO.getInstance().get(id);
         UserBean currentUser = (UserBean)getSecurityContext().getUserPrincipal();
-        
-        if (currentUser.equals(targetUser)) {
-            return gson.toJson(targetUser);
-        }
-        else throw new AccessDeniedException();
+
+        if (targetUser == null)
+            throw new DataNotFoundException(ExceptionMessage.DeveloperMessage.DATA_NOT_FOUND);
+
+        if (!currentUser.equals(targetUser))
+            throw new ForbiddenException();
+
+        return gson.toJson(targetUser);
     }
 
 
@@ -57,7 +61,7 @@ public class UserResource extends BaseResource {
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
                          @FormParam("email") String email,
-                         @FormParam("password") String password) throws AccessDeniedException {
+                         @FormParam("password") String password)   {
         name = name.trim();
         email = email.trim();
         password = password.trim();
@@ -69,12 +73,15 @@ public class UserResource extends BaseResource {
         UserBean targetUser = UserDAO.getInstance().get(id);
         UserBean currentUser = (UserBean)getSecurityContext().getUserPrincipal();
 
-        if (currentUser.equals(targetUser)) {
-            UserDAO.getInstance().update(id, name, email, password);
-            UserBean userBean = UserDAO.getInstance().get(id);
-            return gson.toJson(userBean);
-        }
-        else throw new AccessDeniedException();
+        if (targetUser == null)
+            throw new DataNotFoundException(ExceptionMessage.DeveloperMessage.DATA_NOT_FOUND);
+
+        if (currentUser.equals(targetUser))
+            throw new ForbiddenException();
+
+        UserDAO.getInstance().update(id, name, email, password);
+        UserBean userBean = UserDAO.getInstance().get(id);
+        return gson.toJson(userBean);
     }
 
 
@@ -107,7 +114,7 @@ public class UserResource extends BaseResource {
                          @FormParam("password") String password){
         try {
             UserBean u = UserDAO.getInstance().getByEmail(email);
-            if(u!=null){
+            if(u!=null) {
                 return gson.toJson(u);
             }
 
