@@ -30,10 +30,12 @@ public class SessionFilter implements ContainerRequestFilter {
 
     @Context
     ResourceInfo resourceInfo;
+
     @Context
     HttpServletRequest request;
 
     private boolean isSessionNeeded(AnnotatedElement annotatedElement) {
+
         if (annotatedElement == null) {
             return false;
         } else {

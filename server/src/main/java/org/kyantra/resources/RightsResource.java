@@ -66,10 +66,10 @@ public class RightsResource extends BaseResource {
 
     @POST
     @Path("create")
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "right", subjectField = "parentId")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "right", subjectField = "parentId")
-    @Session
     public String create(@FormParam("unitId") Integer unitId,
                          @FormParam("userId") Integer userId,
                          @FormParam("Role") RoleEnum role){

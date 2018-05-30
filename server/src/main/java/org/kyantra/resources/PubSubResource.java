@@ -6,11 +6,13 @@ import com.amazonaws.services.iotdata.AWSIotData;
 import com.amazonaws.services.iotdata.model.GetThingShadowRequest;
 import com.amazonaws.services.iotdata.model.GetThingShadowResult;
 import org.kyantra.beans.DeviceAttributeBean;
+import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.ShadowBean;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.dao.ConfigDAO;
 import org.kyantra.dao.DeviceAttributeDAO;
 import org.kyantra.dao.ThingDAO;
+import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 import org.kyantra.utils.AwsIotHelper;
 
@@ -48,7 +50,7 @@ public class PubSubResource extends BaseResource {
 
     @POST
     @Path("publish")
-    @Session
+    @Secure(roles = {RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String publish(@FormParam("topic") String topic,
@@ -59,6 +61,7 @@ public class PubSubResource extends BaseResource {
 
     @GET
     @Path("shadow/{id}")
+    @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String getThingShadow(@PathParam("id") Integer thingId) throws AWSIotException {

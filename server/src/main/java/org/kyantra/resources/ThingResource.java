@@ -60,7 +60,7 @@ public class ThingResource extends BaseResource {
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
         if (UnitHelper.getInstance().checkAccess(userBean, targetUnit))
-            throw new  ForbiddenException();
+            throw new  ForbiddenException(ExceptionMessage.FORBIDDEN);
             
         return gson.toJson(thingBean);
     }
@@ -83,7 +83,7 @@ public class ThingResource extends BaseResource {
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
                          @FormParam("description") String description,
-                         @FormParam("ip") String ip) throws  ForbiddenException{
+                         @FormParam("ip") String ip) {
         //TODO: create/update will only add/edit current entity values and not its parent/children attributes
         ThingBean bean = ThingDAO.getInstance().get(id);
 
@@ -94,7 +94,7 @@ public class ThingResource extends BaseResource {
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
         if (UnitHelper.getInstance().checkAccess(userBean, targetUnit))
-            throw new  ForbiddenException();
+            throw new  ForbiddenException(ExceptionMessage.FORBIDDEN);
 
         ThingDAO.getInstance().update(id, name, description, ip);
         return gson.toJson(bean);
@@ -115,7 +115,7 @@ public class ThingResource extends BaseResource {
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
         if (UnitHelper.getInstance().checkAccess(userBean, targetUnit))
-            throw new  ForbiddenException();
+            throw new  ForbiddenException(ExceptionMessage.FORBIDDEN);
 
         try {
             ThingDAO.getInstance().delete(id);
@@ -137,7 +137,7 @@ public class ThingResource extends BaseResource {
     public String create(@FormParam("name") String name,
                          @FormParam("description") String description,
                          @FormParam("ip") String ip,
-                         @FormParam("parentUnitId") Integer parentUnitId)  {
+                         @FormParam("parentUnitId") Integer parentUnitId) {
 
         UnitBean targetUnit = UnitDAO.getInstance().get(parentUnitId);
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
@@ -227,7 +227,7 @@ public class ThingResource extends BaseResource {
             return "{\"success\":false}";
 
         }
-        else throw new  ForbiddenException();
+        else throw new  ForbiddenException(ExceptionMessage.FORBIDDEN);
     }
 
     @GET
@@ -247,7 +247,7 @@ public class ThingResource extends BaseResource {
             Set<ThingBean> things = ThingDAO.getInstance().getByUnitId(id);
             return gson.toJson(things);
         }
-        else throw new  ForbiddenException();
+        else throw new  ForbiddenException(ExceptionMessage.FORBIDDEN);
     }
 
     // TODO: 5/24/18 Debug this resource method: Gives NPE always
@@ -257,7 +257,7 @@ public class ThingResource extends BaseResource {
     @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String getThingShadow(@PathParam("id") Integer thingId) throws AWSIotException {
+    public String getThingShadow(@PathParam("id") Integer thingId) {
         ThingBean thingBean = ThingDAO.getInstance().get(thingId);
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
@@ -265,7 +265,7 @@ public class ThingResource extends BaseResource {
             throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
         if (AuthorizationHelper.getInstance().checkAccess(userBean, thingBean))
-            throw new ForbiddenException();
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
 
         String shadowName = "thing"+thingBean.getId();
 

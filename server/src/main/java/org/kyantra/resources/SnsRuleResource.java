@@ -9,7 +9,8 @@ import org.kyantra.aws.RuleHelper;
 import org.kyantra.aws.SnsHelper;
 import org.kyantra.beans.*;
 import org.kyantra.dao.*;
-import org.kyantra.exceptionhandling.AccessDeniedException;
+import org.kyantra.exceptionhandling.DataNotFoundException;
+import org.kyantra.exceptionhandling.ExceptionMessage;
 import org.kyantra.helper.AuthorizationHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
@@ -51,7 +52,7 @@ public class SnsRuleResource extends BaseResource {
                          @FormParam("subject") String subject,
                          @FormParam("message") String message,
                          @FormParam("interval") Integer interval,
-                         @FormParam("sns_topic") String snsTopic) throws AccessDeniedException {
+                         @FormParam("sns_topic") String snsTopic) {
         /*
          * Steps:
          * 1. create SnsBean
@@ -65,6 +66,9 @@ public class SnsRuleResource extends BaseResource {
         ThingBean targetThing = ThingDAO.getInstance().get(parentThingId);
         UserBean user = (UserBean) getSecurityContext().getUserPrincipal();
 
+        if (targetThing == null) 
+            throw  new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+        
         if (AuthorizationHelper.getInstance().checkAccess(user, targetThing)) {
             // create SnsBean
             SnsBean snsBean = new SnsBean();
@@ -125,7 +129,7 @@ public class SnsRuleResource extends BaseResource {
             }
             return gson.toJson(ruleBean);
         }
-        else throw new AccessDeniedException();
+        else throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
     }
 
 
@@ -134,16 +138,19 @@ public class SnsRuleResource extends BaseResource {
     @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Path("/get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@PathParam("id") Integer ruleId) throws AccessDeniedException {
+    public String get(@PathParam("id") Integer ruleId) {
         RuleBean ruleBean = RuleDAO.getInstance().get(ruleId);
 
         ThingBean targetThing = ruleBean.getParentThing();
         UserBean user = (UserBean)getSecurityContext().getUserPrincipal();
 
+        if (targetThing == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
         if (AuthorizationHelper.getInstance().checkAccess(user, targetThing)) {
             return gson.toJson(ruleBean);
         }
-        else throw new AccessDeniedException();
+        else throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
     }
 
 
@@ -157,13 +164,16 @@ public class SnsRuleResource extends BaseResource {
                          @FormParam("description") String description,
                          @FormParam("data") String data,
                          @FormParam("condition") String condition,
-                         @FormParam("parentThing") Integer parentThingId) throws AccessDeniedException {
+                         @FormParam("parentThing") Integer parentThingId) {
 
         // create RuleBean
         RuleBean ruleBean = RuleDAO.getInstance().get(ruleId);
 
         ThingBean targetThing = ruleBean.getParentThing();
         UserBean user = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (targetThing == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
         if (AuthorizationHelper.getInstance().checkAccess(user, targetThing)) {
             ruleBean.setDescription(description);
@@ -187,7 +197,7 @@ public class SnsRuleResource extends BaseResource {
 
             return gson.toJson(ruleBean);
         }
-        else throw new AccessDeniedException();
+        else throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
     }
 
 
@@ -197,7 +207,7 @@ public class SnsRuleResource extends BaseResource {
     @Session
     @Secure(roles = {RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
-    public String delete(@PathParam("id") Integer ruleId) throws AccessDeniedException {
+    public String delete(@PathParam("id") Integer ruleId) {
         /*
          * Steps:
          * 1. Get ruleBean
@@ -211,6 +221,9 @@ public class SnsRuleResource extends BaseResource {
         ThingBean targetThing = ruleBean.getParentThing();
         UserBean user = (UserBean)getSecurityContext().getUserPrincipal();
 
+        if (targetThing == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
         if (AuthorizationHelper.getInstance().checkAccess(user, targetThing)) {
             // delete rule in AWS
             DeleteTopicRuleResult deleteTopicRuleResult = RuleHelper.getInstance().deleteRule(ruleBean);
@@ -219,7 +232,7 @@ public class SnsRuleResource extends BaseResource {
             RuleDAO.getInstance().delete(ruleId);
             return "{\"success\": true}";
         }
-        else throw new AccessDeniedException();
+        else throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
     }
 
 
@@ -230,7 +243,7 @@ public class SnsRuleResource extends BaseResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public String deleteByName(@NotNull @FormParam("name") String ruleName,
-                               @NotNull @FormParam("parentThing") Integer Id) throws AccessDeniedException {
+                               @NotNull @FormParam("parentThing") Integer Id) {
         /*
          * Steps:
          * 1. Get ruleBean
@@ -244,6 +257,9 @@ public class SnsRuleResource extends BaseResource {
         ThingBean targetThing = ruleBean.getParentThing();
         UserBean user = (UserBean)getSecurityContext().getUserPrincipal();
 
+        if (targetThing == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
         if (AuthorizationHelper.getInstance().checkAccess(user, targetThing)) {
             // delete rule in AWS
             DeleteTopicRuleResult deleteTopicRuleResult = RuleHelper.getInstance().deleteRule(ruleBean);
@@ -252,7 +268,7 @@ public class SnsRuleResource extends BaseResource {
             RuleDAO.getInstance().deleteByName(ruleName);
             return "{\"success\": true}";
         }
-        else throw new AccessDeniedException();
+        else throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
     }
 
 
@@ -284,14 +300,17 @@ public class SnsRuleResource extends BaseResource {
     @Session
     @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByThing(@PathParam("id") Integer parentThingId) throws AccessDeniedException {
+    public String getByThing(@PathParam("id") Integer parentThingId) {
         ThingBean targetThing = ThingDAO.getInstance().get(parentThingId);
         UserBean user = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (targetThing == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
         if(AuthorizationHelper.getInstance().checkAccess(user, targetThing)) {
             Set<RuleBean> ruleBean = RuleDAO.getInstance().getByThing(parentThingId);
             return gson.toJson(ruleBean);
         }
-        else throw new AccessDeniedException();
+        else throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
     }
 }

@@ -3,16 +3,17 @@ package org.kyantra.resources;
 import io.swagger.annotations.Api;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.ThingBean;
+import org.kyantra.beans.UserBean;
 import org.kyantra.dao.ThingDAO;
+import org.kyantra.exceptionhandling.DataNotFoundException;
+import org.kyantra.exceptionhandling.ExceptionMessage;
+import org.kyantra.helper.AuthorizationHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 import org.kyantra.utils.Constant;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -29,11 +30,21 @@ public class CertificateResource extends BaseResource {
 
     @GET
     @Path("get/{name}/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response get(@PathParam("id") Integer id,
                         @PathParam("name") String name) {
 
         ThingBean bean = ThingDAO.getInstance().get(id);
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (bean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
+        if (AuthorizationHelper.getInstance().checkAccess(userBean, bean))
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
+
         String certificateDirectory = Paths.get(Constant.CERT_ROOT,bean.getCertificateDir(),name+".pem").toString();
 
         File rootCA = new File(Constant.CERT_ROOT + "rootCA.pem");
