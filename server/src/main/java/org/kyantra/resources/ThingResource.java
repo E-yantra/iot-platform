@@ -13,7 +13,9 @@ import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.ThingDAO;
 import org.kyantra.dao.UnitDAO;
-import org.kyantra.exceptionhandling.AccessDeniedException;
+import org.kyantra.exceptionhandling.DataNotFoundException;
+import org.kyantra.exceptionhandling.ExceptionMessage;
+import org.kyantra.helper.AuthorizationHelper;
 import org.kyantra.helper.UnitHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
@@ -23,6 +25,7 @@ import org.kyantra.utils.ThingHelper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -44,16 +47,22 @@ public class ThingResource extends BaseResource {
     @Secure(roles = {RoleEnum.ALL, RoleEnum.WRITE, RoleEnum.READ})
     @Path("get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@PathParam("id") Integer id) throws AccessDeniedException {
+    public String get(@PathParam("id") Integer id) throws  ForbiddenException {
         ThingBean thingBean = ThingDAO.getInstance().get(id);
 
+        // check if thingBean is not null
+        if (thingBean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
+        // if this is done before null check, it'll throw a NullPointerException
+        // but we want DataNotFoundException
         UnitBean targetUnit = thingBean.getParentUnit();
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
-        if(UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
-            return gson.toJson(thingBean);
-        }
-        else throw new AccessDeniedException();
+        if (UnitHelper.getInstance().checkAccess(userBean, targetUnit))
+            throw new  ForbiddenException();
+            
+        return gson.toJson(thingBean);
     }
 
     @GET
@@ -74,17 +83,21 @@ public class ThingResource extends BaseResource {
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
                          @FormParam("description") String description,
-                         @FormParam("ip") String ip) throws AccessDeniedException{
+                         @FormParam("ip") String ip) throws  ForbiddenException{
         //TODO: create/update will only add/edit current entity values and not its parent/children attributes
         ThingBean bean = ThingDAO.getInstance().get(id);
+
+        if (bean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
         UnitBean targetUnit = bean.getParentUnit();
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
-        if(UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
-            ThingDAO.getInstance().update(id, name, description, ip);
-            return gson.toJson(bean);
-        }
-        else throw new AccessDeniedException();
+        if (UnitHelper.getInstance().checkAccess(userBean, targetUnit))
+            throw new  ForbiddenException();
+
+        ThingDAO.getInstance().update(id, name, description, ip);
+        return gson.toJson(bean);
     }
 
     @DELETE
@@ -92,22 +105,26 @@ public class ThingResource extends BaseResource {
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String delete(@PathParam("id") Integer id) throws AccessDeniedException{
+    public String delete(@PathParam("id") Integer id)  {
         ThingBean bean = ThingDAO.getInstance().get(id);
+
+        if (bean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
         UnitBean targetUnit = bean.getParentUnit();
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
-        if(UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
-            try {
-                ThingDAO.getInstance().delete(id);
-                // TODO: 5/24/18 return proper response 
-                return "{}";
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
+        if (UnitHelper.getInstance().checkAccess(userBean, targetUnit))
+            throw new  ForbiddenException();
+
+        try {
+            ThingDAO.getInstance().delete(id);
+            // TODO: 5/24/18 return proper response
             return "{}";
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
-        else throw new AccessDeniedException();
+        return "{}";
     }
 
     // TODO: 5/24/18 Zip the certificates
@@ -120,10 +137,13 @@ public class ThingResource extends BaseResource {
     public String create(@FormParam("name") String name,
                          @FormParam("description") String description,
                          @FormParam("ip") String ip,
-                         @FormParam("parentUnitId") Integer parentUnitId) throws AccessDeniedException{
+                         @FormParam("parentUnitId") Integer parentUnitId)  {
 
         UnitBean targetUnit = UnitDAO.getInstance().get(parentUnitId);
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (targetUnit == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
         if(UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
             try {
@@ -207,7 +227,7 @@ public class ThingResource extends BaseResource {
             return "{\"success\":false}";
 
         }
-        else throw new AccessDeniedException();
+        else throw new  ForbiddenException();
     }
 
     @GET
@@ -215,25 +235,38 @@ public class ThingResource extends BaseResource {
     @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Path("unit/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByUnit(@PathParam("id") Integer id) throws AccessDeniedException {
+    public String getByUnit(@PathParam("id") Integer id)   {
         // should have access to read parent units details
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
         UnitBean targetUnit = UnitDAO.getInstance().get(id);
+
+        if (targetUnit == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
         if (UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
             Set<ThingBean> things = ThingDAO.getInstance().getByUnitId(id);
             return gson.toJson(things);
         }
-        else throw new AccessDeniedException();
+        else throw new  ForbiddenException();
     }
 
     // TODO: 5/24/18 Debug this resource method: Gives NPE always
     @GET
     @Path("shadow/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String getThingShadow(@PathParam("id") Integer thingId) throws AWSIotException {
         ThingBean thingBean = ThingDAO.getInstance().get(thingId);
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (thingBean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
+        if (AuthorizationHelper.getInstance().checkAccess(userBean, thingBean))
+            throw new ForbiddenException();
+
         String shadowName = "thing"+thingBean.getId();
 
         AWSIotData client1 = AwsIotHelper.getIotDataClient();

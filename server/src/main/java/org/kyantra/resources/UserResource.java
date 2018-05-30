@@ -30,10 +30,10 @@ public class UserResource extends BaseResource {
         UserBean currentUser = (UserBean)getSecurityContext().getUserPrincipal();
 
         if (targetUser == null)
-            throw new DataNotFoundException(ExceptionMessage.DeveloperMessage.DATA_NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
         if (!currentUser.equals(targetUser))
-            throw new ForbiddenException();
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
 
         return gson.toJson(targetUser);
     }
@@ -74,10 +74,10 @@ public class UserResource extends BaseResource {
         UserBean currentUser = (UserBean)getSecurityContext().getUserPrincipal();
 
         if (targetUser == null)
-            throw new DataNotFoundException(ExceptionMessage.DeveloperMessage.DATA_NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
-        if (currentUser.equals(targetUser))
-            throw new ForbiddenException();
+        if (!currentUser.equals(targetUser))
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
 
         UserDAO.getInstance().update(id, name, email, password);
         UserBean userBean = UserDAO.getInstance().get(id);
