@@ -29,7 +29,7 @@ public class AuthResource extends BaseResource {
     HttpServletRequest request;
 
     @POST
-    @Path("basic")
+    @Path("token")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public String authenticate(@FormParam("email") String email,
@@ -77,9 +77,9 @@ public class AuthResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String signup(@FormParam("name") String name,
                          @FormParam("email") String email,
-                               @FormParam("password") String password,
-                               @Context HttpServletRequest request,
-                               @Context ContainerRequest containerRequest) throws Exception {
+                         @FormParam("password") String password,
+                         @Context HttpServletRequest request,
+                         @Context ContainerRequest containerRequest) throws Exception {
 
         UserBean userBean = UserDAO.getInstance().getByEmail(email.toLowerCase());
         if(userBean!=null){

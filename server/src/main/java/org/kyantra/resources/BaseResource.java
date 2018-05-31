@@ -11,13 +11,13 @@ import javax.ws.rs.core.SecurityContext;
 
 public class BaseResource {
 
-
     static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     static HibernateService service;
-    
+
 
     @Context
     SecurityContext sc;
+
     @Context
     HttpServletRequest request;
 
@@ -25,6 +25,14 @@ public class BaseResource {
         if(service==null) {
             service = HibernateService.getInstance();
         }
+    }
+
+    public BaseResource(SecurityContext sc, HttpServletRequest request){
+        if(service==null) {
+            service = HibernateService.getInstance();
+        }
+        this.sc = sc;
+        this.request = request;
     }
 
     public Session getSession(){
@@ -42,4 +50,5 @@ public class BaseResource {
     public SecurityContext getSecurityContext() {
         return sc;
     }
+
 }

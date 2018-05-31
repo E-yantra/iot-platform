@@ -28,7 +28,7 @@
                             {{ unit.unitName }} <span class="badge badge-success">{{role}}</span>
                         </div>
                         <div class="card-body">
-                            <img height=150 src="${unit.photo!""}" class="float-left p-1"> <p>${unit.description!""}</p>
+                            <img height=150 v-bind:src="unit.photo || ''" class="float-left p-1"><p>{{unit.description || ''}}</p>
                             <div class="clear"></div>
                         </div>
                         <div class="card-footer">
@@ -128,7 +128,7 @@
             },
             saveLoader:false,
             subunits:[],
-            things:[],
+            things:[]
             // deleteUnit:{}
         },
         methods: {
@@ -264,7 +264,7 @@
                 } else {
                     $.ajax({
                         "url": "/thing/update/" + that.createThing.id,
-                        "method": "POST",
+                        "method": "PUT",
                         "data": that.createThing,
                         "success": function (data) {
                             that.saveLoader = false;
@@ -287,13 +287,18 @@
                         "success": function (data) {
                             that.saveLoader = false;
                             $("#create_unit").modal('hide');
+                            that.unit = data;
+                            Vue.set(that.unit, 'id', data.id);
+                            Vue.set(that.unit, 'description', data.description);
+                            Vue.set(that.unit, 'unitName', data.unitName);
+                            Vue.set(that.unit, 'photo', data.photo);
                             that.load();
                         }
                     });
                 } else {
                     $.ajax({
                         "url": "/unit/update/" + unitId,
-                        "method": "POST",
+                        "method": "PUT",
                         "data": that.createUnit,
                         "success": function (data) {
                             that.saveLoader = false;
@@ -323,7 +328,7 @@
                 } else {
                     $.ajax({
                         "url": "/user/update/" + userId,
-                        "method": "POST",
+                        "method": "PUT",
                         "data": that.createUser,
                         "success": function (data) {
                             that.saveLoader = false;

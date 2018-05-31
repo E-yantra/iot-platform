@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @Secure
 @Provider
-@Priority(Priorities.AUTHENTICATION)
+@Priority(Priorities.AUTHORIZATION)
 public class AuthorizationFilter implements ContainerRequestFilter {
 
     private static final String REALM = "unit";
@@ -42,10 +42,9 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         // Get the Authorization header from the request
-        String authorizationHeader =
-                requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+        String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-        String authorizationCookie = requestContext.getCookies().getOrDefault("authorization",new Cookie("token","")).getValue().toString();
+        String authorizationCookie = requestContext.getCookies().getOrDefault("authorization", new Cookie("token","")).getValue().toString();
 
         // Validate the Authorization header
         if (!isTokenBasedAuthentication(authorizationHeader) && !isTokenBasedAuthentication(authorizationCookie)) {
@@ -98,23 +97,25 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         }
     }
 
-    private void checkPermissions(UserBean userBean, List<RoleEnum> expectedRoles, ContainerRequestContext requestContent) throws Exception{
+    private void checkPermissions(UserBean userBean, List<RoleEnum> expectedRoles, ContainerRequestContext requestContent) throws Exception {
 
         if(!expectedRoles.isEmpty()) {
             Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUser(userBean);
-            Set<RoleEnum> roles = rights.stream().map(RightsBean::getRole).collect(Collectors.toSet());
-            for(RoleEnum r:roles){
-                if(expectedRoles.contains(r)){
-                    return;
-                }
-            }
-        }else{
+//            Set<RoleEnum> roles = rights.stream().map(RightsBean::getRole).collect(Collectors.toSet());
+//            for(RoleEnum r:roles){
+//                if(expectedRoles.contains(r)){
+//                    return;
+//                }
+//            }
+
+
+
+        } else {
             return;
         }
 
         //TODO Remove this later
         //throw new Exception("Not possible");
-
     }
 
     private boolean isTokenBasedAuthentication(String authorizationHeader) {

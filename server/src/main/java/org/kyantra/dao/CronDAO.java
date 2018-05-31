@@ -57,7 +57,7 @@ public class CronDAO extends BaseDAO {
                     .withState(RuleState.ENABLED);
 
             PutRuleResult response = cwe.putRule(request);
-            ConfigBean configBean = ConfigDAO.getInstance().get("lambdaFunctionArn");
+            ConfigBean configBean = ConfigDAO.getInstance().get("lambdaCronArn");
             String targetData = "{}";
             Map<String,Object> map = new HashMap<>();
             map.put("thingName","thing"+bean.getParentThing().getId());

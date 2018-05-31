@@ -11,8 +11,6 @@
                 <div class="float-right p-1" v-if="role=='ALL' || role=='WRITE'">
                     <button v-on:click="newDevice" class="btn btn-outline-primary">Add Device</button>
                     <button v-on:click="importThing" class="btn btn-outline-primary">Import Device</button>
-                    <#--<button v-on:click="addCron" class="btn btn-outline-primary">Add Cron</button>-->
-                    <#--<button v-on:click="newRule" class="btn btn-outline-primary">Create Rule</button>-->
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -33,7 +31,7 @@
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <table class="table mb-0">
+                        <table class="table mb-0" v-if="devices.length">
                             <thead class="thead-light">
                                 <tr>
                                     <th>Device Name</th>
@@ -50,6 +48,7 @@
                                 </td>
                             </tr>
                         </table>
+                        <div v-else class="h3 pt-2 pb-2 text-center text-muted" v-else>No devices</div>
                     </div>
                     <div class="card-footer">
                         <div class="float-right">
@@ -76,7 +75,7 @@
                         Crons
                     </div>
                     <div class="card-body p-0">
-                        <table class="table mb-0" v-if="crons.length != 0">
+                        <table class="table mb-0" v-if="crons.length">
                             <thead class="thead-light">
                                 <tr>
                                     <th>Name</th>
@@ -118,7 +117,7 @@
                         Rules
                     </div>
                     <div class="card-body p-0">
-                        <table class="table mb-0" v-if="rules.length != 0">
+                        <table class="table mb-0" v-if="rules.length">
                             <thead class="thead-light">
                                 <tr>
                                     <th>Name</th>
@@ -142,9 +141,7 @@
                                                 v-on:click="editRuleModal(rule, idx)">EDIT</button>
                                     </td>
                                     <td>
-                                        <a v-bind:href="'/rules/' + rule.type + '/' + rule.snsAction.id"
-                                           class="btn btn-success btn-sm" role="button"
-                                           aria-pressed="true">CHANGE</a>
+                                        <a v-bind:href="'/rules/' + rule.type.toLowerCase() + '/' + rule.snsAction.id" class="btn btn-success btn-sm" role="button" aria-pressed="true">DETAILS</a>
                                         <#--<button v-on:click="" class="btn btn-sm btn-success">CHANGE</button>-->
                                     </td>
                                 </tr>
@@ -220,7 +217,7 @@
             },
             createRule: {},
             ruleUpdate: false,
-            ruleActionList: ["sns"],
+            ruleActionList: [],
             createSubscription: {},
             cttr: {},
             generateCode: "",
@@ -274,16 +271,17 @@
                 });
             },
 
-            //TODO: Fetch list of supported rule actions from server
             "newRuleModal": function () {
                 this.createRule = {
                     name: "",
                     description: "",
                     data: "",
                     condition: "",
-                    topic: "",
                     action: "",
-                    sns_topic: ""
+                    sns_topic: "",
+                    subject: "",
+                    message: "",
+                    interval: 15
                 };
                 this.ruleUpdate = false;
                 $('#create_rule').modal('show');
@@ -294,7 +292,7 @@
                 var that = this;
                 that.saveLoader = true;
 
-                var data = {
+                var formData = {
                     "name": that.createRule.name,
                     "description": that.createRule.description,
                     "data": that.createRule.data,
@@ -303,17 +301,24 @@
                     "action": that.createRule.action
                 };
 
-                if (that.createRule.action == 'sns') {
-                    data.sns_topic = that.createRule.sns_topic;
+                // send extra parameters according to the type of rule
+                if (that.createRule.action == 'SNS') {
+                    formData.sns_topic = that.createRule.sns_topic;
+                    formData.subject = that.createRule.subject;
+                    formData.message = that.createRule.message;
+                    formData.interval = that.createRule.interval;
                 }
 
+                console.log(that.createRule.action);
                 $.ajax({
-                    "url": "/rule/" + this.createRule.action + "/create/" + thingId,
+                    "url": "/rule/" + that.createRule.action.toLowerCase() + "/create/" + thingId,
                     "method": "POST",
-                    "data": data,
+                    "data": formData,
                     success: function (data) {
+                        if(data.success !== false) {
+                            that.rules.push(data);
+                        }
                         that.saveLoader = false;
-                        that.rules.push(data);
                         $('#create_rule').modal('hide');
                     }
                 });
@@ -321,9 +326,10 @@
 
             "deleteRule": function (rule, idx) {
                 var that = this;
+
                 $.ajax({
-                    "url": "/rule/" + rule.type + "/delete/" + rule.id,
-                    "method": "GET",
+                    "url": "/rule/" + rule.type.toLowerCase() + "/delete/" + rule.id,
+                    "method": "DELETE",
                     "success": function (data) {
                         if(data.success === true) {
                             alert("Rule deleted!");
@@ -331,7 +337,7 @@
                         }
                     }
 
-                })
+                });
             },
 
             "editRuleModal": function (rule, idx) {
@@ -360,8 +366,8 @@
                 };
 
                 $.ajax({
-                    "url": "/rule/" + that.createRule.type + "/update/" + that.createRule.id,
-                    "method": "POST",
+                    "url": "/rule/" + that.createRule.type.toLowerCase() + "/update/" + that.createRule.id,
+                    "method": "PUT",
                     "data": data,
                     success: function (data) {
                         that.saveLoader = false;
@@ -477,6 +483,7 @@
                         });
                     }
                 });
+
                 $.ajax({
                     url: "/device/thing/" + thingId,
                     success: function (data) {
@@ -489,6 +496,13 @@
                         that.rules = data;
                     }
                 });
+                $.ajax({
+                    url: "/rule/actions",
+                    success: function(data) {
+                        console.log(data);
+                        that.ruleActionList = data;
+                    }
+                })
                 that.getCrons();
 
             },
@@ -562,6 +576,7 @@
             },
 
             "addAttr": function () {
+                console.log('Inside addAttr');
                 if (this.cttr.name && this.cttr.type) {
                     this.createDevice.deviceAttributes.push(Object.assign({}, this.cttr));
                 }
@@ -585,7 +600,7 @@
                         "method": "DELETE",
                         success: function (data) {
                             that.saveLoader = false;
-                            alert(data);
+                            alert("Device deleted!");
                             //that.deleteDeviceAttributes(device.id);
                             that.load();
                         }
@@ -599,7 +614,7 @@
                         url: "/attribute/delete/" + deviceId,
                         "method": "DELETE",
                         success: function (data) {
-                            alert('Device attributes deleted');
+                            alert('Device attributes deleted!');
                             this.load();
                         }
                     });
@@ -614,7 +629,7 @@
                 if (this.createDevice.id) {
                     $.ajax({
                         url: "/device/update/" + that.createDevice.id,
-                        "method": "POST",
+                        "method": "PUT",
                         data: that.createDevice,
                         success: function (data) {
                             that.saveLoader = false;
@@ -675,7 +690,7 @@
                 } else {
                     $.ajax({
                         "url": "/unit/update/" + unitId,
-                        "method": "POST",
+                        "method": "PUT",
                         "data": that.createUnit,
                         "success": function (data) {
                             that.saveLoader = false;

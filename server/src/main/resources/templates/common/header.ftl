@@ -3,6 +3,9 @@
 <head>
     <title>IoT Platform</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+    <meta http-equiv="PRAGMA" content="NO-CACHE">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
@@ -30,7 +33,8 @@
             margin-bottom: 20px;
             border-bottom: 1px solid #eee;
         }
-        button{
+
+        button {
             cursor: pointer;
         }
 
@@ -72,6 +76,7 @@
             box-sizing: border-box;
             outline: none;
         }
+
         body {
             background: url(/img/bg.jpg) no-repeat center center fixed;
             -webkit-background-size: cover;
@@ -94,16 +99,19 @@
             -moz-border-radius: 10px;
             -webkit-border-radius: 10px;
         }
+
         form[role=login] img {
             display: block;
             margin: 0 auto;
             margin-bottom: 35px;
         }
+
         form[role=login] input,
         form[role=login] button {
             font-size: 18px;
             margin: 16px 0;
         }
+
         form[role=login] > div {
             text-align: center;
         }
@@ -113,6 +121,7 @@
             margin-top: 1em;
             margin-bottom: 50px;
         }
+
         .form-links a {
             color: #fff;
         }

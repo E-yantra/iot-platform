@@ -3,6 +3,8 @@ package org.kyantra.beans;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 
 @Entity
@@ -30,10 +32,6 @@ public class RuleBean {
     @Expose
     @Column(name = "`data`")
     String data;
-
-    @Expose
-    @Column(name = "`topic`")
-    String topic;
 
     @Expose
     @Column(name = "`condition`")
@@ -80,14 +78,6 @@ public class RuleBean {
 
     public void setData(String data) {
         this.data = data;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
     }
 
     public String getCondition() {
@@ -141,18 +131,4 @@ public class RuleBean {
         this.type = type;
     }
 
-    @Override
-    public String toString() {
-        return "RuleBean{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", data='" + data + '\'' +
-                ", topic='" + topic + '\'' +
-                ", condition='" + condition + '\'' +
-                ", type='" + type + '\'' +
-                ", snsAction=" + snsAction +
-                ", parentThing=" + parentThing +
-                '}';
-    }
 }

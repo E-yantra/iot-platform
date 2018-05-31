@@ -5,22 +5,16 @@ import org.kyantra.beans.RightsBean;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
-import org.kyantra.dao.AuthorizationDAO;
 import org.kyantra.dao.RightsDAO;
 import org.kyantra.dao.UnitDAO;
-import org.kyantra.dao.UserDAO;
+import org.kyantra.exceptionhandling.DataNotFoundException;
+import org.kyantra.exceptionhandling.ExceptionMessage;
+import org.kyantra.helper.AuthorizationHelper;
+import org.kyantra.helper.UnitHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.security.Principal;
 import java.util.HashSet;
@@ -39,134 +33,194 @@ public class UnitResource extends BaseResource {
 
     @GET
     @Path("get/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.ALL, RoleEnum.WRITE, RoleEnum.READ})
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@PathParam("id") Integer id){
+    public String get(@PathParam("id") Integer id) {
+        
         UnitBean unitBean = UnitDAO.getInstance().get(id);
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if(unitBean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+        
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean))
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
+
         return gson.toJson(unitBean);
     }
 
+    // TODO: 5/29/18 Need authorization here? 
     @GET
     @Path("list/page/{page}")
+    @Session
     @Produces(MediaType.APPLICATION_JSON)
-    public String list(@PathParam("page") Integer page){
+    public String list(@PathParam("page") Integer page) {
+        
         Principal principal = getSecurityContext().getUserPrincipal();
         UserBean currentUser = (UserBean) principal;
         List<UnitBean> users = UnitDAO.getInstance().list(page,limit);
         return gson.toJson(users);
     }
 
-    @POST
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
+
+    @PUT
     @Path("update/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String update(@PathParam("id") Integer id,
                          @FormParam("unitName") String name,
                          @FormParam("description") String description,
-                         @FormParam("photo") String photo) throws AccessDeniedException {
+                         @FormParam("photo") String photo) {
+        
         //TODO: can parent unit be changed?
-        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
-            UnitDAO.getInstance().update(id, name, description, photo);
-            UnitBean unitBean = UnitDAO.getInstance().get(id);
-            return gson.toJson(unitBean);
-        }
-        else{
-            throw new AccessDeniedException();
-        }
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        UnitBean unitBean = UnitDAO.getInstance().get(id);
+
+        if (unitBean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+        
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean))
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
+
+        unitBean = UnitDAO.getInstance().update(id, name, description, photo);
+        return gson.toJson(unitBean);
     }
 
     @DELETE
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Path("delete/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Produces(MediaType.APPLICATION_JSON)
-    public String delete(@PathParam("id") Integer id) throws AccessDeniedException{
-        if (AuthorizationDAO.getInstance().ownsUnit((UserBean) getSecurityContext().getUserPrincipal(), UnitDAO.getInstance().get(id))) {
-            try {
-                UnitDAO.getInstance().delete(id);
-                return "{}";
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
+    public String delete(@PathParam("id") Integer id) {
+        
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        UnitBean unitBean = UnitDAO.getInstance().get(id);
+
+        if (unitBean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+        
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean)) 
+            throw new ForbiddenException();
+
+        try {
+            UnitDAO.getInstance().delete(id);
             return "{}";
-        } else {
-            throw new AccessDeniedException();
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
+        return "{}";
     }
 
     @POST
     @Path("create")
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "unit", subjectField = "parent_id")
-    @Session
     public String create(@FormParam("unitName") String name,
                          @FormParam("description") String description,
                          @FormParam("photo") String photo,
-                         @DefaultValue("0") @FormParam("parentUnitId") Integer parentUnitId) throws AccessDeniedException{
-        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(parentUnitId))) {
-            try {
-                String s = "Found something";
-                //System.out.println(gson.toJson(childUnit));
-                UnitBean unit = new UnitBean();
-                unit.setUnitName(name);
-                unit.setDescription(description);
-                unit.setPhoto(photo);
+                         @DefaultValue("0") @FormParam("parentUnitId") Integer parentUnitId) {
 
-                //root unit will not have any parent unit
-                if (parentUnitId != 0) {
-                    unit.setParent(UnitDAO.getInstance().get(parentUnitId));
-                }
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        UnitBean unitBean = UnitDAO.getInstance().get(parentUnitId);
+        
+        if (unitBean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+        
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean)) 
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
+        
+        try {
+            String s = "Found something";
+            //System.out.println(gson.toJson(childUnit));
+            UnitBean unit = new UnitBean();
+            unit.setUnitName(name);
+            unit.setDescription(description);
+            unit.setPhoto(photo);
 
-                unit = UnitDAO.getInstance().add(unit);
-                return gson.toJson(unit);
-
-            } catch (Throwable t) {
-                t.printStackTrace();
+            //root unit will not have any parent unit
+            if (parentUnitId != 0) {
+                unit.setParent(UnitDAO.getInstance().get(parentUnitId));
             }
-            return "{\"success\":false}";
-        }else{
-            throw new AccessDeniedException();
+
+            unit = UnitDAO.getInstance().add(unit);
+            return gson.toJson(unit);
+
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
+        return "{\"success\":false}";
     }
+
 
     @POST
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE})
     @Path("addusers/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String addUsers(@PathParam("id") Integer id, Set<UserBean> users) throws AccessDeniedException{
-        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
-            UnitDAO.getInstance().addUsers(id, users);
-            UnitBean unitBean = UnitDAO.getInstance().get(id);
-            return gson.toJson(unitBean);
-        }else{
-            throw new AccessDeniedException();
-        }
+    public String addUsers(@PathParam("id") Integer id, Set<UserBean> users) {
+        
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        UnitBean unitBean = UnitDAO.getInstance().get(id);
+
+        if (unitBean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+        
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean)) 
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
+            
+        UnitDAO.getInstance().addUsers(id, users);
+        return gson.toJson(unitBean);
     }
 
     @GET
-    @Secure(roles= {RoleEnum.READ})
     @Path("rights/{id}/{userId}")
+    @Session
+    @Secure(roles= {RoleEnum.READ})
     @Produces(MediaType.APPLICATION_JSON)
-    public String getUserRights(@PathParam("id") Integer unitId, @PathParam("userId") Integer userId){
-        UserBean userBean = UserDAO.getInstance().get(userId);
+    public String getUserRights(@PathParam("id") Integer unitId,
+                                @PathParam("userId") Integer userId) {
+        
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        UnitBean unitBean = UnitDAO.getInstance().get(unitId);
+
+        if (unitBean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+        
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean))
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);    
+        
         Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUser(userBean);
         Set<UnitBean> allBeans = new HashSet<>();
-        rights.forEach(r->{
-            allBeans.addAll(UnitDAO.getInstance().getAllParents(r.getUnit()));
+        rights.forEach(r -> {
+            allBeans.addAll(UnitHelper.getInstance().getAllParents(r.getUnit()));
         });
-        return gson.toJson(rights.stream().filter(r->allBeans.contains(r.getUnit())).collect(Collectors.toSet()));
+
+        return gson.toJson(rights.stream().filter(r -> allBeans.contains(r.getUnit())).collect(Collectors.toSet()));
     }
 
     @GET
-    @Secure(roles = {RoleEnum.READ})
     @Path("users/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.READ})
     @Produces(MediaType.APPLICATION_JSON)
-    public String getAuthorizedUsers(@PathParam("id") Integer unitId){
-
+    public String getAuthorizedUsers(@PathParam("id") Integer unitId) {
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
         UnitBean unitBean = UnitDAO.getInstance().get(unitId);
+
+        if (unitBean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean))
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
+
         Set<RightsBean> rights = RightsDAO.getInstance().getRightsByUnit(unitBean);
-        while(unitBean.getParent()!=null){
+        while (unitBean.getParent() != null) {
             unitBean = unitBean.getParent();
             rights.addAll(RightsDAO.getInstance().getRightsByUnit(unitBean));
         }
@@ -174,11 +228,39 @@ public class UnitResource extends BaseResource {
     }
 
     @GET
-    @Secure(roles = {RoleEnum.READ})
     @Path("subunits/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.READ})
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSubunits(@PathParam("id") Integer unitId){
+    public String getSubunits(@PathParam("id") Integer unitId) {
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
         UnitBean unitBean = UnitDAO.getInstance().get(unitId);
+
+        if (unitBean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, unitBean))
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
+
         return gson.toJson(unitBean.getSubunits());
+    }
+
+    @GET
+    @Path("parents/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.READ})
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAllParents(@PathParam("id") Integer unitId) {
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        UnitBean unitBean = UnitDAO.getInstance().get(unitId);
+
+        if (unitBean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
+        if (AuthorizationHelper.getInstance().checkAccess(userBean, unitBean))
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
+
+        Set<UnitBean> allParents = UnitHelper.getInstance().getAllParents(unitBean);
+        return gson.toJson(allParents);
     }
 }

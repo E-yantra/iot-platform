@@ -42,7 +42,7 @@
             //debugger;
 
             $.ajax({
-                type: 'POST',
+                type: 'PUT',
                 url: '/user/update/' + userId,
                 data: $('.user-info-form').serialize(),
                 // data: JSON.stringify({name:username,email:userEmail,password:userPassword}),

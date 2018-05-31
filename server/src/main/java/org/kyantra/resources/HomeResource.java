@@ -6,6 +6,8 @@ import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.*;
+import org.kyantra.exceptionhandling.AccessDeniedException;
+import org.kyantra.exceptionhandling.ExceptionMessage;
 import org.kyantra.interfaces.Session;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +34,6 @@ public class HomeResource extends BaseResource {
 
 
     @GET
-    @Path("/")
     @Template(name = "/index.ftl")
     @Session
     public Map<String, Object> index() throws URISyntaxException {
@@ -76,7 +77,7 @@ public class HomeResource extends BaseResource {
     @Path("/units/create")
     @Template(name = "/units/create.ftl")
     @Session
-    public Map<String, Object> createUnit(@QueryParam("id") Integer id) throws AccessDeniedException{
+    public Map<String, Object> createUnit(@QueryParam("id") Integer id) throws AccessDeniedException {
         //TODO: required?
         if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
             final Map<String, Object> map = new HashMap<String, Object>();
@@ -135,6 +136,7 @@ public class HomeResource extends BaseResource {
         setCommonData(map);
         return map;
     }
+
     @GET
     @Path("/users/create")
     @Template(name = "/users/create.ftl")
@@ -163,7 +165,9 @@ public class HomeResource extends BaseResource {
     @Template(name = "index.ftl")
     public Map<String, Object> logout(@Context HttpServletRequest request) throws URISyntaxException {
         final Map<String, Object> map = new HashMap<String, Object>();
-        throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization","")).build());
+        throw new RedirectionException(ExceptionMessage.TEMP_REDIRECT,
+                Response.Status.TEMPORARY_REDIRECT.getStatusCode(),
+                new URI("/login"));
     }
 
     @GET
@@ -244,4 +248,5 @@ public class HomeResource extends BaseResource {
         setCommonData(map);
         return map;
     }
+
 }

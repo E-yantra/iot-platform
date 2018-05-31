@@ -4,6 +4,8 @@ import io.swagger.annotations.Api;
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.UserBean;
 import org.kyantra.dao.UserDAO;
+import org.kyantra.exceptionhandling.DataNotFoundException;
+import org.kyantra.exceptionhandling.ExceptionMessage;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
@@ -14,27 +16,33 @@ import java.util.List;
 
 @Path("/user")
 @Api(value="user")
-public class UserResource extends BaseResource{
+public class UserResource extends BaseResource {
 
     int limit = 10;
 
     @GET
     @Path("get/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
-    @Secure(roles = {RoleEnum.READ})
-    public String get(@PathParam("id") Integer id){
-        UserBean userBean = UserDAO.getInstance().get(id);
+    public String get(@PathParam("id") Integer id)   {
+        UserBean targetUser = UserDAO.getInstance().get(id);
+        UserBean currentUser = (UserBean)getSecurityContext().getUserPrincipal();
 
-        Principal principal = getSecurityContext().getUserPrincipal();
-        UserBean currentUser = (UserBean) principal;
-        //TODO code to check if currentUser has permission to read this user.
+        if (targetUser == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
+        if (!currentUser.equals(targetUser))
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
 
-        return gson.toJson(userBean);
+        return gson.toJson(targetUser);
     }
 
+
+    // TODO: 5/25/18 Need authorization here?
     @GET
     @Path("list/page/{page}")
+    @Session
     @Produces(MediaType.APPLICATION_JSON)
     public String list(@PathParam("page") Integer page){
         Principal principal = getSecurityContext().getUserPrincipal();
@@ -43,16 +51,17 @@ public class UserResource extends BaseResource{
         return gson.toJson(users);
     }
 
-    @POST
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
-    @Session
+
+    @PUT
     @Path("update/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
                          @FormParam("email") String email,
-                         @FormParam("password") String password){
+                         @FormParam("password") String password)   {
         name = name.trim();
         email = email.trim();
         password = password.trim();
@@ -61,17 +70,28 @@ public class UserResource extends BaseResource{
         // if update was made
         if(name.equals("") || email.equals("") || password.equals(""))
             return "{}";
-        UserDAO.getInstance().update(id,name,email,password);
+        UserBean targetUser = UserDAO.getInstance().get(id);
+        UserBean currentUser = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (targetUser == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
+        if (!currentUser.equals(targetUser))
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
+
+        UserDAO.getInstance().update(id, name, email, password);
         UserBean userBean = UserDAO.getInstance().get(id);
         return gson.toJson(userBean);
     }
 
+
     @DELETE
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
-    @Session
     @Path("delete/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
     @Produces(MediaType.APPLICATION_JSON)
-    public String delete(@PathParam("id") Integer id){
+    public String delete(@PathParam("id") Integer id) {
+        // TODO: 5/24/18 Don't delete user only remove rights
         try {
             UserDAO.getInstance().delete(id);
             return "{}";
@@ -81,6 +101,8 @@ public class UserResource extends BaseResource{
         return "{}";
     }
 
+
+    // TODO: 5/24/18 This method lets a person signup and create a user but no unit is assigned to him/her
     @POST
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "user", subjectField = "userId")
     @Session
@@ -91,9 +113,8 @@ public class UserResource extends BaseResource{
                          @FormParam("email") String email,
                          @FormParam("password") String password){
         try {
-
             UserBean u = UserDAO.getInstance().getByEmail(email);
-            if(u!=null){
+            if(u!=null) {
                 return gson.toJson(u);
             }
 
@@ -105,9 +126,9 @@ public class UserResource extends BaseResource{
             UserBean userBean = UserDAO.getInstance().add(user);
 
             return gson.toJson(userBean);
-        }catch (Throwable t){
+        } catch (Throwable t) {
             t.printStackTrace();
         }
-        return "{\"success\":false}";
+        return "{\"success\": false}";
     }
 }

@@ -5,22 +5,18 @@ import com.amazonaws.services.iot.client.AWSIotMqttClient;
 import com.amazonaws.services.iotdata.AWSIotData;
 import com.amazonaws.services.iotdata.model.GetThingShadowRequest;
 import com.amazonaws.services.iotdata.model.GetThingShadowResult;
-import org.kyantra.beans.DeviceAttributeBean;
-import org.kyantra.beans.ShadowBean;
-import org.kyantra.beans.ThingBean;
+import org.kyantra.beans.*;
 import org.kyantra.dao.ConfigDAO;
 import org.kyantra.dao.DeviceAttributeDAO;
 import org.kyantra.dao.ThingDAO;
+import org.kyantra.exceptionhandling.DataNotFoundException;
+import org.kyantra.exceptionhandling.ExceptionMessage;
+import org.kyantra.helper.AuthorizationHelper;
+import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 import org.kyantra.utils.AwsIotHelper;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Deque;
 import java.util.Map;
@@ -46,23 +42,35 @@ public class PubSubResource extends BaseResource {
         }
     }
 
+    // TODO: 5/31/18 What is this? 
     @POST
     @Path("publish")
-    @Session
+    @Secure(roles = {RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String publish(@FormParam("topic") String topic, @FormParam("payload") String payload) throws AWSIotException {
+    public String publish(@FormParam("topic") String topic,
+                          @FormParam("payload") String payload) throws AWSIotException {
         client.publish(topic,payload);
         return gson.toJson("{}");
     }
 
+
     @GET
     @Path("shadow/{id}")
+    @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String getThingShadow(@PathParam("id") Integer thingId) throws AWSIotException {
+    public String getThingShadow(@PathParam("id") Integer thingId) {
         ThingBean thingBean = ThingDAO.getInstance().get(thingId);
-        String shadowName = "thing"+thingBean.getId();
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (thingBean == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, thingBean))
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
+
+        String shadowName = "thing" + thingBean.getId();
 
         AWSIotData client1 = AwsIotHelper.getIotDataClient();
         GetThingShadowResult result = client1.getThingShadow(new GetThingShadowRequest()
@@ -73,37 +81,49 @@ public class PubSubResource extends BaseResource {
         client1.shutdown();
 
         return resultString;
-
     }
 
 
     @POST
     @Path("value/{id}")
+    @Secure(roles = {RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String setValue(@FormParam("value") String value, @PathParam("id") Integer id) throws AWSIotException {
+
         DeviceAttributeBean att = DeviceAttributeDAO.getInstance().get(id);
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (att == null)
+            throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
+
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, att))
+            throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
+
         ShadowBean bean = new ShadowBean();
         bean.setThingBean(att.getParentDevice().getParentThing());
+
         if(att.getType().equals("Boolean")) {
             bean.setDesired(att, att.getId() + "", value.equals("1")?1:0);
         }
         else if(att.getType().equals("Double")) {
             bean.setDesired(att, att.getId() + "", Double.parseDouble(value));
-        }else{
+        }
+        else {
             bean.setDesired(att, att.getId() + "", value);
         }
 
         client.publish(bean.getUpdateTopic(),gson.toJson(bean.getMap()));
         return  gson.toJson(bean.getMap());
-
     }
 
+
+    // TODO: 5/31/18 What is this? 
     @POST
     @Path("messages")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String getMessages(@FormParam("topic") String topic){
+    public String getMessages(@FormParam("topic") String topic) {
         String resp =  gson.toJson(messages.get(topic+"/get"));
         messages.get(topic).clear();
         return resp;

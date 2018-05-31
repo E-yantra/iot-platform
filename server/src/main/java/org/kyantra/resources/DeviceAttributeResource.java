@@ -1,13 +1,12 @@
 package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
-import org.kyantra.beans.DeviceAttributeBean;
-import org.kyantra.beans.RoleEnum;
-import org.kyantra.beans.UserBean;
-import org.kyantra.dao.AuthorizationDAO;
+import org.kyantra.beans.*;
 import org.kyantra.dao.DeviceAttributeDAO;
 import org.kyantra.dao.DeviceDAO;
 import org.kyantra.dao.UnitDAO;
+import org.kyantra.exceptionhandling.AccessDeniedException;
+import org.kyantra.helper.AuthorizationHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
@@ -23,38 +22,51 @@ import java.util.List;
 public class DeviceAttributeResource extends BaseResource {
     @GET
     @Path("get/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@PathParam("id") Integer id){
-        DeviceAttributeBean bean = DeviceAttributeDAO.getInstance().get(id);
-        return gson.toJson(bean);
+    public String get(@PathParam("id") Integer id) throws AccessDeniedException {
+        DeviceAttributeBean deviceAttributeBean = DeviceAttributeDAO.getInstance().get(id);
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+        if (AuthorizationHelper.getInstance().checkAccess(userBean, deviceAttributeBean)) {
+            return gson.toJson(deviceAttributeBean);
+        }
+        else throw new AccessDeniedException();
     }
 
-    @POST
+
+    @PUT
     @Path("update/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.ALL, RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
-    @Session
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
                          @FormParam("type") String type,
                          @FormParam("def") String def) throws AccessDeniedException{
-        if (AuthorizationDAO.getInstance().ownsDeviceAttributes((UserBean)getSecurityContext().getUserPrincipal(),DeviceAttributeDAO.getInstance().get(id))) {
+        DeviceAttributeBean deviceAttributeBean = DeviceAttributeDAO.getInstance().get(id);
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (AuthorizationHelper.getInstance().checkAccess(userBean, deviceAttributeBean)) {
             DeviceAttributeDAO.getInstance().update(id, name, type, def);
             DeviceAttributeBean bean = DeviceAttributeDAO.getInstance().get(id);
             return gson.toJson(bean);
-        }else {
-            throw new AccessDeniedException();
         }
+        else throw new AccessDeniedException();
     }
+
 
     @DELETE
     @Path("delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
+    @Secure(roles = {RoleEnum.ALL, RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
     @Session
     public String delete(@PathParam("id") Integer id) throws  AccessDeniedException{
-        if (AuthorizationDAO.getInstance().ownsDeviceAttributes((UserBean)getSecurityContext().getUserPrincipal(),DeviceAttributeDAO.getInstance().get(id))) {
+        DeviceAttributeBean deviceAttributeBean = DeviceAttributeDAO.getInstance().get(id);
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (AuthorizationHelper.getInstance().checkAccess(userBean, deviceAttributeBean)) {
             try {
                 DeviceAttributeDAO.getInstance().delete(id);
                 return "{}";
@@ -62,23 +74,26 @@ public class DeviceAttributeResource extends BaseResource {
                 t.printStackTrace();
             }
             return "{}";
-        }else{
-            throw new AccessDeniedException();
         }
+        else throw new AccessDeniedException();
     }
+
 
     @POST
     @Path("create")
+    @Session
+    @Secure(roles = {RoleEnum.ALL, RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "deviceAttributes", subjectField = "parentId")
-    @Session
     public String create(@FormParam("name") String name,
                          @FormParam("type") String type,
                          @FormParam("def") String def,
                          @FormParam("parentDeviceId") Integer parentDeviceId,
                          @FormParam("ownerUnitId") Integer ownerUnitId) throws AccessDeniedException {
-        if (AuthorizationDAO.getInstance().ownsDevice((UserBean)getSecurityContext().getUserPrincipal(),DeviceDAO.getInstance().get(parentDeviceId))) {
+        UnitBean targetUnit = UnitDAO.getInstance().get(ownerUnitId);
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (AuthorizationHelper.getInstance().checkAccess(userBean, targetUnit)) {
             try {
                 String s = "Found something";
                 DeviceAttributeBean deviceAttribute = new DeviceAttributeBean();
@@ -93,26 +108,33 @@ public class DeviceAttributeResource extends BaseResource {
                 t.printStackTrace();
             }
             return "{\"success\":false}";
-        }else{
-            throw new AccessDeniedException();
         }
+        else throw new AccessDeniedException();
     }
+
 
     @POST
     @Path("add/{deviceId}")
+    @Session
+    @Secure(roles = {RoleEnum.ALL, RoleEnum.WRITE})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE})
-    @Session
     public String add(@PathParam("deviceId") Integer deviceId,
-                         List<DeviceAttributeBean> attributes){
-        for(DeviceAttributeBean att:attributes){
-            att.setParentDevice(DeviceDAO.getInstance().get(deviceId));
-            try {
-                DeviceAttributeDAO.getInstance().add(att);
-            }catch (Throwable t) {t.printStackTrace();} //later change to something
-        }
+                         List<DeviceAttributeBean> attributes) throws AccessDeniedException {
+        DeviceBean deviceBean = DeviceDAO.getInstance().get(deviceId);
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
-        return "{\"success\": true}";
+        if (AuthorizationHelper.getInstance().checkAccess(userBean, deviceBean)) {
+            for (DeviceAttributeBean att : attributes) {
+                att.setParentDevice(DeviceDAO.getInstance().get(deviceId));
+                try {
+                    DeviceAttributeDAO.getInstance().add(att);
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                } //later change to something
+            }
+            return "{\"success\": true}";
+        }
+        else throw new AccessDeniedException();
     }
 }

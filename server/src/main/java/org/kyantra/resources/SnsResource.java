@@ -2,6 +2,7 @@ package org.kyantra.resources;
 
 import org.kyantra.beans.SnsBean;
 import org.kyantra.dao.SnsDAO;
+import org.kyantra.interfaces.Session;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -14,6 +15,7 @@ public class SnsResource extends BaseResource {
 
     @GET
     @Path("/get/{id}")
+    @Session
     @Produces(MediaType.APPLICATION_JSON)
     public String getSnsBean(@PathParam("id") Integer id) {
         SnsBean snsBean = SnsDAO.getInstance().get(id);

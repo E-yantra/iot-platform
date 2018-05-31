@@ -15,7 +15,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.mvc.freemarker.FreemarkerMvcFeature;
 import org.kyantra.filters.AuthorizationFilter;
 import org.kyantra.filters.SessionFilter;
-import org.kyantra.resources.AppExceptionMapper;
+import org.kyantra.exceptionhandling.AppExceptionMapper;
 import org.kyantra.resources.AuthResource;
 import org.kyantra.services.HibernateService;
 
@@ -27,7 +27,9 @@ public class Main {
 
         String resources = "org.kyantra.resources";
         BeanConfig beanConfig = new BeanConfig();
-        beanConfig.setVersion("1.0.2");
+        beanConfig.setTitle("E-Yantra IoT Platform API");
+        beanConfig.setDescription("Below are endpoints defined for E-Yantra IoT Platform. Note that you need to have an account so that you can get the token which is mandatory to make requests.");
+        beanConfig.setVersion("1.2.3");
         beanConfig.setSchemes(new String[]{"http"});
         beanConfig.setBasePath("/");
         beanConfig.setResourcePackage(resources);
@@ -39,9 +41,9 @@ public class Main {
         rc.register(io.swagger.jaxrs.listing.ApiListingResource.class);
         rc.register(io.swagger.jaxrs.listing.SwaggerSerializers.class);
         rc.register(JacksonFeature.class);
+        rc.register(AppExceptionMapper.class);
         rc.register(SessionFilter.class);
         rc.register(AuthorizationFilter.class);
-        rc.register(AppExceptionMapper.class);
         rc.register(AuthResource.class);
 
         ClassLoader loader = Main.class.getClassLoader();
@@ -54,6 +56,7 @@ public class Main {
         server = GrizzlyHttpServerFactory.createHttpServer(URI.create("http://0.0.0.0:"+port+"/"), rc);
         ServerConfiguration cfg = server.getServerConfiguration();
         cfg.addHttpHandler(docsHandler, "/docs/");
+        // TODO: 5/30/18 Enter to submit form in modals and other places
         cfg.addHttpHandler(staticHttpHandler,"/static/");
         return server;
     }
