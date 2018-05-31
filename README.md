@@ -32,3 +32,6 @@ Setup
     - IoTRoleARN (role that grants iot access to dynamoDB and other services, requires additional settings) (optional for dynamoDB storage)
     - lambdaFunctionArn (ARN of the lambda function that manages cron, requires additional settings) (optional for cron service)
 9. Change the CERT_ROOT under StringConstants class to point to the directory where you want to store thing certificates
+
+
+**Follow this [link for additional AWS setup steps for optional services](https://github.com/manjrekarom/iot-platform/blob/master/AWS-SETUP.md).**
