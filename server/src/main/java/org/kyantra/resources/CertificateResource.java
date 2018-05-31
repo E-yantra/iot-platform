@@ -42,7 +42,7 @@ public class CertificateResource extends BaseResource {
         if (bean == null)
             throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
-        if (AuthorizationHelper.getInstance().checkAccess(userBean, bean))
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, bean))
             throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
 
         String certificateDirectory = Paths.get(Constant.CERT_ROOT,bean.getCertificateDir(),name+".pem").toString();

@@ -147,7 +147,7 @@ public class SnsRuleResource extends BaseResource {
         if (targetThing == null)
             throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
-        if (AuthorizationHelper.getInstance().checkAccess(user, targetThing)) {
+        if (!AuthorizationHelper.getInstance().checkAccess(user, targetThing)) {
             return gson.toJson(ruleBean);
         }
         else throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
