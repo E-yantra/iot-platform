@@ -56,10 +56,9 @@ public class ThingResource extends BaseResource {
 
         // if this is done before null check, it'll throw a NullPointerException
         // but we want DataNotFoundException
-        UnitBean targetUnit = thingBean.getParentUnit();
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
-        if (UnitHelper.getInstance().checkAccess(userBean, targetUnit))
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, thingBean))
             throw new  ForbiddenException(ExceptionMessage.FORBIDDEN);
             
         return gson.toJson(thingBean);
@@ -90,10 +89,9 @@ public class ThingResource extends BaseResource {
         if (bean == null)
             throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
-        UnitBean targetUnit = bean.getParentUnit();
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
-        if (UnitHelper.getInstance().checkAccess(userBean, targetUnit))
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, bean))
             throw new  ForbiddenException(ExceptionMessage.FORBIDDEN);
 
         ThingDAO.getInstance().update(id, name, description, ip);
@@ -111,10 +109,9 @@ public class ThingResource extends BaseResource {
         if (bean == null)
             throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
-        UnitBean targetUnit = bean.getParentUnit();
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
 
-        if (UnitHelper.getInstance().checkAccess(userBean, targetUnit))
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, bean))
             throw new  ForbiddenException(ExceptionMessage.FORBIDDEN);
 
         try {
@@ -145,7 +142,7 @@ public class ThingResource extends BaseResource {
         if (targetUnit == null)
             throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
-        if(UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
+        if(AuthorizationHelper.getInstance().checkAccess(userBean, targetUnit)) {
             try {
                 String s = "Create thing";
                 //System.out.println(gson.toJson(bean));
@@ -243,7 +240,7 @@ public class ThingResource extends BaseResource {
         if (targetUnit == null)
             throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
-        if (UnitHelper.getInstance().checkAccess(userBean, targetUnit)) {
+        if (AuthorizationHelper.getInstance().checkAccess(userBean, targetUnit)) {
             Set<ThingBean> things = ThingDAO.getInstance().getByUnitId(id);
             return gson.toJson(things);
         }
@@ -264,7 +261,7 @@ public class ThingResource extends BaseResource {
         if (thingBean == null)
             throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
-        if (AuthorizationHelper.getInstance().checkAccess(userBean, thingBean))
+        if (!AuthorizationHelper.getInstance().checkAccess(userBean, thingBean))
             throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
 
         String shadowName = "thing"+thingBean.getId();
