@@ -4,7 +4,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kyantra.beans.RightsBean;
 import org.kyantra.beans.RoleEnum;
-import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
 import org.kyantra.beans.UserBean;
 import org.kyantra.services.HibernateService;
@@ -73,16 +72,18 @@ public class RightsDAO {
         session.close();
     }
 
-    public void update(int id, UnitBean unit, RoleEnum role){
+    // update the role of the user on the unit
+    public RightsBean update(int id, RoleEnum role){
         if(id <=0)
-            return;
+            return null;
         Session session = mService.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         RightsBean bean = session.get(RightsBean.class, id);
-        bean.setUnit(unit);
+//        bean.setUnit(unit);
         bean.setRole(role);
         tx.commit();
         session.close();
+        return bean;
     }
 
     public Set<UnitBean> getUnitsByUser(UserBean userBean) {
