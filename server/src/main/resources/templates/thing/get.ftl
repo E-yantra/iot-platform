@@ -54,9 +54,20 @@
                         <div class="float-right">
                             <#--<button v-on:click="edit" class="btn btn-primary btn-sm">EDIT</button>-->
                             <button v-on:click="generate" class="btn btn-primary btn-sm">GENERATE CLIENT</button>
-                            <button v-on:click="downloadCertificates" class="btn btn-primary btn-sm">DOWNLOAD
-                                CERTIFICATES
-                            </button>
+                            <#--<button v-on:click="downloadCertificates" class="btn btn-primary btn-sm">DOWNLOAD-->
+                                <#--CERTIFICATES-->
+                            <#--</button>-->
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        DOWNLOAD CERTIFICATES
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item" type="button" v-on:click="downloadCertificatesAsZip">.zip</button>
+                                        <span title="Might have some issues with popup"><button class="dropdown-item" type="button" v-on:click="downloadCertificates">files</button></span>
+                                        <div class="dropdown-divider"></div>
+                                        <button class="dropdown-item" type="button" v-on:click="downloadRootCA">rootCA</button>
+                                    </div>
+                                </div>
                             <button v-on:click="dashboard" class="btn btn-primary btn-sm">DASHBOARD</button>
                         </div>
                         <button v-on:click="deleteThing" class="btn btn-danger btn-sm float-left text-white"><i
@@ -409,6 +420,15 @@
                 fileNames.forEach(function (fileName) {
                     window.open("/thing/certificate/get/" + fileName + "/" + thingId, "_blank");
                 });
+            },
+
+            "downloadCertificatesAsZip": function () {
+                var that = this;
+                window.open("/thing/certificate/zip/" + thingId, "_blank");
+            },
+
+            "downloadRootCA": function () {
+                var that = this;
                 window.open("/thing/certificate/get/" + "rootCA" + "/" + thingId, "_blank");
             },
 
