@@ -11,7 +11,7 @@ in dynamoDB, sending notifications with SNS, invoking lambda functions, etc.
     2. Give permissions to the roles by attaching policies (SNS Full Access policy, DynamoDB policy).
     3. Put the ARN of this role into configset table as *IoTRoleARN*.
 2. For creating CRON rules
-    1. Create this Lambda function and put it's ARN into configset as *lambdaFunctionArn*.
+    1. Create a [Lambda function](https://github.com/manjrekarom/iot-platform/blob/master/aws-setup/lambda-cron.js) and put it's ARN into configset as a value to the key *lambdaCronArn*.
     2. Assign another role to it giving it permissions to access required services.
 3. Create two DynamoDB tables to hold data
     1. *NotificationDetail*
@@ -19,6 +19,6 @@ in dynamoDB, sending notifications with SNS, invoking lambda functions, etc.
     2. *ThingDB*
           - primarySortKey: timestamp (Number)
 4. For using notification service
-    1. Create this Lambda function.
-    2. Assign it a role with policies that give it access to DynamoDB and SNS
+    1. Create a [Lambda function](https://github.com/manjrekarom/iot-platform/blob/master/aws-setup/lambda-notification.js) and put it's ARN into configset as a value to the key *lambdaNotificationArn*.
+    2. Assign it a role with policies that give it access to DynamoDB and SNS.
           
