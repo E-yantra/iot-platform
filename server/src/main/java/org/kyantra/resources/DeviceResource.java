@@ -59,7 +59,7 @@ public class DeviceResource extends BaseResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String update(@PathParam("id") Integer id,
                          @FormParam("name") String name,
-                         @FormParam("description") String description) throws AccessDeniedException{
+                         @FormParam("description") String description) throws AccessDeniedException {
         //TODO: required?
         DeviceBean deviceBean = DeviceDAO.getInstance().get(id);
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();

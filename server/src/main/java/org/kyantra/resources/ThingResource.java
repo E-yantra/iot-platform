@@ -1,12 +1,17 @@
 package org.kyantra.resources;
 
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
+
 import com.amazonaws.services.iot.AWSIot;
-import com.amazonaws.services.iot.client.AWSIotException;
 import com.amazonaws.services.iot.model.*;
 import com.amazonaws.services.iotdata.AWSIotData;
 import com.amazonaws.services.iotdata.model.GetThingShadowRequest;
 import com.amazonaws.services.iotdata.model.GetThingShadowResult;
 import io.swagger.annotations.Api;
+
 import org.kyantra.beans.RoleEnum;
 import org.kyantra.beans.ThingBean;
 import org.kyantra.beans.UnitBean;
@@ -16,7 +21,6 @@ import org.kyantra.dao.UnitDAO;
 import org.kyantra.exceptionhandling.DataNotFoundException;
 import org.kyantra.exceptionhandling.ExceptionMessage;
 import org.kyantra.helper.AuthorizationHelper;
-import org.kyantra.helper.UnitHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 import org.kyantra.utils.AwsIotHelper;
@@ -25,7 +29,6 @@ import org.kyantra.utils.ThingHelper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -41,6 +44,7 @@ import java.util.Set;
 public class ThingResource extends BaseResource {
 
     int limit = 10;
+
 
     @GET
     @Session
@@ -64,6 +68,7 @@ public class ThingResource extends BaseResource {
         return gson.toJson(thingBean);
     }
 
+
     @GET
     @Session
     @Path("list/page/{page}")
@@ -72,6 +77,7 @@ public class ThingResource extends BaseResource {
         List<ThingBean> things= ThingDAO.getInstance().list(page,limit);
         return gson.toJson(things);
     }
+
 
     @PUT
     @Session
@@ -98,6 +104,7 @@ public class ThingResource extends BaseResource {
         return gson.toJson(bean);
     }
 
+
     @DELETE
     @Session
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
@@ -123,6 +130,7 @@ public class ThingResource extends BaseResource {
         }
         return "{}";
     }
+
 
     // TODO: 5/24/18 Zip the certificates
     @POST
@@ -183,6 +191,24 @@ public class ThingResource extends BaseResource {
                             file = new PrintWriter(certificateDir.getAbsolutePath() + "/public.key.pem");
                             file.write(publicKey);
                             file.close();
+
+                            ZipFile zipFile = new ZipFile(certificateDir.getAbsolutePath()+".zip");
+
+                            // Folder to add
+                            String folderToAdd = certificateDir.getAbsolutePath();
+
+                            // Initiate Zip Parameters which define various properties such
+                            // as compression method, etc.
+                            ZipParameters parameters = new ZipParameters();
+
+                            // set compression method to store compression
+                            parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+
+                            // Set the compression level
+                            parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+
+                            // Add folder to the zip file
+                            zipFile.addFolder(folderToAdd, parameters);
                         }
 
                     }
@@ -227,6 +253,7 @@ public class ThingResource extends BaseResource {
         else throw new  ForbiddenException(ExceptionMessage.FORBIDDEN);
     }
 
+
     @GET
     @Session
     @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
@@ -246,6 +273,7 @@ public class ThingResource extends BaseResource {
         }
         else throw new  ForbiddenException(ExceptionMessage.FORBIDDEN);
     }
+
 
     // TODO: 5/24/18 Debug this resource method: Gives NPE always
     @GET
@@ -276,6 +304,7 @@ public class ThingResource extends BaseResource {
 
         return resultString;
     }
+
 
     @Path("/certificate")
     public CertificateResource getCertificateResource() {

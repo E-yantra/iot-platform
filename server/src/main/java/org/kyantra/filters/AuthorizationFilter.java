@@ -114,8 +114,8 @@ public class AuthorizationFilter implements ContainerRequestFilter {
             return;
         }
 
-        //TODO Remove this later
-        //throw new Exception("Not possible");
+        // TODO Remove this later
+        // throw new Exception("Not possible");
     }
 
     private boolean isTokenBasedAuthentication(String authorizationHeader) {

@@ -98,7 +98,6 @@ public class SessionFilter implements ContainerRequestFilter {
 
 
         } else {
-            // TODO: 5/24/18 Send a JSON response along with temporary redirect error
             try {
                 throw new RedirectionException(ExceptionMessage.TEMP_REDIRECT,
                         Response.Status.TEMPORARY_REDIRECT.getStatusCode(),
