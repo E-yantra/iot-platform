@@ -10,6 +10,7 @@ import org.kyantra.helper.AuthorizationHelper;
 import org.kyantra.interfaces.Secure;
 import org.kyantra.interfaces.Session;
 
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -20,6 +21,9 @@ import java.util.List;
 @Path("/attribute")
 @Api(value="attribute")
 public class DeviceAttributeResource extends BaseResource {
+
+    int limit = 10;
+
     @GET
     @Path("get/{id}")
     @Session
@@ -28,10 +32,23 @@ public class DeviceAttributeResource extends BaseResource {
     public String get(@PathParam("id") Integer id) throws AccessDeniedException {
         DeviceAttributeBean deviceAttributeBean = DeviceAttributeDAO.getInstance().get(id);
         UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
         if (AuthorizationHelper.getInstance().checkAccess(userBean, deviceAttributeBean)) {
             return gson.toJson(deviceAttributeBean);
         }
+
         else throw new AccessDeniedException();
+    }
+
+
+    @GET
+    @Path("/list/page/{page}")
+    @Session
+    @Produces(MediaType.APPLICATION_JSON)
+    public String list(@PathParam("page") Integer pageNumber) {
+        List<DeviceAttributeBean> deviceAttributeBeanList = DeviceAttributeDAO.getInstance().list(pageNumber, limit);
+
+        return gson.toJson(deviceAttributeBeanList);
     }
 
 
@@ -100,7 +117,7 @@ public class DeviceAttributeResource extends BaseResource {
                 deviceAttribute.setName(name);
                 deviceAttribute.setType(type);
                 deviceAttribute.setDef(def);
-                deviceAttribute.setOwnerUnit(UnitDAO.getInstance().get(ownerUnitId));
+                deviceAttribute.setOwnerUnit(targetUnit);
 
                 DeviceAttributeBean deviceAttributeBean = DeviceAttributeDAO.getInstance().add(deviceAttribute);
                 return gson.toJson(deviceAttributeBean);
