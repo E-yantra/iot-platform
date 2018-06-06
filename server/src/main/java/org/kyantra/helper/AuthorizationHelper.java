@@ -2,6 +2,7 @@ package org.kyantra.helper;
 
 import org.kyantra.beans.*;
 import org.kyantra.dao.RightsDAO;
+import org.kyantra.dao.UnitDAO;
 
 import java.util.Set;
 
@@ -45,6 +46,12 @@ public class AuthorizationHelper {
 
     public Boolean checkAccess(UserBean user, DeviceAttributeBean targetDeviceAttribute) {
         UnitBean targetUnit = targetDeviceAttribute.getOwnerUnit();
+        DeviceBean targetDevice = targetDeviceAttribute.getParentDevice();
+
+        // TODO: 6/6/18 Change after bean validation; Required OwnerUnit
+        if (targetDevice != null)
+            return checkAccess(user, targetDevice);
+
         return checkAccess(user, targetUnit);
     }
 }
