@@ -28,6 +28,7 @@ public class PubSubResource extends BaseResource {
     static AWSIotMqttClient client;
     static Map<String,Deque<String>> messages  = new ConcurrentHashMap<>();
 
+    // TODO: 6/6/18 Some issues with pubsub resource
     public PubSubResource() throws AWSIotException {
         super();
         String awsKey = ConfigDAO.getInstance().get("awsKey").getValue();
@@ -42,17 +43,20 @@ public class PubSubResource extends BaseResource {
         }
     }
 
-    // TODO: 5/31/18 What is this? 
-    @POST
-    @Path("publish")
-    @Secure(roles = {RoleEnum.WRITE, RoleEnum.ALL})
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String publish(@FormParam("topic") String topic,
-                          @FormParam("payload") String payload) throws AWSIotException {
-        client.publish(topic,payload);
-        return gson.toJson("{}");
-    }
+    // TODO: 5/31/18 What is this?
+    // TODO: 6/6/18 Commenting because of probable security issues
+    // A user could try to access thing that he doesn't have access via our platform
+    // by typing topic as that things mqtt address
+//    @POST
+//    @Path("publish")
+//    @Secure(roles = {RoleEnum.WRITE, RoleEnum.ALL})
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+//    public String publish(@FormParam("topic") String topic,
+//                          @FormParam("payload") String payload) throws AWSIotException {
+//        client.publish(topic, payload);
+//        return gson.toJson("{}");
+//    }
 
 
     @GET
@@ -84,6 +88,7 @@ public class PubSubResource extends BaseResource {
     }
 
 
+    // TODO: 6/6/18 Owner unit is always null; Using parent device as quick fix
     @POST
     @Path("value/{id}")
     @Secure(roles = {RoleEnum.WRITE, RoleEnum.ALL})
@@ -97,6 +102,7 @@ public class PubSubResource extends BaseResource {
         if (att == null)
             throw new DataNotFoundException(ExceptionMessage.DATA_NOT_FOUND);
 
+        //
         if (!AuthorizationHelper.getInstance().checkAccess(userBean, att))
             throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
 
@@ -118,14 +124,17 @@ public class PubSubResource extends BaseResource {
     }
 
 
-    // TODO: 5/31/18 What is this? 
-    @POST
-    @Path("messages")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String getMessages(@FormParam("topic") String topic) {
-        String resp =  gson.toJson(messages.get(topic+"/get"));
-        messages.get(topic).clear();
-        return resp;
-    }
+//    // TODO: 5/31/18 What is this?
+    // TODO: 6/6/18 Commenting because of probable security issues
+    // A user could try to access thing that he doesn't have access via our platform
+    // by typing topic as that things mqtt address
+//    @POST
+//    @Path("messages")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+//    public String getMessages(@FormParam("topic") String topic) {
+//        String resp =  gson.toJson(messages.get(topic+"/get"));
+//        messages.get(topic).clear();
+//        return resp;
+//    }
 }

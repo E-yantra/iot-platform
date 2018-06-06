@@ -132,7 +132,7 @@ public class ThingResource extends BaseResource {
     }
 
 
-    // TODO: 5/24/18 Zip the certificates
+    // TODO: 6/4/18 Debug return succes: false 
     @POST
     @Session
     @Secure(roles = {RoleEnum.ALL,RoleEnum.WRITE}, subjectType = "thing", subjectField = "parentId")
