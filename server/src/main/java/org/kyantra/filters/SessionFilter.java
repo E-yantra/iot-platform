@@ -57,7 +57,7 @@ public class SessionFilter implements ContainerRequestFilter {
         String authorizationCookie = requestContext.getCookies().getOrDefault("authorization", new Cookie("authorization", "")).getValue();
 
         // TODO: 6/4/18 Add authentication header here
-        if (!authorizationCookie.isEmpty() || !authorizationHeader.isEmpty()) {
+        if (!authorizationCookie.isEmpty() || (authorizationHeader != null && !authorizationHeader.isEmpty())) {
             String authorizationToken = authorizationCookie.isEmpty() ? authorizationHeader : authorizationCookie;
             UserBean userBean = UserDAO.getInstance().getByToken(authorizationToken);
 
