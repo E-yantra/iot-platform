@@ -251,9 +251,9 @@
                 //TODO
             },
 
-
+            // TODO: Check the responses
             "deleteThing": function () {
-                alert(thingId);
+                // alert(thingId);
                 if (confirm("Are you sure you want to delete thing?") && confirm("Are you really sure?")) {
                     $.ajax({
                         url: "/thing/delete/" + thingId,

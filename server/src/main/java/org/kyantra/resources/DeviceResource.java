@@ -2,6 +2,7 @@ package org.kyantra.resources;
 
 import io.swagger.annotations.Api;
 import org.kyantra.beans.*;
+import org.kyantra.dao.ConfigDAO;
 import org.kyantra.dao.DeviceDAO;
 import org.kyantra.dao.ThingDAO;
 import org.kyantra.dao.UnitDAO;
@@ -140,12 +141,14 @@ public class DeviceResource extends BaseResource {
             ShadowBean shadowBean = new ShadowBean();
             shadowBean.setThingBean(thing);
             StringBuilder sb = new StringBuilder();
-            sb.append("ThingID:");
+            sb.append("ThingID: ");
             sb.append("thing" + thing.getId());
             sb.append("\n");
-            sb.append("Subscribe to Delta Topic : " + shadowBean.getDeltaTopic());
+            sb.append("Subscribe to Delta Topic: " + shadowBean.getDeltaTopic());
             sb.append("\n");
-            sb.append("Publish to reporting Topic : " + shadowBean.getUpdateTopic());
+            sb.append("Publish to reporting Topic: " + shadowBean.getUpdateTopic());
+            sb.append("\n");
+            sb.append("IoT Endpoint: " + ConfigDAO.getInstance().get("endpoint").getValue());
             sb.append("\n");
             sb.append("{\n" +
                     "   \"state\": {\n" +
