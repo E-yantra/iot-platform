@@ -593,7 +593,7 @@
 
             "removeAttr": function (key) {
                 if (key !== -1) {
-                    array.splice(key, 1);
+                    this.createDevice.deviceAttributes.splice(key, 1);
                 }
             },
 
@@ -601,6 +601,8 @@
                 console.log('Inside addAttr');
                 if (this.cttr.name && this.cttr.type) {
                     this.createDevice.deviceAttributes.push(Object.assign({}, this.cttr));
+                    this.cttr.name = "";
+                    this.cttr.type = "";
                 }
             },
 
@@ -646,7 +648,7 @@
             "saveDevice": function () {
                 var that = this;
                 this.saveLoader = true;
-                that.createDevice.ownerUnitId = that.thing.parentUnitId;
+                that.createDevice.ownerUnitId = that.thing.parentUnit.id;
                 that.createDevice.parentThingId = that.thing.id;
                 if (this.createDevice.id) {
                     $.ajax({
