@@ -3,7 +3,7 @@
 
 **Note:** *Before following steps in this document you should have completed the steps in README.md. Also note that you must be an admin IAM user for performing most of the steps in this document such as writing roles, etc. and pushing it to AWS.*
 
-Additional setup steps
+Additional Setup
 ----
 1. For creating AWS IoT rules that will interact with other services such as SNS, DynamoDB, AWS Lambda, you need to create roles. These roles will give permissions to AWS IoT so that it can access these services.
     1. Create an IAM role for AWS IoT. A role grants a service like IoT, the right to access other services.
