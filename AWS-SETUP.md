@@ -1,12 +1,11 @@
 # AWS Setup
-#### This guide is to setup additional services such as Crons, notification rules, DynamoDB storage. You won't need to follow this if you just have to connect devices to internet and interchange basic data. If you haven't followed instructions in README.md please come back after doing so.
+#### This guide is to setup additional services such as Crons, Email/SMS Notifications, DynamoDB storage, etc. You won't need to follow this if you just want to connect devices to internet and interchange basic data. 
 
+**Note:** *Before following steps in this document you should have completed the steps in README.md. Also note that you must be an admin IAM user for performing most of the steps in this document such as writing roles, etc. and pushing it to AWS.*
 
-**Note: You must be an admin IAM user for writing roles and pushing it to AWS.** 
-
-For writing rules on the platform you need to do additional setup on AWS.
-1. For creating rules that interact with other services such as SNS, DynamoDB, AWS Lambda. This is required for writing rules for storing data 
-in dynamoDB, sending notifications with SNS, invoking lambda functions, etc.
+Additional setup steps
+----
+1. For creating AWS IoT rules that will interact with other services such as SNS, DynamoDB, AWS Lambda, you need to create roles. These roles will give permissions to AWS IoT so that it can access these services.
     1. Create an IAM role for AWS IoT. A role grants a service like IoT, the right to access other services.
     2. Give permissions to the roles by attaching policies (SNS Full Access policy, DynamoDB policy).
     3. Put the ARN of this role into configset table as *IoTRoleARN*.
@@ -15,9 +14,10 @@ in dynamoDB, sending notifications with SNS, invoking lambda functions, etc.
     2. Assign another role to it giving it permissions to access required services.
 3. Create two DynamoDB tables to hold data
     1. *NotificationDetail*
-          - primaryPartitionKey: ruleName (String)
+          - Primary Partition Key: ruleName (String)
     2. *ThingDB*
-          - primarySortKey: timestamp (Number)
+          - Primary Partition Key: id (String)
+          - Primary Sort Key: timestamp (Number)
 4. For using notification service
     1. Create a [Lambda function](https://github.com/manjrekarom/iot-platform/blob/master/aws-setup/lambda-notification.js) and put it's ARN into configset as a value to the key *lambdaNotificationArn*.
     2. Assign it a role with policies that give it access to DynamoDB and SNS.
