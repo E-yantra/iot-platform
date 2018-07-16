@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form autocomplete="on" v-on:keyup.enter="saveUnit">
                     <div class="form-group">
                         <label>Unit Name:</label>
                         <input type="text" name="name" class="form-control" v-model='createUnit.unitName' placeholder="Unit Name">

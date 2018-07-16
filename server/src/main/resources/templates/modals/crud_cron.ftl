@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form autocomplete="on" v-on:keyup.enter="saveCron">
                     <div class="form-group">
                         <label>Name:</label>
                         <input class="form-control" v-model="cronName" placeholder="Irrigation Pump Cron" type="text" name="cronName">

@@ -8,13 +8,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form autocomplete="on" v-on:keyup.enter="saveDevice">
                     <div class="form-group">
                         <label class="col-form-label" for="formGroupExampleInput">Device Name</label>
                         <input v-model="createDevice.name" type="text" class="form-control" id="formGroupExampleInput" placeholder="Device Name">
                     </div>
                 </form>
-                <form class="form-inline p-1" v-for="(value, key) in createDevice.deviceAttributes">
+                <form class="form-inline p-1" autocomplete="on" v-for="(value, key) in createDevice.deviceAttributes">
                     <label class="sr-only" for="inlineFormInputName2">Name</label>
                     <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" v-model="createDevice.deviceAttributes[key].name" placeholder="Name">
 
@@ -31,7 +31,7 @@
                     <input type="checkbox" class="form-control mb-2 mr-sm-2 mb-sm-0" v-model="createDevice.deviceAttributes[key].actuator"/> Actuator &nbsp;
                     <button type="button" class="btn btn-danger" v-on:click="removeAttr(key)">x</button>
                 </form>
-                <form class="form-inline p-1">
+                <form class="form-inline p-1" autocomplete="on">
                     <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0"  v-model="cttr.name" placeholder="Name">
                     <label class="sr-only" for="inlineFormInputName2">Type</label>
                     <select class="custom-select mb-2 mr-sm-2 mb-sm-0" v-model="cttr.type">

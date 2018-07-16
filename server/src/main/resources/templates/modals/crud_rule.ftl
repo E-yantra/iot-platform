@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form autocomplete="on" v-on:keyup.enter="updateRule">
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
