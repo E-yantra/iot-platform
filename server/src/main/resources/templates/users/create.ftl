@@ -4,7 +4,7 @@
 <div class="container-fluid" id="container-main">
 <#include "../common/sidenavbar.ftl"/>
 <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
-<form>
+<form autocomplete="on">
     <div class="form-group">
         <label for="inputEmail4">User Name:</label>
         <input type="text" class="form-control" id="inputUsername" placeholder="User Name">

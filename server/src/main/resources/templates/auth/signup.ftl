@@ -5,7 +5,7 @@
         <div>
             <section class="container">
                 <section class="login-form">
-                    <form class="form-signin" method="post" action="" role="login">
+                    <form class="form-signin" autocomplete="on" method="post" action="" role="login">
                         <div style="text-align: center;font-size: 30px;"><a style="text-decoration: none;" href="#">Signup</a></div><br>
                         <input name="name" type="text" id="inputName" class="form-control" placeholder="User Name" required="" autofocus="" autocomplete="off" >
                         <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" autocomplete="off" >

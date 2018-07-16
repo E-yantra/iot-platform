@@ -107,7 +107,7 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-danger btn-sm text-white"
-                                            v-on:click="deleteCron(cron)">Delete</button>
+                                            v-on:click="deleteCron(cron)">DELETE</button>
                                 </td>
                             </tr>
                         </table>
@@ -174,7 +174,7 @@
                     </div>
 
                     <div class="card-body p-1">
-                        <form>
+                        <form autocomplete="on">
                             <div class="form-group">
                                 <label class="col-form-label" for="formGroupExampleInput">Topic Name</label>
                                 <input v-model="testTopic" type="text" class="form-control" id="formGroupExampleInput"

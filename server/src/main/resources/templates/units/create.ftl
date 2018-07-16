@@ -8,7 +8,7 @@
     <#else>
     <#assign unit={}>
     </#if>
-    <form>
+    <form autocomplete="on">
         <div class="form-group">
             <label for="inputUnitname">Unit Name:</label>
             <input type="text" class="form-control" value='${unit.unitName!""}' form-control" id="inputUnitname" placeholder="Unit Name">
