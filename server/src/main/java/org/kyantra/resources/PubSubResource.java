@@ -115,6 +115,9 @@ public class PubSubResource extends BaseResource {
         else if(att.getType().equals("Double")) {
             bean.setDesired(att, att.getId() + "", Double.parseDouble(value));
         }
+        else if(att.getType().equals("Integer")) {
+            bean.setDesired(att, att.getId() + "", Integer.parseInt(value));
+        }
         else {
             bean.setDesired(att, att.getId() + "", value);
         }

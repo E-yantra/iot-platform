@@ -124,8 +124,7 @@ public class SnsRuleResource extends BaseResource {
                 ruleBean = RuleDAO.getInstance().get(ruleBean.getId());
 
             } catch (Exception e) {
-                e.printStackTrace();
-                return "{\"success\": false}";
+                throw e;
             }
             return gson.toJson(ruleBean);
         }
