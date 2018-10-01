@@ -4,7 +4,7 @@
 <div class="container-fluid" id="container-main">
 <#include "../common/sidenavbar.ftl"/>
         <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
-            <form>
+            <form autocomplete="on">
           <div style="float: right;margin-bottom: 10px;" v-if="role=='ALL' || role=='WRITE'"><a href="/users/create" role="button"class="btn btn-primary">Add New</a></div>
                 <table id="userTable" class="table table-bordered">
                     <thead>

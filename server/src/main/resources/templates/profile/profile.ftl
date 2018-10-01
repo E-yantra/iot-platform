@@ -4,7 +4,7 @@
 <div class="container-fluid" id="container-main">
 <#include "../common/sidenavbar.ftl"/>
     <main role="main" class="main col-sm-9 ml-sm-auto col-md-10 pt-3 pb-5">
-        <form class="user-info-form">
+        <form class="user-info-form" autocomplete="on">
             <div class="form-group">
 
                 <input type="hidden" class="form-control" id="inputUserId" value="${user.id}" >

@@ -5,7 +5,7 @@
     <div>
         <section class="container">
             <section class="login-form">
-                <form class="form-signin" method="post" action="" role="login">
+                <form class="form-signin" autocomplete="on" method="post" action="" role="login">
                     <div id="app" v-if="error" class="alert alert-danger">
                         {{ message }}
                     </div>

@@ -128,7 +128,7 @@ public class UserResource extends BaseResource {
             return gson.toJson(userBean);
         } catch (Throwable t) {
             t.printStackTrace();
+            throw t;
         }
-        return "{\"success\": false}";
     }
 }

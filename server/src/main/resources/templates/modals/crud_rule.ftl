@@ -10,13 +10,12 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form autocomplete="on" v-on:keyup.enter="updateRule">
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
                                 <label>Name</label>
-                                <input v-bind:readOnly="ruleUpdate" type="text" name="name" class="form-control" v-model='createRule.name'
-                                       placeholder="temperature_rule">
+                                <input v-bind:readOnly="ruleUpdate" type="text" name="name" class="form-control" v-model='createRule.name' placeholder="temperature_rule">
                                 <small class="text-muted">Name of the rule will be prefixed with &lt;thing-id&gt;_&lt;rule-type&gt;</small>
                             </div>
                             <div class="form-group">

@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form autocomplete="on" v-on:keyup.enter="addSubscription">
                     <div class="form-group">
                         <label>Protocol:</label>
                         <input type="text" name="type" class="form-control" v-model='createSubscription.type' placeholder="email">

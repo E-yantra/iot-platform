@@ -28,5 +28,4 @@ public class SnsDAO extends BaseDAO {
         session.close();
         return snsBean;
     }
-
 }

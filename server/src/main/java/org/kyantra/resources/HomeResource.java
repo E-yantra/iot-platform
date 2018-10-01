@@ -54,110 +54,123 @@ public class HomeResource extends BaseResource {
         return map;
     }
 
+    // TODO: 6/1/18 if user has logged in move him to HOME path
     @GET
     @Path("/login")
     @Template(name = "/auth/login.ftl")
-    public Map<String, Object> login() {
+    public Map<String, Object> login() throws URISyntaxException {
+        UserBean userBean = (UserBean)getSecurityContext().getUserPrincipal();
+
+        if (userBean != null)
+            throw new RedirectionException(ExceptionMessage.PERMANENTLY_MOVED,
+                    Response.Status.MOVED_PERMANENTLY.getStatusCode(),
+                    new URI("/"));
+
         final Map<String, Object> map = new HashMap<String, Object>();
         return map;
     }
 
-    @GET
-    @Path("/units/list")
-    @Template(name = "/units/list.ftl")
-    @Session
-    public Map<String, Object> listUnits() {
-        final Map<String, Object> map = new HashMap<String, Object>();
-        map.put("active","unit");
-        setCommonData(map);
-        return map;
-    }
+//    @GET
+//    @Path("/units/list")
+//    @Template(name = "/units/list.ftl")
+//    @Session
+//    public Map<String, Object> listUnits() {
+//        final Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("active","unit");
+//        setCommonData(map);
+//        return map;
+//    }
 
-    @GET
-    @Path("/units/create")
-    @Template(name = "/units/create.ftl")
-    @Session
-    public Map<String, Object> createUnit(@QueryParam("id") Integer id) throws AccessDeniedException {
-        //TODO: required?
-        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
-            final Map<String, Object> map = new HashMap<String, Object>();
-            map.put("active", "unit");
-            if (id != null) {
-                map.put("unit", UnitDAO.getInstance().get(id));
-            }
-            setCommonData(map);
-            return map;
-        }
-        else{
-            throw new AccessDeniedException();
-        }
-    }
+    // TODO: 6/1/18 Test if required?
+//    @GET
+//    @Path("/units/create")
+//    @Template(name = "/units/create.ftl")
+//    @Session
+//    public Map<String, Object> createUnit(@QueryParam("id") Integer id) throws AccessDeniedException {
+//        //TODO: required?
+//        if (AuthorizationDAO.getInstance().ownsUnit((UserBean)getSecurityContext().getUserPrincipal(),UnitDAO.getInstance().get(id))) {
+//            final Map<String, Object> map = new HashMap<String, Object>();
+//            map.put("active", "unit");
+//            if (id != null) {
+//                map.put("unit", UnitDAO.getInstance().get(id));
+//            }
+//            setCommonData(map);
+//            return map;
+//        }
+//        else{
+//            throw new AccessDeniedException();
+//        }
+//    }
 
-    @GET
-    @Path("/things/list")
-    @Template(name = "/thing/list.ftl")
-    @Session
-    public Map<String, Object> listThings() {
-        final Map<String, Object> map = new HashMap<String, Object>();
-        map.put("active","thing");
-        setCommonData(map);
-        return map;
-    }
+//    @GET
+//    @Path("/things/list")
+//    @Template(name = "/thing/list.ftl")
+//    @Session
+//    public Map<String, Object> listThings() {
+//        final Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("active","thing");
+//        setCommonData(map);
+//        return map;
+//    }
 
-    @GET
-    @Path("/things/create")
-    @Template(name = "/thing/create.ftl")
-    @Session
-    public Map<String, Object> createThing() {
-        final Map<String, Object> map = new HashMap<String, Object>();
-        map.put("active","thing");
-        setCommonData(map);
-        return map;
-    }
+//    @GET
+//    @Path("/things/create")
+//    @Template(name = "/thing/create.ftl")
+//    @Session
+//    public Map<String, Object> createThing() {
+//        final Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("active","thing");
+//        setCommonData(map);
+//        return map;
+//    }
 
-    @GET
-    @Path("/rights/create")
-    @Template(name = "/rights/create.ftl")
-    @Session
-    public Map<String, Object> createRight() {
-        final Map<String, Object> map = new HashMap<String, Object>();
-        map.put("active","right");
-        setCommonData(map);
-        return map;
-    }
 
-    @GET
-    @Path("/rights/list")
-    @Template(name = "/rights/list.ftl")
-    @Session
-    public Map<String, Object> listRight() {
-        final Map<String, Object> map = new HashMap<String, Object>();
-        map.put("active","right");
-        setCommonData(map);
-        return map;
-    }
+//    @GET
+//    @Path("/rights/create")
+//    @Template(name = "/rights/create.ftl")
+//    @Session
+//    public Map<String, Object> createRight() {
+//        final Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("active","right");
+//        setCommonData(map);
+//        return map;
+//    }
 
-    @GET
-    @Path("/users/create")
-    @Template(name = "/users/create.ftl")
-    @Session
-    public Map<String, Object> createUsers() {
-        final Map<String, Object> map = new HashMap<String, Object>();
-        map.put("active","user");
-        setCommonData(map);
-        return map;
-    }
 
-    @GET
-    @Path("/users/list")
-    @Template(name = "/users/list.ftl")
-    @Session
-    public Map<String, Object> listusers() {
-        final Map<String, Object> map = new HashMap<String, Object>();
-        map.put("active","user");
-        setCommonData(map);
-        return map;
-    }
+//    @GET
+//    @Path("/rights/list")
+//    @Template(name = "/rights/list.ftl")
+//    @Session
+//    public Map<String, Object> listRight() {
+//        final Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("active","right");
+//        setCommonData(map);
+//        return map;
+//    }
+
+
+//    @GET
+//    @Path("/users/create")
+//    @Template(name = "/users/create.ftl")
+//    @Session
+//    public Map<String, Object> createUsers() {
+//        final Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("active","user");
+//        setCommonData(map);
+//        return map;
+//    }
+
+//    @GET
+//    @Path("/users/list")
+//    @Template(name = "/users/list.ftl")
+//    @Session
+//    public Map<String, Object> listusers() {
+//        final Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("active","user");
+//        setCommonData(map);
+//        return map;
+//    }
+
 
     @GET
     @Path("/logout")
@@ -170,16 +183,17 @@ public class HomeResource extends BaseResource {
                 new URI("/login"));
     }
 
+
     @GET
     @Path("/unauthorized")
     @Template(name = "/auth/unauthorized.ftl")
     @Session
-    public Map<String, Object> unauthorized() throws URISyntaxException{
+    public Map<String, Object> unauthorized() throws URISyntaxException {
         final Map<String, Object> map = new HashMap<String, Object>();
         throw new WebApplicationException(Response.temporaryRedirect(new URI("/login")).cookie(new NewCookie("authorization","")).build());
     }
 
-    private void setCommonData(Map<String, Object> map){
+    private void setCommonData(Map<String, Object> map) {
         map.put("user",getSecurityContext().getUserPrincipal());
     }
 
@@ -213,7 +227,7 @@ public class HomeResource extends BaseResource {
     @Path("/things/dashboard/{id}")
     @Template(name = "/thing/dashboard.ftl")
     @Session
-    public Map<String, Object> getDashboard(@PathParam("id") Integer id){
+    public Map<String, Object> getDashboard(@PathParam("id") Integer id) {
         final Map<String, Object> map = new HashMap<String, Object>();
         map.put("active","thing");
         ThingBean thing = ThingDAO.getInstance().get(id);
@@ -248,5 +262,4 @@ public class HomeResource extends BaseResource {
         setCommonData(map);
         return map;
     }
-
 }

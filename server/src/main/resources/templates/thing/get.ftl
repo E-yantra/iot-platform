@@ -54,9 +54,20 @@
                         <div class="float-right">
                             <#--<button v-on:click="edit" class="btn btn-primary btn-sm">EDIT</button>-->
                             <button v-on:click="generate" class="btn btn-primary btn-sm">GENERATE CLIENT</button>
-                            <button v-on:click="downloadCertificates" class="btn btn-primary btn-sm">DOWNLOAD
-                                CERTIFICATES
-                            </button>
+                            <#--<button v-on:click="downloadCertificates" class="btn btn-primary btn-sm">DOWNLOAD-->
+                                <#--CERTIFICATES-->
+                            <#--</button>-->
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        DOWNLOAD CERTIFICATES
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item" type="button" v-on:click="downloadCertificatesAsZip">.zip</button>
+                                        <span title="Might have some issues with popup"><button class="dropdown-item" type="button" v-on:click="downloadCertificates">files</button></span>
+                                        <div class="dropdown-divider"></div>
+                                        <button class="dropdown-item" type="button" v-on:click="downloadRootCA">rootCA</button>
+                                    </div>
+                                </div>
                             <button v-on:click="dashboard" class="btn btn-primary btn-sm">DASHBOARD</button>
                         </div>
                         <button v-on:click="deleteThing" class="btn btn-danger btn-sm float-left text-white"><i
@@ -96,7 +107,7 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-danger btn-sm text-white"
-                                            v-on:click="deleteCron(cron)">Delete</button>
+                                            v-on:click="deleteCron(cron)">DELETE</button>
                                 </td>
                             </tr>
                         </table>
@@ -163,7 +174,7 @@
                     </div>
 
                     <div class="card-body p-1">
-                        <form>
+                        <form autocomplete="on">
                             <div class="form-group">
                                 <label class="col-form-label" for="formGroupExampleInput">Topic Name</label>
                                 <input v-model="testTopic" type="text" class="form-control" id="formGroupExampleInput"
@@ -194,6 +205,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="/static/js/app.js"></script>
 <script>
+    // TODO: Cannot delete form item in device
+    // TODO: Bug for device with no name; Validation needed
     var token = $.cookie("authorization");
     var userId = ${user.id};
     var thingId = ${thing.id};
@@ -238,9 +251,9 @@
                 //TODO
             },
 
-
+            // TODO: Check the responses
             "deleteThing": function () {
-                alert(thingId);
+                // alert(thingId);
                 if (confirm("Are you sure you want to delete thing?") && confirm("Are you really sure?")) {
                     $.ajax({
                         url: "/thing/delete/" + thingId,
@@ -409,6 +422,15 @@
                 fileNames.forEach(function (fileName) {
                     window.open("/thing/certificate/get/" + fileName + "/" + thingId, "_blank");
                 });
+            },
+
+            "downloadCertificatesAsZip": function () {
+                var that = this;
+                window.open("/thing/certificate/zip/" + thingId, "_blank");
+            },
+
+            "downloadRootCA": function () {
+                var that = this;
                 window.open("/thing/certificate/get/" + "rootCA" + "/" + thingId, "_blank");
             },
 
@@ -502,7 +524,7 @@
                         console.log(data);
                         that.ruleActionList = data;
                     }
-                })
+                });
                 that.getCrons();
 
             },
@@ -571,7 +593,7 @@
 
             "removeAttr": function (key) {
                 if (key !== -1) {
-                    array.splice(key, 1);
+                    this.createDevice.deviceAttributes.splice(key, 1);
                 }
             },
 
@@ -579,6 +601,8 @@
                 console.log('Inside addAttr');
                 if (this.cttr.name && this.cttr.type) {
                     this.createDevice.deviceAttributes.push(Object.assign({}, this.cttr));
+                    this.cttr.name = "";
+                    this.cttr.type = "";
                 }
             },
 

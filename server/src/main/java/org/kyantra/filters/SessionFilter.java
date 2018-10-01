@@ -12,10 +12,7 @@ import javax.ws.rs.RedirectionException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.*;
 import javax.ws.rs.ext.Provider;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -55,9 +52,14 @@ public class SessionFilter implements ContainerRequestFilter {
             return;
         }
 
+        String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+
         String authorizationCookie = requestContext.getCookies().getOrDefault("authorization", new Cookie("authorization", "")).getValue();
-        if (!authorizationCookie.isEmpty()) {
-            UserBean userBean = UserDAO.getInstance().getByToken(authorizationCookie);
+
+        // TODO: 6/4/18 Add authentication header here
+        if (!authorizationCookie.isEmpty() || (authorizationHeader != null && !authorizationHeader.isEmpty())) {
+            String authorizationToken = authorizationCookie.isEmpty() ? authorizationHeader : authorizationCookie;
+            UserBean userBean = UserDAO.getInstance().getByToken(authorizationToken);
 
             // If user provides a wrong auth token redirect him to login
             if (userBean == null) {
@@ -98,7 +100,6 @@ public class SessionFilter implements ContainerRequestFilter {
 
 
         } else {
-            // TODO: 5/24/18 Send a JSON response along with temporary redirect error
             try {
                 throw new RedirectionException(ExceptionMessage.TEMP_REDIRECT,
                         Response.Status.TEMPORARY_REDIRECT.getStatusCode(),

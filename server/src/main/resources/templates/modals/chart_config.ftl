@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form autocomplete="on">
                     <div class="form-group">
                         <div class="row">
                             <div class="col">

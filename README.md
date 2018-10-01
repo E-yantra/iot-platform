@@ -30,7 +30,8 @@ Setup
     - awsSecret 
     - endpoint (iot endpoint unique to your AWS account)    
     - IoTRoleARN (role that grants iot access to dynamoDB and other services, requires additional settings) (optional for dynamoDB storage)
-    - lambdaFunctionArn (ARN of the lambda function that manages cron, requires additional settings) (optional for cron service)
+    - lambdaCronArn (ARN of the lambda function that manages cron, requires additional settings) (optional for cron service)
+    - lambdaNotificationArn (ARN of the lambbda function that manages SNS notification settings)
 9. Change the CERT_ROOT under StringConstants class to point to the directory where you want to store thing certificates
 
 

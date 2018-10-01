@@ -32,6 +32,7 @@ public class SnsHelper {
         return createTopicResult;
     }
 
+
     public SubscribeResult subscibeTopic(SnsSubscriptionBean subscriptionBean) {
         String topicARN = subscriptionBean.getParentSNSBean().getTopicARN();
         SubscribeRequest request = new SubscribeRequest(

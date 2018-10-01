@@ -43,19 +43,14 @@
                         <div class="card-body p-1 d-flex justify-content-center align-content-center">
                             <div class="m-1 w-100 h-100 mw-100 mh-100">
                                 <div v-if="!att.actuator">
-                                <#--<select class="form-control" v-model="chartTypesSelected[att.id]"-->
-                                <#--v-on:change="(chartInitFunctions[chartTypesSelected[att.id]])(att)">-->
-                                <#--<option disabled value="">Please select one</option>-->
-                                <#--<option v-for="chartType in chartTypes[att.type]"-->
-                                <#--v-bind:value="chartType.value">-->
-                                <#--{{ chartType.text }}-->
-                                <#--</option>-->
-                                <#--</select>-->
                                 <#--canvas is required by chartsJS-->
                                     <canvas v-if="chartTypeRequires[chartTypesSelected[att.id]]=='canvas'"
                                             v-bind:id="'att_'+att.id">
                                     </canvas>
                                 <#--div is required by GCharts-->
+                                    <div v-else-if="att.type == 'String'">
+                                        {{att.value}}
+                                    </div>
                                     <div v-else v-bind:id="'att_'+att.id">
                                         <img src="/static/img/ajax-loader.gif"/>
                                     </div>
@@ -71,11 +66,17 @@
                                             OFF
                                         </button>
                                     </div>
-                                    <div v-if="att.type=='Double'" v-bind:id="'att_'+att.id">
+                                    <div v-if="att.type=='Double'" v-bind:id="'att_'+att.id" style="text-align: center;">
+                                        <span class="act-values" v-if="att.value">{{att.value}}</span>
+                                        <input class="input form-control" step="any" type="number" v-on:change="setValue(att)"/>
+                                    </div>
+                                    <div v-if="att.type=='Integer'" v-bind:id="'att_'+att.id" style="text-align: center;">
+                                        <span class="act-values" v-if="att.value">{{att.value}}</span>
                                         <input class="input form-control" type="number" v-on:change="setValue(att)"/>
                                     </div>
-                                    <div v-if="att.type=='Integer'" v-bind:id="'att_'+att.id">
-                                        <input class="input form-control" type="number" v-on:change="setValue(att)"/>
+                                    <div v-if="att.type=='String'" v-bind:id="'att_'+att.id" style="text-align: center;">
+                                        <span class="act-values" v-if="att.value">{{att.value}}</span>
+                                        <input class="input form-control" type="text" v-on:change="setValue(att)"/>
                                     </div>
                                 </div>
                             </div>
@@ -219,10 +220,16 @@
                 return timestamp;
             },
             "setValue": function (att) {
+                console.log(att);
+                var that = this;
+                if ($('input', $(document.getElementById('att_' + att.id))).val() == '' && att.type!='String')
+                    return;
                 $.ajax({
                     url: "/pubsub/value/" + att.id,
                     "method": "POST",
-                    "data": {"value": $(document.getElementById('att_' + att.id)).val()},
+                    "data": {
+                        "value": $('input', $(document.getElementById('att_' + att.id))).val()
+                    },
                     success: function (data) {
                         setTimeout(function () {
                             that.refresh();
@@ -325,24 +332,31 @@
                                     var dName = "device" + device.id + "." + att.id;
                                     if (dName === key) {
                                         // console.log(att);
-                                        if (att.type === "Integer") {
-                                            Vue.set(att, 'value', val);
-                                            if (isInit) {
-                                                Vue.set(app.chartTypesSelected, att.id, 'Gauge');
-                                                that.updateGauge(att);
+                                        if (!att.actuator) {
+                                            if (att.type === "Integer") {
+                                                Vue.set(att, 'value', val);
+                                                if (isInit) {
+                                                    Vue.set(app.chartTypesSelected, att.id, 'Gauge');
+                                                    that.updateGauge(att);
+                                                }
+                                                else
+                                                    (that.chartUpdateFunctions[that.chartTypesSelected[att.id]])(att);
+                                            } else if (att.type === "Double") {
+                                                Vue.set(att, 'value', val);
+                                                if (isInit) {
+                                                    Vue.set(app.chartTypesSelected, att.id, 'Gauge');
+                                                    that.updateGauge(att);
+                                                }
+                                                else
+                                                    (that.chartUpdateFunctions[that.chartTypesSelected[att.id]])(att);
+                                            } else if (att.type === "String") {
+                                                Vue.set(att, 'value', val);
                                             }
-                                            else
-                                                (that.chartUpdateFunctions[that.chartTypesSelected[att.id]])(att);
-                                        } else if (att.type === "Double") {
-                                            Vue.set(att, 'value', val);
-                                            if (isInit) {
-                                                Vue.set(app.chartTypesSelected, att.id, 'Gauge');
-                                                that.updateGauge(att);
+                                            else {
+                                                Vue.set(att, 'value', val !== 0);
                                             }
-                                            else
-                                                (that.chartUpdateFunctions[that.chartTypesSelected[att.id]])(att);
                                         } else {
-                                            Vue.set(att, 'value', val !== 0);
+                                            Vue.set(att, 'value', val);
                                         }
                                     }
                                 }
@@ -400,4 +414,3 @@
 </script>
 </body>
 </html>
-

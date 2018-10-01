@@ -20,13 +20,14 @@ import javax.ws.rs.core.SecurityContext;
 import java.io.*;
 import java.nio.file.Paths;
 
-// TODO: 5/24/18 Apply proper authorization 
+// auth and eh present
 @Api(value = "")
 public class CertificateResource extends BaseResource {
 
     public CertificateResource(SecurityContext sc, HttpServletRequest request) {
         super(sc, request);
     }
+
 
     @GET
     @Path("get/{name}/{id}")
@@ -45,24 +46,48 @@ public class CertificateResource extends BaseResource {
         if (!AuthorizationHelper.getInstance().checkAccess(userBean, bean))
             throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
 
-        String certificateDirectory = Paths.get(Constant.CERT_ROOT,bean.getCertificateDir(),name+".pem").toString();
+        String certificateDirectory = Paths.get(Constant.CERT_ROOT,bean.getCertificateDir(), name+".pem").toString();
 
         File rootCA = new File(Constant.CERT_ROOT + "rootCA.pem");
+
         File certificateFile = new File(certificateDirectory);
+
         System.out.println(certificateFile.getAbsolutePath()+"\nExists: " + certificateFile.exists());
 
-        if(name.equals("rootCA") && rootCA.exists()) {
+        if (name.equals("rootCA") && rootCA.exists()) {
             return Response.ok(rootCA, MediaType.APPLICATION_OCTET_STREAM)
                     .header("Content-Disposition", "attachment; filename=\"" + rootCA.getName() + "\"" )
                     .build();
         }
 
-        if(certificateFile.exists()) {
+        if (certificateFile.exists()) {
             return Response.ok(certificateFile, MediaType.APPLICATION_OCTET_STREAM)
-                    .header("Content-Disposition", "attachment; filename=\"" + certificateFile.getName() + "\"" ) //optional
+                    .header("Content-Disposition", "attachment; filename=\"" +
+                            certificateFile.getName() + "\"" ) //optional
                     .build();
         }
+
         return Response.status(404).build();
     }
 
+
+    @GET
+    @Path("zip/{id}")
+    @Session
+    @Secure(roles = {RoleEnum.READ, RoleEnum.WRITE, RoleEnum.ALL})
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getZip(@PathParam("id") Integer id) {
+        ThingBean thingBean = ThingDAO.getInstance().get(id);
+
+        String certificateDirectory = Paths.get(Constant.CERT_ROOT,thingBean.getCertificateDir()).toString();
+
+        File certificateZip = new File(certificateDirectory + ".zip");
+
+        if (!certificateZip.exists())
+            throw new NotFoundException();
+
+        return Response.ok(certificateZip, MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=\"" + "certificates.zip" + "\"" )
+                .build();
+    }
 }

@@ -129,6 +129,10 @@
         .footer {
 
         }
+
+        .act-values {
+            font-size: 3rem;
+        }
     </style>
 
 </head>

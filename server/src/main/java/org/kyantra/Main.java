@@ -14,6 +14,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.mvc.freemarker.FreemarkerMvcFeature;
 import org.kyantra.filters.AuthorizationFilter;
+import org.kyantra.filters.CORSFilter;
 import org.kyantra.filters.SessionFilter;
 import org.kyantra.exceptionhandling.AppExceptionMapper;
 import org.kyantra.resources.AuthResource;
@@ -44,6 +45,7 @@ public class Main {
         rc.register(AppExceptionMapper.class);
         rc.register(SessionFilter.class);
         rc.register(AuthorizationFilter.class);
+        rc.register(CORSFilter.class);
         rc.register(AuthResource.class);
 
         ClassLoader loader = Main.class.getClassLoader();
